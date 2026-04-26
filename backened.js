@@ -229,7 +229,7 @@ app.post("/add-product", upload.single("image"), async (req, res) => {
                 brandname
             });
 
-            const verificationURL = `http://localhost:3000/check/status/${product._id}`;
+            const verificationURL = `https://trust-layer-r1vk-git-main-eman7866s-projects.vercel.app//check/status/${product._id}`;
             const qrPath = path.join(qrFolder, `${product._id}.png`);
 
             await QRCode.toFile(qrPath, verificationURL);
