@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust Layer — Sign Up</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0a0f0a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      background: #1a4d1a;
+      border: 1px solid #2d7a2d;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: #a8e6a8;
+      letter-spacing: 0.03em;
+    }
+
+    .card {
+      background: #0d1a0d;
+      border: 1px solid #1a3a1a;
+      border-radius: 12px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 420px;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: #e8f5e8;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .card-sub {
+      font-size: 13px;
+      color: #3a6b3a;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .field { margin-bottom: 18px; }
+    .field-label {
+      display: block;
+      font-size: 12px;
+      color: #5a8c5a;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .input-wrap { position: relative; }
+    .input-wrap svg.ico {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .input-wrap input {
+      width: 100%;
+      background: #111811;
+      border: 1px solid #1a3a1a;
+      border-radius: 8px;
+      padding: 12px 42px;
+      font-size: 13px;
+      color: #e8f5e8;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-wrap input::placeholder { color: #2d4d2d; }
+    .input-wrap input:focus { border-color: #2d7a2d; }
+
+    .eye-btn {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      color: #3a6b3a;
+    }
+    .eye-btn:hover { color: #5a8c5a; }
+
+    .err { font-size: 11px; color: #d4a017; margin-top: 5px; display: none; }
+
+    .terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      margin-bottom: 24px;
+      margin-top: 4px;
+    }
+    .terms input { width: 14px; height: 14px; accent-color: #4caf50; cursor: pointer; margin-top: 2px; flex-shrink: 0; }
+    .terms span { font-size: 12px; color: #3a6b3a; line-height: 1.6; }
+    .terms a { color: #4caf50; text-decoration: none; }
+    .terms a:hover { color: #6dd96d; }
+
+    .signup-btn {
+      width: 100%;
+      background: #2d7a2d;
+      color: #e8f5e8;
+      border: none;
+      padding: 13px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+      margin-bottom: 18px;
+    }
+    .signup-btn:hover { background: #3a9e3a; }
+    .signup-btn:active { transform: scale(0.99); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .div-line { flex: 1; height: 1px; background: #1a3a1a; }
+    .div-text { font-size: 11px; color: #2d4d2d; letter-spacing: 0.1em; }
+
+    .login-row { text-align: center; font-size: 12px; color: #3a6b3a; }
+    .login-row a { color: #4caf50; font-weight: 500; text-decoration: none; }
+    .login-row a:hover { color: #6dd96d; }
+
+    .sec-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 11px 13px;
+      background: #060c06;
+      border: 1px solid #1a3a1a;
+      border-radius: 8px;
+    }
+    .sec-note span { font-size: 11px; color: #3a6b3a; line-height: 1.5; }
+
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 20px 0 4px;
+    }
+    .success-icon {
+      width: 52px;
+      height: 52px;
+      background: #0d2a0d;
+      border: 1px solid #2d7a2d;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+    .success-title { font-size: 17px; font-weight: 500; color: #e8f5e8; margin-bottom: 6px; }
+    .success-sub { font-size: 12px; color: #3a6b3a; line-height: 1.7; }
+  </style>
+</head>
+<body>
+
+  <div class="brand">
+    <div class="brand-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#4caf50" opacity="0.9"/>
+        <path d="M7 9.5l1.5 1.5 3-3" stroke="#0d1a0d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="brand-name">Trust Layer</span>
+  </div>
+
+  <div class="card">
+
+    <!-- FORM -->
+    <div id="form-section">
+      <div class="card-title">Create your account</div>
+      <div class="card-sub">Start protecting your products in minutes — no credit card required</div>
+
+      <!-- Brand Name -->
+       <form action="/register" method="post">
+      <div class="field">
+        <label class="field-label" for="brandname">Brand name</label>
+        <div class="input-wrap">
+          <svg class="ico" width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#3a6b3a" stroke-width="1.2"/>
+            <path d="M5 7h6M5 10h4" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="brandname" name="brandname" placeholder="e.g. Sidr Honey Co." required>
+        </div>
+        <div class="err" id="err-brand">Please enter your brand name.</div>
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label class="field-label" for="email">Email address</label>
+        <div class="input-wrap">
+          <svg class="ico" width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <rect x="1" y="3" width="14" height="10" rx="1.5" stroke="#3a6b3a" stroke-width="1.2"/>
+            <path d="M1 5l7 5 7-5" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input type="email" id="email" name="email" placeholder="your@brand.pk" required>
+        </div>
+        <div class="err" id="err-email">Please enter a valid email address.</div>
+      </div>
+
+      <!-- Username -->
+      <div class="field">
+        <label class="field-label" for="username">Username</label>
+        <div class="input-wrap">
+          <svg class="ico" width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <circle cx="8" cy="5" r="3" stroke="#3a6b3a" stroke-width="1.2"/>
+            <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="username" name="username" placeholder="Choose a username" required>
+        </div>
+        <div class="err" id="err-uname">Please enter a username.</div>
+      </div>
+
+      <!-- Password -->
+      <div class="field">
+        <label class="field-label" for="password">Password</label>
+        <div class="input-wrap">
+          <svg class="ico" width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <rect x="2" y="7" width="12" height="8" rx="1.5" stroke="#3a6b3a" stroke-width="1.2"/>
+            <path d="M5 7V5a3 3 0 016 0v2" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          <input type="password" id="password" name="password" placeholder="Min. 8 characters" required>
+          <button class="eye-btn" onclick="togglePw()" type="button">
+            <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+              <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.2"/>
+              <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/>
+            </svg>
+          </button>
+        </div>
+        <div class="err" id="err-pw">Password must be at least 8 characters.</div>
+      </div>
+
+      <!-- Terms -->
+      <div class="terms">
+        <input type="checkbox" id="terms">
+        <span>I agree to Trust Layer's <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+      </div>
+      <div class="err" id="err-terms" style="margin-top:-16px;margin-bottom:16px;">Please accept the terms to continue.</div>
+
+      <button class="signup-btn" onclick="handleSignup()">Create my account ↗</button>
+</form>
+      <div class="divider">
+        <div class="div-line"></div>
+        <span class="div-text">already have an account?</span>
+        <div class="div-line"></div>
+      </div>
+
+      <div class="login-row">
+        <a href="trust_layer_login.html">Sign in instead →</a>
+      </div>
+
+      <div class="sec-note">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+          <path d="M8 2L2 5.5v4c0 2.8 2.2 5.4 6 6.1 3.8-.7 6-3.3 6-6.1v-4L8 2z" stroke="#2d7a2d" stroke-width="1.2"/>
+          <path d="M5.5 8l2 2 3.5-3.5" stroke="#2d7a2d" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Your data is encrypted and never shared. Cancel or delete your account anytime.</span>
+      </div>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-msg" id="success-section">
+      <div class="success-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12l5 5L19 7" stroke="#4caf50" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="success-title">Account created!</div>
+      <div class="success-sub" id="success-sub">Welcome to Trust Layer.<br>Redirecting you to your dashboard...</div>
+    </div>
+
+  </div>
+
+  <script>
+    function togglePw() {
+      var inp = document.getElementById('pw');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    function handleSignup() {
+      var brand = document.getElementById('brandname').value.trim();
+      var email = document.getElementById('email').value.trim();
+      var uname = document.getElementById('uname').value.trim();
+      var pw    = document.getElementById('pw').value.trim();
+      var terms = document.getElementById('terms').checked;
+
+      var eb = document.getElementById('err-brand');
+      var ee = document.getElementById('err-email');
+      var eu = document.getElementById('err-uname');
+      var ep = document.getElementById('err-pw');
+      var et = document.getElementById('err-terms');
+
+      eb.style.display = 'none';
+      ee.style.display = 'none';
+      eu.style.display = 'none';
+      ep.style.display = 'none';
+      et.style.display = 'none';
+
+      var ok = true;
+      if (!brand)              { eb.style.display = 'block'; ok = false; }
+      if (!email || !email.includes('@')) { ee.style.display = 'block'; ok = false; }
+      if (!uname)              { eu.style.display = 'block'; ok = false; }
+      if (pw.length < 8)       { ep.style.display = 'block'; ok = false; }
+      if (!terms)              { et.style.display = 'block'; ok = false; }
+
+      if (ok) {
+        document.getElementById('form-section').style.display = 'none';
+        document.getElementById('success-section').style.display = 'block';
+        document.getElementById('success-sub').innerHTML =
+          'Welcome, <strong style="color:#a8e6a8">' + uname + '</strong>!<br>Your brand <strong style="color:#a8e6a8">' + brand + '</strong> is now registered.<br><br>Redirecting you to your dashboard...';
+      }
+    }
+  </script>
+
+</body>
+</html>

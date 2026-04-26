@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust Layer — Login</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0a0f0a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .brand-icon {
+      width: 34px;
+      height: 34px;
+      background: #1a4d1a;
+      border: 1px solid #2d7a2d;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-name {
+      font-size: 16px;
+      font-weight: 500;
+      color: #a8e6a8;
+      letter-spacing: 0.03em;
+    }
+
+    .card {
+      background: #0d1a0d;
+      border: 1px solid #1a3a1a;
+      border-radius: 12px;
+      padding: 36px 32px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: #e8f5e8;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+    .card-sub {
+      font-size: 13px;
+      color: #3a6b3a;
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .field { margin-bottom: 18px; }
+    .field-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .field-label { font-size: 12px; color: #5a8c5a; letter-spacing: 0.05em; }
+    .field-link {
+      font-size: 11px;
+      color: #2d7a2d;
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      padding: 0;
+    }
+    .field-link:hover { color: #4caf50; }
+
+    .input-wrap { position: relative; }
+    .input-wrap svg.ico {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    .input-wrap input {
+      width: 100%;
+      background: #111811;
+      border: 1px solid #1a3a1a;
+      border-radius: 8px;
+      padding: 12px 42px;
+      font-size: 13px;
+      color: #e8f5e8;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .input-wrap input::placeholder { color: #2d4d2d; }
+    .input-wrap input:focus { border-color: #2d7a2d; }
+
+    .eye-btn {
+      position: absolute;
+      right: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      color: #3a6b3a;
+    }
+    .eye-btn:hover { color: #5a8c5a; }
+
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 22px;
+      cursor: pointer;
+    }
+    .remember input { width: 14px; height: 14px; accent-color: #4caf50; cursor: pointer; }
+    .remember span { font-size: 12px; color: #3a6b3a; }
+
+    .login-btn {
+      width: 100%;
+      background: #2d7a2d;
+      color: #e8f5e8;
+      border: none;
+      padding: 13px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+      margin-bottom: 18px;
+    }
+    .login-btn:hover { background: #3a9e3a; }
+    .login-btn:active { transform: scale(0.99); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .div-line { flex: 1; height: 1px; background: #1a3a1a; }
+    .div-text { font-size: 11px; color: #2d4d2d; letter-spacing: 0.1em; }
+
+    .signup { text-align: center; font-size: 12px; color: #3a6b3a; }
+    .signup a { color: #4caf50; cursor: pointer; font-weight: 500; text-decoration: none; }
+    .signup a:hover { color: #6dd96d; }
+
+    .sec-note {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 20px;
+      padding: 11px 13px;
+      background: #060c06;
+      border: 1px solid #1a3a1a;
+      border-radius: 8px;
+    }
+    .sec-note span { font-size: 11px; color: #3a6b3a; line-height: 1.5; }
+
+    .err { font-size: 11px; color: #d4a017; margin-top: 6px; display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="brand">
+    <div class="brand-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#4caf50" opacity="0.9"/>
+        <path d="M7 9.5l1.5 1.5 3-3" stroke="#0d1a0d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="brand-name">Trust Layer</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Welcome back</div>
+    <div class="card-sub">Sign in to your brand protection workspace</div>
+<form action="/login" method="post">
+    <div class="field">
+      <div class="field-top">
+        <span class="field-label">Username</span>
+      </div>
+      <div class="input-wrap">
+        <svg class="ico" width="15" height="15" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="5" r="3" stroke="#3a6b3a" stroke-width="1.2"/>
+          <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="username" name="username" placeholder="abc" required>
+      </div>
+      <div class="err" id="err-u">Please enter your username.</div>
+    </div>
+
+    <div class="field">
+      <div class="field-top">
+        <span class="field-label">Password</span>
+        <button class="field-link" onclick="alert('Password reset link sent to your email.')">Forgot password?</button>
+      </div>
+      <div class="input-wrap">
+        <svg class="ico" width="15" height="15" viewBox="0 0 16 16" fill="none">
+          <rect x="2" y="7" width="12" height="8" rx="1.5" stroke="#3a6b3a" stroke-width="1.2"/>
+          <path d="M5 7V5a3 3 0 016 0v2" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+        <button class="eye-btn" onclick="togglePw()" type="button">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+            <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.2"/>
+            <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </button>
+      </div>
+      <div class="err" id="err-p">Please enter your password.</div>
+    </div>
+
+    <label class="remember">
+      <input type="checkbox" id="rem">
+      <span>Keep me signed in for 30 days</span>
+    </label>
+
+    <button class="login-btn" onclick="handleLogin()">Sign in to dashboard</button>
+</form>
+    <div class="divider">
+      <div class="div-line"></div>
+      <span class="div-text">or</span>
+      <div class="div-line"></div>
+    </div>
+
+    <div class="signup">
+      No account yet? <a href="#">Create a free account ↗</a>
+    </div>
+
+    <div class="sec-note">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex-shrink:0">
+        <path d="M8 2L2 5.5v4c0 2.8 2.2 5.4 6 6.1 3.8-.7 6-3.3 6-6.1v-4L8 2z" stroke="#2d7a2d" stroke-width="1.2"/>
+        <path d="M5.5 8l2 2 3.5-3.5" stroke="#2d7a2d" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Your session is encrypted end-to-end. Trust Layer never stores plain-text credentials.</span>
+    </div>
+  </div>
+
+  <script>
+    function togglePw() {
+      var inp = document.getElementById('pw');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    function handleLogin() {
+      var u = document.getElementById('uname').value.trim();
+      var p = document.getElementById('pw').value.trim();
+      var eu = document.getElementById('err-u');
+      var ep = document.getElementById('err-p');
+      eu.style.display = 'none';
+      ep.style.display = 'none';
+      var ok = true;
+      if (!u) { eu.style.display = 'block'; ok = false; }
+      if (!p) { ep.style.display = 'block'; ok = false; }
+      if (ok) {
+        alert('Logging in as ' + u + '...');
+        // Connect your backend here
+      }
+    }
+  </script>
+
+</body>
+</html>

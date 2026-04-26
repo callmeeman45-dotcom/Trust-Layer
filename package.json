@@ -1,0 +1,96 @@
+{
+
+
+      "engines": {
+
+
+            "node": "20.x"
+
+
+      },
+
+
+      "name": "university-project",
+
+
+      "version": "1.0.0",
+
+
+      "main": "backened.js",
+
+
+      "scripts": {
+
+
+            "test": "echo \"Error: no test specified\" && exit 1"
+
+
+      },
+
+
+      "keywords": [],
+
+
+      "author": "",
+
+
+      "license": "ISC",
+
+
+      "description": "",
+
+
+      "dependencies": {
+
+
+            "body-parser": "^2.2.2",
+
+
+            "cloudinary": "^1.41.0",
+
+
+            "connect-mongo": "^6.0.0",
+
+
+            "express": "^5.2.1",
+
+
+            "express-session": "^1.19.0",
+
+
+            "geoip-lite": "^1.4.10",
+
+
+            "mongoose": "^9.5.0",
+
+
+            "multer": "^2.0.2",
+
+
+            "multer-storage-cloudinary": "^4.0.0",
+
+
+            "passport": "^0.7.0",
+
+
+            "passport-local": "^1.0.0",
+
+
+            "passport-local-mongoose": "^9.0.1",
+
+
+            "pdfkit": "^0.18.0",
+
+
+            "qrcode": "^1.5.4"
+
+
+      },
+
+
+      "type": "commonjs"
+
+
+}
+
+

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust Layer</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-sans, system-ui, sans-serif); }
+    .tl-wrap { background: #0a0f0a; color: #e8f5e8; min-height: 100vh; font-family: var(--font-sans, system-ui, sans-serif); }
+
+    /* NAV */
+    .tl-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(10,15,10,0.97); border-bottom: 1px solid #1a2e1a; position: sticky; top: 0; z-index: 100; }
+    .tl-logo { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 500; color: #a8e6a8; letter-spacing: 0.03em; }
+    .tl-logo-icon { width: 32px; height: 32px; background: #1a4d1a; border: 1px solid #2d7a2d; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+    .tl-nav-links { display: flex; gap: 32px; list-style: none; }
+    .tl-nav-links a { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #5a8c5a; text-decoration: none; transition: color 0.2s; }
+    .tl-nav-links a:hover { color: #a8e6a8; }
+    .tl-nav-btn { background: #2d7a2d; color: #e8f5e8; border: none; padding: 9px 22px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: background 0.2s; font-family: inherit; }
+    .tl-nav-btn:hover { background: #3a9e3a; }
+
+    /* HERO WRAPPER — handles background image */
+    .tl-hero-wrapper1 {
+      background-image: url('https://res.cloudinary.com/dc3lavmde/image/upload/q_auto/f_auto/v1776360882/WhatsApp_Image_2026-04-16_at_9.38.49_AM_j2tvep.jpg');
+     /* opacity: 0.5;  */
+      background-size: cover;
+      background-position: center;
+    }
+    .tl-hero-wrapper {
+      background: rgba(27, 27, 27, 0.85);
+    }
+
+    /* HERO INNER — handles layout */
+    .tl-hero {
+      padding: 96px 48px 72px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 64px;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .tl-badge { display: inline-flex; align-items: center; gap: 8px; background: #0d1f0d; border: 1px solid #2d7a2d; padding: 6px 16px; border-radius: 100px; margin-bottom: 28px; }
+    .tl-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #4caf50; }
+    .tl-badge span { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #4caf50; font-weight: 400; }
+    .tl-h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 500; line-height: 1.1; color: #e8f5e8; margin-bottom: 20px; letter-spacing: -0.02em; }
+    .tl-h1 em { font-style: italic; color: #4caf50; }
+    .tl-hero-sub { font-size: 14px; color: #5a8c5a; line-height: 1.8; margin-bottom: 40px; max-width: 440px; font-weight: 400; }
+    .tl-hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .tl-btn-primary { background: #2d7a2d; color: #e8f5e8; border: none; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: background 0.2s; }
+    .tl-btn-primary:hover { background: #3a9e3a; }
+    .tl-btn-outline { background: transparent; color: #a8e6a8; border: 1px solid #2d7a2d; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: all 0.2s; }
+    .tl-btn-outline:hover { background: #0d1f0d; border-color: #4caf50; }
+
+    /* HERO VISUAL */
+    .tl-hero-visual { position: relative; }
+    .tl-qr-demo { background: #0d1f0d; border: 1px solid #1a3a1a; border-radius: 12px; padding: 32px; }
+    .tl-qr-top { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .tl-qr-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: #3a6b3a; }
+    .tl-qr-status { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+    .tl-qr-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4caf50; }
+    .tl-qr-status span { font-size: 10px; color: #4caf50; letter-spacing: 0.1em; }
+    .tl-qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .tl-qr-product { background: #111811; border: 1px solid #1a3a1a; border-radius: 8px; padding: 16px; cursor: pointer; transition: border-color 0.2s; }
+    .tl-qr-product:hover, .tl-qr-product.active { border-color: #2d7a2d; }
+    .tl-qr-product.active { background: #0d1f0d; }
+    .tl-product-icon { width: 36px; height: 36px; background: #1a3a1a; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .tl-product-name { font-size: 12px; color: #a8e6a8; font-weight: 500; margin-bottom: 2px; }
+    .tl-product-id { font-size: 10px; color: #3a6b3a; letter-spacing: 0.1em; font-family: var(--font-mono, monospace); }
+    .tl-scan-info { background: #111811; border: 1px solid #1a3a1a; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .tl-scan-left { font-size: 11px; color: #5a8c5a; }
+    .tl-scan-left strong { display: block; font-size: 13px; color: #a8e6a8; font-weight: 500; margin-top: 2px; }
+    .tl-scan-badge { background: #0d2a0d; border: 1px solid #2d7a2d; color: #4caf50; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; }
+
+    /* STATS */
+    .tl-stats { background: #0d1a0d; border-top: 1px solid #1a3a1a; border-bottom: 1px solid #1a3a1a; padding: 40px 48px; }
+    .tl-stats-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
+    .tl-stat { text-align: center; padding: 0 24px; border-right: 1px solid #1a3a1a; }
+    .tl-stat:last-child { border-right: none; }
+    .tl-stat-num { font-size: 2.2rem; font-weight: 500; color: #4caf50; letter-spacing: -0.02em; display: block; }
+    .tl-stat-lbl { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #3a6b3a; margin-top: 4px; }
+
+    /* SERVICES */
+    .tl-services { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
+    .tl-section-tag { font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: #2d7a2d; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .tl-section-tag::after { content: ''; flex: 0 0 40px; height: 1px; background: #1a3a1a; }
+    .tl-section-title { font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 500; color: #e8f5e8; margin-bottom: 12px; }
+    .tl-section-sub { font-size: 13px; color: #5a8c5a; max-width: 480px; line-height: 1.8; margin-bottom: 48px; }
+    .tl-services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .tl-service-card { background: #0d1a0d; border: 1px solid #1a3a1a; border-radius: 10px; padding: 28px 24px; cursor: pointer; transition: border-color 0.25s, background 0.25s; position: relative; overflow: hidden; }
+    .tl-service-card:hover { border-color: #2d7a2d; background: #0f1f0f; }
+    .tl-service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #2d7a2d, transparent); opacity: 0; transition: opacity 0.25s; }
+    .tl-service-card:hover::before { opacity: 1; }
+    .tl-service-icon { width: 44px; height: 44px; background: #1a3a1a; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .tl-service-name { font-size: 14px; font-weight: 500; color: #a8e6a8; margin-bottom: 8px; }
+    .tl-service-desc { font-size: 12px; color: #3a6b3a; line-height: 1.7; }
+
+    /* HOW IT WORKS */
+    .tl-how { background: #0d1a0d; padding: 80px 48px; border-top: 1px solid #1a3a1a; }
+    .tl-how-inner { max-width: 1200px; margin: 0 auto; }
+    .tl-how-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 48px; position: relative; }
+    .tl-how-steps::before { content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px; background: #1a3a1a; z-index: 0; }
+    .tl-step { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
+    .tl-step-num { width: 56px; height: 56px; border-radius: 50%; border: 1px solid #2d7a2d; background: #0a0f0a; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 16px; font-weight: 500; color: #4caf50; }
+    .tl-step-title { font-size: 13px; font-weight: 500; color: #a8e6a8; margin-bottom: 8px; }
+    .tl-step-desc { font-size: 11px; color: #3a6b3a; line-height: 1.7; }
+
+    /* PRODUCT DEMO */
+    .tl-demo { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
+    .tl-demo-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .tl-demo-card { background: #0d1a0d; border: 1px solid #1a3a1a; border-radius: 12px; padding: 32px; }
+    .tl-demo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .tl-demo-title { font-size: 13px; font-weight: 500; color: #a8e6a8; }
+    .tl-verified-badge { background: #0d2a0d; border: 1px solid #2d7a2d; color: #4caf50; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; }
+    .tl-vdot { width: 5px; height: 5px; border-radius: 50%; background: #4caf50; }
+    .tl-product-info { margin-bottom: 20px; }
+    .tl-pi-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a3a1a; font-size: 12px; }
+    .tl-pi-row:last-child { border-bottom: none; }
+    .tl-pi-key { color: #3a6b3a; letter-spacing: 0.08em; }
+    .tl-pi-val { color: #a8e6a8; font-weight: 400; }
+    .tl-pi-val.green { color: #4caf50; }
+    .tl-trace { background: #0a0f0a; border: 1px solid #1a3a1a; border-radius: 8px; padding: 14px 16px; }
+    .tl-trace-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #2d7a2d; margin-bottom: 8px; }
+    .tl-trace-val { font-size: 11px; color: #3a6b3a; font-family: var(--font-mono, monospace); letter-spacing: 0.05em; }
+
+    /* CTA */
+    .tl-cta { background: #0d2a0d; border-top: 1px solid #1a3a1a; border-bottom: 1px solid #1a3a1a; padding: 72px 48px; text-align: center; }
+    .tl-cta h2 { font-size: clamp(1.6rem, 2.8vw, 2.4rem); font-weight: 500; color: #e8f5e8; margin-bottom: 16px; }
+    .tl-cta p { font-size: 14px; color: #5a8c5a; margin-bottom: 36px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+    .tl-cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+    /* FOOTER */
+    .tl-footer { background: #060c06; padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .tl-footer-brand { font-size: 14px; color: #3a6b3a; }
+    .tl-footer-brand strong { color: #4caf50; }
+    .tl-footer-copy { font-size: 10px; letter-spacing: 0.15em; color: #1a3a1a; }
+    .tl-footer-links { display: flex; gap: 24px; }
+    .tl-footer-links a { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #2d6b2d; text-decoration: none; transition: color 0.2s; }
+    .tl-footer-links a:hover { color: #5a8c5a; }
+  </style>
+</head>
+<body>
+
+<div class="tl-wrap">
+
+  <!-- NAV -->
+  <nav class="tl-nav">
+    <div class="tl-logo">
+      <div class="tl-logo-icon">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#4caf50" opacity="0.9"/>
+          <path d="M7 9.5l1.5 1.5 3-3" stroke="#0d1a0d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      Trust Layer
+    </div>
+    <ul class="tl-nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#">Products</a></li>
+      <li><a href="#">Dashboard</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <a href="/admin/space"><button class="tl-nav-btn">Admin Space</button></a>
+  </nav>
+
+  <!-- HERO — wrapper for background image, inner div for layout -->
+   <div class="tl-hero-wrapper1">
+  <section class="tl-hero-wrapper">
+    <div class="tl-hero">
+      <div>
+        <div class="tl-badge"><div class="tl-badge-dot"></div><span>Blockchain-secured authentication</span></div>
+        <h1 class="tl-h1">Make every product<br><em>impossible to fake.</em></h1>
+        <p class="tl-hero-sub">Trust Layer assigns a unique, personalised QR code to each product unit. Scan it — and instantly verify authenticity, trace the product journey, and detect counterfeit copies in real time.</p>
+        <div class="tl-hero-btns">
+          <button class="tl-btn-primary" onclick="alert('Contact us to get started!')">Protect your products ↗</button>
+          <button class="tl-btn-outline">View live demo</button>
+        </div>
+      </div>
+      <!-- <div class="tl-hero-visual">
+        <div class="tl-qr-demo">
+          <div class="tl-qr-top">
+            <span class="tl-qr-label">Live product registry</span>
+            <div class="tl-qr-status"><div class="tl-qr-status-dot"></div><span>Active</span></div>
+          </div>
+          <div class="tl-qr-grid">
+            <div class="tl-qr-product active" id="p1" onclick="selectProduct(1)">
+              <div class="tl-product-icon"> -->
+                <!-- <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#4caf50" stroke-width="1.2"/><path d="M7 10h6M10 7v6" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div>
+              <div class="tl-product-name">Sidr Honey 500g</div>
+              <div class="tl-product-id">TL-0042-SH5</div>
+            </div>
+            <div class="tl-qr-product" id="p2" onclick="selectProduct(2)">
+              <div class="tl-product-icon">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#3a6b3a" stroke-width="1.2"/><path d="M10 6v4l2.5 2.5" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/></svg>
+              </div> -->
+              <!-- <div class="tl-product-name" style="color:#5a8c5a">Wild Forest Honey</div>
+              <div class="tl-product-id">TL-0091-WF3</div>
+            </div>
+          </div>
+          <div class="tl-scan-info">
+            <div class="tl-scan-left">Scan status<strong id="scanStatus">First scan · Authentic</strong></div>
+            <div class="tl-scan-badge" id="scanBadge">✔ Verified</div>
+          </div>
+        </div>
+      </div> -->
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="tl-stats">
+    <div class="tl-stats-inner">
+      <div class="tl-stat"><span class="tl-stat-num">12K+</span><span class="tl-stat-lbl">Products registered</span></div>
+      <div class="tl-stat"><span class="tl-stat-num">98.7%</span><span class="tl-stat-lbl">Scan accuracy</span></div>
+      <div class="tl-stat"><span class="tl-stat-num">340+</span><span class="tl-stat-lbl">Brands protected</span></div>
+      <div class="tl-stat"><span class="tl-stat-num">0</span><span class="tl-stat-lbl">Successful fakes</span></div>
+    </div>
+  </div>
+</div>
+
+  <!-- SERVICES -->
+  <section class="tl-services">
+    <p class="tl-section-tag">What we offer</p>
+    <h2 class="tl-section-title">Every tool you need to fight counterfeiting</h2>
+    <p class="tl-section-sub">From unique QR generation to real-time scan tracking — Trust Layer gives you a complete anti-counterfeit system out of the box.</p>
+    <div class="tl-services-grid">
+      <div class="tl-service-card">
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="#4caf50" stroke-width="1.2"/><rect x="12" y="3" width="7" height="7" rx="1" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="12" width="7" height="7" rx="1" stroke="#4caf50" stroke-width="1.2"/><path d="M15 12v7M12 15h7" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tl-service-name">Unique QR Generation</div>
+        <div class="tl-service-desc">Every product unit receives its own cryptographically unique QR code that cannot be duplicated or reused.</div>
+      </div>
+      <div class="tl-service-card">
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3L4 7v5c0 4 3.1 7.7 7 8.5 3.9-.8 7-4.5 7-8.5V7L11 3z" stroke="#4caf50" stroke-width="1.2"/><path d="M8 11.5l2 2 4-4" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="tl-service-name">Product Authentication</div>
+        <div class="tl-service-desc">Consumers scan the QR code and instantly see verified product data — origin, batch, date, and more — proving authenticity.</div>
+      </div>
+      <div class="tl-service-card">
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="#4caf50" stroke-width="1.2"/><circle cx="11" cy="11" r="3" stroke="#4caf50" stroke-width="1.2"/><path d="M11 4v3M11 15v3M4 11h3M15 11h3" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tl-service-name">Scan Tracking</div>
+        <div class="tl-service-desc">Know exactly when and where each product was scanned. First scan vs duplicate scan detection flags counterfeit attempts instantly.</div>
+      </div>
+      <div class="tl-service-card">
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 6h14M4 11h10M4 16h7" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tl-service-name">Personalised Product Data</div>
+        <div class="tl-service-desc">Each QR holds a full data profile — batch number, price, origin, manufacturing date, expiry, and custom fields for your product.</div>
+      </div>
+      <div class="tl-service-card">
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 17l4-4 3 3 4-5 5 6" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="tl-service-name">Brand Analytics Dashboard</div>
+        <div class="tl-service-desc">Real-time dashboard showing scan geography, counterfeit alerts, product performance, and scan history for every unit.</div>
+      </div>
+      <div class="tl-service-card">
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="5" width="16" height="12" rx="2" stroke="#4caf50" stroke-width="1.2"/><path d="M8 9h6M8 13h4" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tl-service-name">Lab Report Integration</div>
+        <div class="tl-service-desc">Attach verified lab analysis reports and certificates directly to the product QR — full transparency for your customers.</div>
+      </div>
+    </div>
+  </section>
+  <!-- HOW IT WORKS -->
+  <section class="tl-how">
+    <div class="tl-how-inner">
+      <p class="tl-section-tag">How it works</p>
+      <h2 class="tl-section-title">From product to protected in four steps</h2>
+      <div class="tl-how-steps">
+        <div class="tl-step">
+          <div class="tl-step-num">1</div>
+          <div class="tl-step-title">Register product</div>
+          <div class="tl-step-desc">Add your product with all personalised data — origin, batch, price, description — through our dashboard.</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-step-num">2</div>
+          <div class="tl-step-title">Generate unique QR</div>
+          <div class="tl-step-desc">Each unit gets a cryptographically unique QR code linked to its exact data record in our database.</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-step-num">3</div>
+          <div class="tl-step-title">Customer scans</div>
+          <div class="tl-step-desc">Consumer scans the QR with any phone — product info is shown immediately with full authenticity confirmation.</div>
+        </div>
+        <div class="tl-step">
+          <div class="tl-step-num">4</div>
+          <div class="tl-step-title">Duplicate = caught</div>
+          <div class="tl-step-desc">Any copied QR triggers a counterfeit alert. You and the customer are both notified — fake products are stopped in their tracks.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCT DEMO -->
+  <section class="tl-demo">
+    <div class="tl-demo-inner">
+      <div>
+        <p class="tl-section-tag">Live example</p>
+        <h2 class="tl-section-title">What your customers see when they scan</h2>
+        <p class="tl-section-sub">A clean, elegant verification page that displays all product details — personalised per unit — and confirms authenticity in real time. Every product is different. Every QR is unique.</p>
+        <button class="tl-btn-primary" onclick="alert('Contact us to register your products!')">Register your products ↗</button>
+      </div>
+      <div class="tl-demo-card">
+        <div class="tl-demo-header">
+          <span class="tl-demo-title">Verification result</span>
+          <div class="tl-verified-badge"><div class="tl-vdot"></div>Authentic</div>
+        </div>
+        <div class="tl-product-info">
+          <div class="tl-pi-row"><span class="tl-pi-key">Product</span><span class="tl-pi-val">Sidr Honey 500g</span></div>
+          <div class="tl-pi-row"><span class="tl-pi-key">Batch no.</span><span class="tl-pi-val" style="font-family:var(--font-mono,monospace);font-size:11px">TL-0042-SH5</span></div>
+          <div class="tl-pi-row"><span class="tl-pi-key">Origin</span><span class="tl-pi-val">Thal Desert, Punjab</span></div>
+          <div class="tl-pi-row"><span class="tl-pi-key">Manufactured</span><span class="tl-pi-val">15 Jan 2026</span></div>
+          <div class="tl-pi-row"><span class="tl-pi-key">Expiry</span><span class="tl-pi-val">15 Jan 2028</span></div>
+          <div class="tl-pi-row"><span class="tl-pi-key">Scan status</span><span class="tl-pi-val green">✔ First scan — genuine</span></div>
+        </div>
+        <div class="tl-trace">
+          <div class="tl-trace-label">Verification hash</div>
+          <div class="tl-trace-val">0x3f7a1b92 · e08c4d5f · 1c3d9f7e</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="tl-cta">
+    <h2>Ready to counterfeit-proof your products?</h2>
+    <p>Join hundreds of brands who trust Trust Layer to protect their reputation and their customers.</p>
+    <div class="tl-cta-btns">
+      <button class="tl-btn-primary" onclick="alert('Welcome! Contact us to get started.')">Start protecting now ↗</button>
+      <button class="tl-btn-outline">Talk to sales</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="tl-footer">
+    <div class="tl-footer-brand"><strong>Trust Layer</strong> · Anti-Counterfeit Platform</div>
+    <div class="tl-footer-copy">© 2026 Trust Layer · All Rights Reserved</div>
+    <div class="tl-footer-links"><a href="#">Home</a><a href="#">Services</a><a href="#">Dashboard</a><a href="#">Contact</a></div>
+  </footer>
+
+</div>
+
+<script>
+  function selectProduct(n) {
+    document.getElementById('p1').classList.remove('active');
+    document.getElementById('p2').classList.remove('active');
+    document.getElementById('p' + n).classList.add('active');
+    if (n === 1) {
+      document.getElementById('scanStatus').textContent = 'First scan · Authentic';
+      document.getElementById('scanBadge').textContent = '✔ Verified';
+      document.getElementById('scanBadge').style.color = '#4caf50';
+      document.getElementById('scanBadge').style.borderColor = '#2d7a2d';
+    } else {
+      document.getElementById('scanStatus').textContent = 'Second scan · Duplicate alert';
+      document.getElementById('scanBadge').textContent = '⚠ Check product';
+      document.getElementById('scanBadge').style.color = '#f0a020';
+      document.getElementById('scanBadge').style.borderColor = '#8a5c00';
+    }
+  }
+</script>
+
+</body>
+</html>
