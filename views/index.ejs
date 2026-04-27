@@ -7,37 +7,33 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: var(--font-sans, system-ui, sans-serif); }
-    .tl-wrap { background: #0a0f0a; color: #e8f5e8; min-height: 100vh; font-family: var(--font-sans, system-ui, sans-serif); }
+    .tl-wrap { background: white; color: #f5f0e8; min-height: 100vh; font-family: var(--font-sans, system-ui, sans-serif); }
 
     /* NAV */
-    .tl-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(10,15,10,0.97); border-bottom: 1px solid #1a2e1a; position: sticky; top: 0; z-index: 100; }
-    .tl-logo { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 500; color: #a8e6a8; letter-spacing: 0.03em; }
-    .tl-logo-icon { width: 32px; height: 32px; background: #1a4d1a; border: 1px solid #2d7a2d; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tl-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(10,8,5,0.97); border-bottom: 1px solid #2e2416; position: sticky; top: 0; z-index: 100; }
+    .tl-logo { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 500; color: #c4aa80; letter-spacing: 0.03em; }
+    .tl-logo-icon { width: 32px; height: 32px; background: #2e1f0a; border: 1px solid #5c3e1a; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .tl-nav-links { display: flex; gap: 32px; list-style: none; }
-    .tl-nav-links a { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #5a8c5a; text-decoration: none; transition: color 0.2s; }
-    .tl-nav-links a:hover { color: #a8e6a8; }
-    .tl-nav-btn { background: #2d7a2d; color: #e8f5e8; border: none; padding: 9px 22px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: background 0.2s; font-family: inherit; }
-    .tl-nav-btn:hover { background: #3a9e3a; }
+    .tl-nav-links a { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #6e5830; text-decoration: none; transition: color 0.2s; }
+    .tl-nav-links a:hover { color: #c4aa80; }
+    .tl-nav-btn { background: #8A7650; color: #f5f0e8; border: none; padding: 9px 22px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: background 0.2s; font-family: inherit; }
+    .tl-nav-btn:hover { background: #a08c62; }
 
     /* Mobile hamburger */
     .tl-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
-    .tl-hamburger span { display: block; width: 22px; height: 2px; background: #a8e6a8; border-radius: 2px; transition: all 0.3s; }
-    .tl-mobile-menu { display: none; position: fixed; top: 68px; left: 0; right: 0; background: rgba(10,15,10,0.99); border-bottom: 1px solid #1a2e1a; padding: 20px 24px; z-index: 99; flex-direction: column; gap: 0; }
+    .tl-hamburger span { display: block; width: 22px; height: 2px; background: #c4aa80; border-radius: 2px; transition: all 0.3s; }
+    .tl-mobile-menu { display: none; position: fixed; top: 68px; left: 0; right: 0; background: rgba(10,8,5,0.99); border-bottom: 1px solid #2e2416; padding: 20px 24px; z-index: 99; flex-direction: column; gap: 0; }
     .tl-mobile-menu.open { display: flex; }
-    .tl-mobile-menu li { list-style: none; border-bottom: 1px solid #1a2e1a; }
+    .tl-mobile-menu li { list-style: none; border-bottom: 1px solid #2e2416; }
     .tl-mobile-menu li:last-child { border-bottom: none; }
-    .tl-mobile-menu a { display: block; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #5a8c5a; text-decoration: none; padding: 14px 0; }
+    .tl-mobile-menu a { display: block; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #6e5830; text-decoration: none; padding: 14px 0; }
     .tl-mobile-menu-btn { margin-top: 16px; }
     .tl-mobile-menu-btn .tl-nav-btn { width: 100%; text-align: center; padding: 13px; font-size: 12px; }
 
     /* HERO WRAPPER */
-    .tl-hero-wrapper1 {
-      background-image: url('https://res.cloudinary.com/dc3lavmde/image/upload/q_auto/f_auto/v1776360882/WhatsApp_Image_2026-04-16_at_9.38.49_AM_j2tvep.jpg');
-      background-size: cover;
-      background-position: center;
-    }
     .tl-hero-wrapper {
-      background: rgba(27, 27, 27, 0.85);
+      background:white
+      ;
     }
 
     /* HERO INNER */
@@ -51,103 +47,103 @@
       margin: 0 auto;
     }
 
-    .tl-badge { display: inline-flex; align-items: center; gap: 8px; background: #0d1f0d; border: 1px solid #2d7a2d; padding: 6px 16px; border-radius: 100px; margin-bottom: 28px; }
-    .tl-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #4caf50; flex-shrink: 0; }
-    .tl-badge span { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #4caf50; font-weight: 400; }
-    .tl-h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 500; line-height: 1.1; color: #e8f5e8; margin-bottom: 20px; letter-spacing: -0.02em; }
-    .tl-h1 em { font-style: italic; color: #4caf50; }
-    .tl-hero-sub { font-size: 14px; color: #5a8c5a; line-height: 1.8; margin-bottom: 40px; max-width: 440px; font-weight: 400; }
+    .tl-badge { display: inline-flex; align-items: center; gap: 8px; background: #1f1508; border: 1px solid #5c3e1a; padding: 6px 16px; border-radius: 100px; margin-bottom: 28px; }
+    .tl-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #8A7650; flex-shrink: 0; }
+    .tl-badge span { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8A7650; font-weight: 400; }
+    .tl-h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 500; line-height: 1.1; color: #33250f; margin-bottom: 20px; letter-spacing: -0.02em; }
+    .tl-h1 em { font-style: italic; color: #29200f; }
+    .tl-hero-sub { font-size: 14px; color: #6e5830; line-height: 1.8; margin-bottom: 40px; max-width: 440px; font-weight: 400; }
     .tl-hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-    .tl-btn-primary { background: #2d7a2d; color: #e8f5e8; border: none; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: background 0.2s; }
-    .tl-btn-primary:hover { background: #3a9e3a; }
-    .tl-btn-outline { background: transparent; color: #a8e6a8; border: 1px solid #2d7a2d; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: all 0.2s; }
-    .tl-btn-outline:hover { background: #0d1f0d; border-color: #4caf50; }
+    .tl-btn-primary { background: #8A7650; color: #f5f0e8; border: none; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: background 0.2s; }
+    .tl-btn-primary:hover { background: #a08c62; }
+    .tl-btn-outline { background: transparent; color: #c4aa80; border: 1px solid #8A7650; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: all 0.2s; }
+    .tl-btn-outline:hover { background: #1f1508; border-color: #8A7650; }
 
     /* HERO VISUAL */
     .tl-hero-visual { position: relative; }
-    .tl-qr-demo { background: #0d1f0d; border: 1px solid #1a3a1a; border-radius: 12px; padding: 32px; }
+    .tl-qr-demo { background: #1f1508; border: 1px solid #2e2416; border-radius: 12px; padding: 32px; }
     .tl-qr-top { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-    .tl-qr-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: #3a6b3a; }
+    .tl-qr-label { font-size: 10px; letter-spacing: 0.25em; text-transform: uppercase; color: #4a3820; }
     .tl-qr-status { margin-left: auto; display: flex; align-items: center; gap: 6px; }
-    .tl-qr-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #4caf50; }
-    .tl-qr-status span { font-size: 10px; color: #4caf50; letter-spacing: 0.1em; }
+    .tl-qr-status-dot { width: 6px; height: 6px; border-radius: 50%; background: #8A7650; }
+    .tl-qr-status span { font-size: 10px; color: #8A7650; letter-spacing: 0.1em; }
     .tl-qr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
-    .tl-qr-product { background: #111811; border: 1px solid #1a3a1a; border-radius: 8px; padding: 16px; cursor: pointer; transition: border-color 0.2s; }
-    .tl-qr-product:hover, .tl-qr-product.active { border-color: #2d7a2d; }
-    .tl-qr-product.active { background: #0d1f0d; }
-    .tl-product-icon { width: 36px; height: 36px; background: #1a3a1a; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
-    .tl-product-name { font-size: 12px; color: #a8e6a8; font-weight: 500; margin-bottom: 2px; }
-    .tl-product-id { font-size: 10px; color: #3a6b3a; letter-spacing: 0.1em; font-family: var(--font-mono, monospace); }
-    .tl-scan-info { background: #111811; border: 1px solid #1a3a1a; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
-    .tl-scan-left { font-size: 11px; color: #5a8c5a; }
-    .tl-scan-left strong { display: block; font-size: 13px; color: #a8e6a8; font-weight: 500; margin-top: 2px; }
-    .tl-scan-badge { background: #0d2a0d; border: 1px solid #2d7a2d; color: #4caf50; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; }
+    .tl-qr-product { background: #150e04; border: 1px solid #2e2416; border-radius: 8px; padding: 16px; cursor: pointer; transition: border-color 0.2s; }
+    .tl-qr-product:hover, .tl-qr-product.active { border-color: #8A7650; }
+    .tl-qr-product.active { background: #1f1508; }
+    .tl-product-icon { width: 36px; height: 36px; background: #2e2416; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .tl-product-name { font-size: 12px; color: #c4aa80; font-weight: 500; margin-bottom: 2px; }
+    .tl-product-id { font-size: 10px; color: #4a3820; letter-spacing: 0.1em; font-family: var(--font-mono, monospace); }
+    .tl-scan-info { background: #150e04; border: 1px solid #2e2416; border-radius: 8px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; }
+    .tl-scan-left { font-size: 11px; color: #6e5830; }
+    .tl-scan-left strong { display: block; font-size: 13px; color: #c4aa80; font-weight: 500; margin-top: 2px; }
+    .tl-scan-badge { background: #1f1508; border: 1px solid #8A7650; color: #8A7650; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; }
 
     /* STATS */
-    .tl-stats { background: #0d1a0d; border-top: 1px solid #1a3a1a; border-bottom: 1px solid #1a3a1a; padding: 40px 48px; }
+    .tl-stats { background: #8A7650; border-top: 1px solid #2e2416; border-bottom: 1px solid #2e2416; padding: 40px 48px; }
     .tl-stats-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
-    .tl-stat { text-align: center; padding: 0 24px; border-right: 1px solid #1a3a1a; }
+    .tl-stat { text-align: center; padding: 0 24px; border-right: 1px solid rgba(255,255,255,0.2); }
     .tl-stat:last-child { border-right: none; }
-    .tl-stat-num { font-size: 2.2rem; font-weight: 500; color: #4caf50; letter-spacing: -0.02em; display: block; }
-    .tl-stat-lbl { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #3a6b3a; margin-top: 4px; }
+    .tl-stat-num { font-size: 2.2rem; font-weight: 500; color: #fff; letter-spacing: -0.02em; display: block; }
+    .tl-stat-lbl { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-top: 4px; }
 
     /* SERVICES */
     .tl-services { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
-    .tl-section-tag { font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: #2d7a2d; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
-    .tl-section-tag::after { content: ''; flex: 0 0 40px; height: 1px; background: #1a3a1a; }
-    .tl-section-title { font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 500; color: #e8f5e8; margin-bottom: 12px; }
-    .tl-section-sub { font-size: 13px; color: #5a8c5a; max-width: 480px; line-height: 1.8; margin-bottom: 48px; }
+    .tl-section-tag { font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase; color: #8A7650; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+    .tl-section-tag::after { content: ''; flex: 0 0 40px; height: 1px; background: #2e2416; }
+    .tl-section-title { font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 500; color: #413016; margin-bottom: 12px; }
+    .tl-section-sub { font-size: 13px; color: #6e5830; max-width: 480px; line-height: 1.8; margin-bottom: 48px; }
     .tl-services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .tl-service-card { background: #0d1a0d; border: 1px solid #1a3a1a; border-radius: 10px; padding: 28px 24px; cursor: pointer; transition: border-color 0.25s, background 0.25s; position: relative; overflow: hidden; }
-    .tl-service-card:hover { border-color: #2d7a2d; background: #0f1f0f; }
-    .tl-service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #2d7a2d, transparent); opacity: 0; transition: opacity 0.25s; }
+    .tl-service-card { background: #8A7650; border: 1px solid #2e2416; border-radius: 10px; padding: 28px 24px; cursor: pointer; transition: border-color 0.25s, background 0.25s; position: relative; overflow: hidden; }
+    .tl-service-card:hover { border-color: #8A7650; background: #1a1108; }
+    .tl-service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #8A7650, transparent); opacity: 0; transition: opacity 0.25s; }
     .tl-service-card:hover::before { opacity: 1; }
-    .tl-service-icon { width: 44px; height: 44px; background: #1a3a1a; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
-    .tl-service-name { font-size: 14px; font-weight: 500; color: #a8e6a8; margin-bottom: 8px; }
-    .tl-service-desc { font-size: 12px; color: #3a6b3a; line-height: 1.7; }
+    .tl-service-icon { width: 44px; height: 44px; background: #2e2416; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 18px; }
+    .tl-service-name { font-size: 14px; font-weight: 500; color: #c4aa80; margin-bottom: 8px; }
+    .tl-service-desc { font-size: 12px; color: #4a3820; line-height: 1.7; }
 
     /* HOW IT WORKS */
-    .tl-how { background: #0d1a0d; padding: 80px 48px; border-top: 1px solid #1a3a1a; }
+    .tl-how { background: #8A7650; padding: 80px 48px; border-top: 1px solid #2e2416; }
     .tl-how-inner { max-width: 1200px; margin: 0 auto; }
     .tl-how-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 48px; position: relative; }
-    .tl-how-steps::before { content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px; background: #1a3a1a; z-index: 0; }
+    .tl-how-steps::before { content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px; background: rgba(255,255,255,0.2); z-index: 0; }
     .tl-step { text-align: center; padding: 0 16px; position: relative; z-index: 1; }
-    .tl-step-num { width: 56px; height: 56px; border-radius: 50%; border: 1px solid #2d7a2d; background: #0a0f0a; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 16px; font-weight: 500; color: #4caf50; }
-    .tl-step-title { font-size: 13px; font-weight: 500; color: #a8e6a8; margin-bottom: 8px; }
-    .tl-step-desc { font-size: 11px; color: #3a6b3a; line-height: 1.7; }
+    .tl-step-num { width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.5); background: #8A7650; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 16px; font-weight: 500; color: #fff; }
+    .tl-step-title { font-size: 13px; font-weight: 500; color: #fff; margin-bottom: 8px; }
+    .tl-step-desc { font-size: 11px; color: rgba(255,255,255,0.75); line-height: 1.7; }
 
     /* PRODUCT DEMO */
     .tl-demo { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
     .tl-demo-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-    .tl-demo-card { background: #0d1a0d; border: 1px solid #1a3a1a; border-radius: 12px; padding: 32px; }
+    .tl-demo-card { background: #8A7650; border: 1px solid #2e2416; border-radius: 12px; padding: 32px; }
     .tl-demo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-    .tl-demo-title { font-size: 13px; font-weight: 500; color: #a8e6a8; }
-    .tl-verified-badge { background: #0d2a0d; border: 1px solid #2d7a2d; color: #4caf50; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; }
-    .tl-vdot { width: 5px; height: 5px; border-radius: 50%; background: #4caf50; }
+    .tl-demo-title { font-size: 13px; font-weight: 500; color: #c4aa80; }
+    .tl-verified-badge { background: #1f1508; border: 1px solid #8A7650; color: #8A7650; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; }
+    .tl-vdot { width: 5px; height: 5px; border-radius: 50%; background: #8A7650; }
     .tl-product-info { margin-bottom: 20px; }
-    .tl-pi-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #1a3a1a; font-size: 12px; }
+    .tl-pi-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2e2416; font-size: 12px; }
     .tl-pi-row:last-child { border-bottom: none; }
-    .tl-pi-key { color: #3a6b3a; letter-spacing: 0.08em; }
-    .tl-pi-val { color: #a8e6a8; font-weight: 400; }
-    .tl-pi-val.green { color: #4caf50; }
-    .tl-trace { background: #0a0f0a; border: 1px solid #1a3a1a; border-radius: 8px; padding: 14px 16px; }
-    .tl-trace-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #2d7a2d; margin-bottom: 8px; }
-    .tl-trace-val { font-size: 11px; color: #3a6b3a; font-family: var(--font-mono, monospace); letter-spacing: 0.05em; }
+    .tl-pi-key { color: #4a3820; letter-spacing: 0.08em; }
+    .tl-pi-val { color: #c4aa80; font-weight: 400; }
+    .tl-pi-val.green { color: #8A7650; }
+    .tl-trace { background: #0f0a03; border: 1px solid #2e2416; border-radius: 8px; padding: 14px 16px; }
+    .tl-trace-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A7650; margin-bottom: 8px; }
+    .tl-trace-val { font-size: 11px; color: #4a3820; font-family: var(--font-mono, monospace); letter-spacing: 0.05em; }
 
     /* CTA */
-    .tl-cta { background: #0d2a0d; border-top: 1px solid #1a3a1a; border-bottom: 1px solid #1a3a1a; padding: 72px 48px; text-align: center; }
-    .tl-cta h2 { font-size: clamp(1.6rem, 2.8vw, 2.4rem); font-weight: 500; color: #e8f5e8; margin-bottom: 16px; }
-    .tl-cta p { font-size: 14px; color: #5a8c5a; margin-bottom: 36px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+    .tl-cta { background: #1f1508; border-top: 1px solid #2e2416; border-bottom: 1px solid #2e2416; padding: 72px 48px; text-align: center; }
+    .tl-cta h2 { font-size: clamp(1.6rem, 2.8vw, 2.4rem); font-weight: 500; color: #f5f0e8; margin-bottom: 16px; }
+    .tl-cta p { font-size: 14px; color: #6e5830; margin-bottom: 36px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
     .tl-cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
     /* FOOTER */
-    .tl-footer { background: #060c06; padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-    .tl-footer-brand { font-size: 14px; color: #3a6b3a; }
-    .tl-footer-brand strong { color: #4caf50; }
-    .tl-footer-copy { font-size: 10px; letter-spacing: 0.15em; color: #1a3a1a; }
+    .tl-footer { background: #080502; padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .tl-footer-brand { font-size: 14px; color: #4a3820; }
+    .tl-footer-brand strong { color: #8A7650; }
+    .tl-footer-copy { font-size: 10px; letter-spacing: 0.15em; color: #2e2416; }
     .tl-footer-links { display: flex; gap: 24px; }
-    .tl-footer-links a { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #2d6b2d; text-decoration: none; transition: color 0.2s; }
-    .tl-footer-links a:hover { color: #5a8c5a; }
+    .tl-footer-links a { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #4a3820; text-decoration: none; transition: color 0.2s; }
+    .tl-footer-links a:hover { color: #6e5830; }
 
     /* ===================== RESPONSIVE ===================== */
 
@@ -172,7 +168,7 @@
       /* STATS */
       .tl-stats { padding: 36px 24px; }
       .tl-stats-inner { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-      .tl-stat { border-right: none; border-bottom: 1px solid #1a3a1a; padding: 0 0 24px; }
+      .tl-stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.2); padding: 0 0 24px; }
       .tl-stat:nth-child(2n) { border-right: none; }
       .tl-stat:nth-last-child(-n+2) { border-bottom: none; padding-bottom: 0; }
 
@@ -259,8 +255,8 @@
     <div class="tl-logo">
       <div class="tl-logo-icon">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#4caf50" opacity="0.9"/>
-          <path d="M7 9.5l1.5 1.5 3-3" stroke="#0d1a0d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#8A7650" opacity="0.9"/>
+          <path d="M7 9.5l1.5 1.5 3-3" stroke="#0d0a05" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
       Trust Layer
@@ -326,32 +322,32 @@
     <p class="tl-section-sub">From unique QR generation to real-time scan tracking — Trust Layer gives you a complete anti-counterfeit system out of the box.</p>
     <div class="tl-services-grid">
       <div class="tl-service-card">
-        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="#4caf50" stroke-width="1.2"/><rect x="12" y="3" width="7" height="7" rx="1" stroke="#4caf50" stroke-width="1.2"/><rect x="3" y="12" width="7" height="7" rx="1" stroke="#4caf50" stroke-width="1.2"/><path d="M15 12v7M12 15h7" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="#8A7650" stroke-width="1.2"/><rect x="12" y="3" width="7" height="7" rx="1" stroke="#8A7650" stroke-width="1.2"/><rect x="3" y="12" width="7" height="7" rx="1" stroke="#8A7650" stroke-width="1.2"/><path d="M15 12v7M12 15h7" stroke="#8A7650" stroke-width="1.2" stroke-linecap="round"/></svg></div>
         <div class="tl-service-name">Unique QR Generation</div>
         <div class="tl-service-desc">Every product unit receives its own cryptographically unique QR code that cannot be duplicated or reused.</div>
       </div>
       <div class="tl-service-card">
-        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3L4 7v5c0 4 3.1 7.7 7 8.5 3.9-.8 7-4.5 7-8.5V7L11 3z" stroke="#4caf50" stroke-width="1.2"/><path d="M8 11.5l2 2 4-4" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3L4 7v5c0 4 3.1 7.7 7 8.5 3.9-.8 7-4.5 7-8.5V7L11 3z" stroke="#8A7650" stroke-width="1.2"/><path d="M8 11.5l2 2 4-4" stroke="#8A7650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="tl-service-name">Product Authentication</div>
         <div class="tl-service-desc">Consumers scan the QR code and instantly see verified product data — origin, batch, date, and more — proving authenticity.</div>
       </div>
       <div class="tl-service-card">
-        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="#4caf50" stroke-width="1.2"/><circle cx="11" cy="11" r="3" stroke="#4caf50" stroke-width="1.2"/><path d="M11 4v3M11 15v3M4 11h3M15 11h3" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="7" stroke="#8A7650" stroke-width="1.2"/><circle cx="11" cy="11" r="3" stroke="#8A7650" stroke-width="1.2"/><path d="M11 4v3M11 15v3M4 11h3M15 11h3" stroke="#8A7650" stroke-width="1.2" stroke-linecap="round"/></svg></div>
         <div class="tl-service-name">Scan Tracking</div>
         <div class="tl-service-desc">Know exactly when and where each product was scanned. First scan vs duplicate scan detection flags counterfeit attempts instantly.</div>
       </div>
       <div class="tl-service-card">
-        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 6h14M4 11h10M4 16h7" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 6h14M4 11h10M4 16h7" stroke="#8A7650" stroke-width="1.2" stroke-linecap="round"/></svg></div>
         <div class="tl-service-name">Personalised Product Data</div>
         <div class="tl-service-desc">Each QR holds a full data profile — batch number, price, origin, manufacturing date, expiry, and custom fields for your product.</div>
       </div>
       <div class="tl-service-card">
-        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 17l4-4 3 3 4-5 5 6" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 17l4-4 3 3 4-5 5 6" stroke="#8A7650" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="tl-service-name">Brand Analytics Dashboard</div>
         <div class="tl-service-desc">Real-time dashboard showing scan geography, counterfeit alerts, product performance, and scan history for every unit.</div>
       </div>
       <div class="tl-service-card">
-        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="5" width="16" height="12" rx="2" stroke="#4caf50" stroke-width="1.2"/><path d="M8 9h6M8 13h4" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
+        <div class="tl-service-icon"><svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="5" width="16" height="12" rx="2" stroke="#8A7650" stroke-width="1.2"/><path d="M8 9h6M8 13h4" stroke="#8A7650" stroke-width="1.2" stroke-linecap="round"/></svg></div>
         <div class="tl-service-name">Lab Report Integration</div>
         <div class="tl-service-desc">Attach verified lab analysis reports and certificates directly to the product QR — full transparency for your customers.</div>
       </div>
@@ -453,8 +449,8 @@
     if (n === 1) {
       document.getElementById('scanStatus').textContent = 'First scan · Authentic';
       document.getElementById('scanBadge').textContent = '✔ Verified';
-      document.getElementById('scanBadge').style.color = '#4caf50';
-      document.getElementById('scanBadge').style.borderColor = '#2d7a2d';
+      document.getElementById('scanBadge').style.color = '#8A7650';
+      document.getElementById('scanBadge').style.borderColor = '#8A7650';
     } else {
       document.getElementById('scanStatus').textContent = 'Second scan · Duplicate alert';
       document.getElementById('scanBadge').textContent = '⚠ Check product';
