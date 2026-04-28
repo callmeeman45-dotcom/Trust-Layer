@@ -42,6 +42,9 @@ const ProductSchema=new mongoose.Schema({
             brandname:{
                 type: String,
                 required:true,
-            }
+            },
+            qrCodeUrl: {
+               type: String,
+            },
         });
 module.exports=mongoose.model('Product',ProductSchema);      

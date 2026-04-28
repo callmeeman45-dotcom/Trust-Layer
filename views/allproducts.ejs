@@ -372,6 +372,7 @@
     <% } else { %>
       <div class="products-grid">
         <% for (let product of products) { %>
+          <form action="/admin/batch/<%=product._id %>/download-pdf" method="get">
           <div class="product-card">
 
             <div class="card-img-wrap">
@@ -410,12 +411,13 @@
                   <div class="count-dot"></div>
                   <span class="count-text"><%= product.count %> unit<%= product.count !== 1 ? 's' : '' %></span>
                 </div>
-                <a class="view-btn" href="/all-products/<%= product._id %>">View batch ↗</a>
+                <button class="view-btn" type="submit">Download Pdf↗</button>
               </div>
             </div>
 
           </div>
         <% } %>
+        </form>
       </div>
     <% } %>
 

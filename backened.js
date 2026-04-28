@@ -184,144 +184,318 @@ app.post("/logout",(req,res)=>{
 });
 
 
+// app.post("/add-product", upload.single("image"), async (req, res) => {
+//     try {
+//         if (!req.file) {
+//             return res.send("Image upload failed");
+//         }
+
+//         const brandname = req.user.brandname;
+//         const imageUrl = req.file.path;
+
+//         const {
+//             name,
+//             description,
+//             batchNumber,
+//             price,
+//             manufacturingDate,
+//             expiryDate,
+//             quantity
+//         } = req.body;
+
+//         const qty = parseInt(quantity);
+//         if (!qty || qty <= 0) {
+//             return res.send("Invalid quantity");
+//         }
+
+//         const qrFolder = path.join(__dirname, "public/qrcodes");
+//         if (!fs.existsSync(qrFolder)) {
+//             fs.mkdirSync(qrFolder, { recursive: true });
+//         }
+
+//         // Step 1 — create all products and generate QR images
+//         const qrPaths = [];
+
+//         for (let i = 0; i < qty; i++) {
+//             const product = new Product({
+//                 name,
+//                 description,
+//                 batchNumber,
+//                 price,
+//                 manufacturingDate,
+//                 image: imageUrl,
+//                 status: "Genuine",
+//                 expiryDate,
+//                 brandname
+//             });
+
+//             const verificationURL = `https://trust-layer-project.vercel.app/check/status/${product._id}`;
+//             const qrPath = path.join(qrFolder, `${product._id}.png`);
+
+//             await QRCode.toFile(qrPath, verificationURL);
+//             await product.save();
+
+//             qrPaths.push({ qrPath, productId: product._id.toString() });
+//         }
+
+//         // Step 2 — build PDF in memory and send to client
+//         const doc = new PDFDocument({
+//             size: 'A4',
+//             margin: 40
+//         });
+
+//         // Tell browser to download it as a file
+//         res.setHeader('Content-Type', 'application/pdf');
+//         res.setHeader('Content-Disposition', `attachment; filename="${batchNumber}_qrcodes.pdf"`);
+
+//         // Pipe PDF directly to response
+//         doc.pipe(res);
+
+//         // PDF Title page info
+//         doc
+//             .fontSize(22)
+//             .fillColor('#1a4d1a')
+//             .text('Trust Layer — QR Codes', { align: 'center' });
+
+//         doc
+//             .fontSize(11)
+//             .fillColor('#555')
+//             .text(`Product: ${name}`, { align: 'center' })
+//             .text(`Batch: ${batchNumber}`, { align: 'center' })
+//             .text(`Total Units: ${qty}`, { align: 'center' })
+//             .text(`Generated: ${new Date().toLocaleDateString()}`, { align: 'center' });
+
+//         doc.moveDown(1.5);
+//         doc.moveTo(40, doc.y).lineTo(550, doc.y).strokeColor('#cccccc').stroke();
+//         doc.moveDown(1);
+
+//         // Step 3 — place QR codes in a 3-column grid
+//         const qrSize  = 140;   // px size of each QR in the PDF
+//         const cols    = 3;
+//         const colGap  = 20;
+//         const rowGap  = 30;
+//         const startX  = 40;
+//         const startY  = doc.y;
+//         const pageH   = 750;   // safe height before new page
+
+//         for (let i = 0; i < qrPaths.length; i++) {
+//             const col   = i % cols;
+//             const row   = Math.floor(i / cols);
+//             const x     = startX + col * (qrSize + colGap);
+//             const y     = startY + row * (qrSize + rowGap + 20);
+
+//             // Add new page if content overflows
+//             if (y + qrSize + 40 > pageH && col === 0 && row !== 0) {
+//                 doc.addPage();
+//             }
+
+//             const drawY = col === 0 && row > 0 ? doc.y : y;
+//             const finalY = col === 0 && i > 0 ? doc.y : y;
+
+//             // Draw QR image
+//             doc.image(qrPaths[i].qrPath, x, finalY, {
+//                 width: qrSize,
+//                 height: qrSize
+//             });
+
+//             // Small label under each QR
+//             doc
+//                 .fontSize(7)
+//                 .fillColor('#333333')
+//                 .text(
+//                     `#${i + 1} · ${qrPaths[i].productId.slice(-8)}`,
+//                     x,
+//                     finalY + qrSize + 4,
+//                     { width: qrSize, align: 'center' }
+//                 );
+//         }
+
+//         doc.end();
+
+//     } catch (error) {
+//         console.log("ERROR:", error);
+//         res.status(500).send("Error occurred while generating products.");
+//     }
+// });
+
+
+// const QRCode    = require('qrcode');
+// const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier'); // npm i streamifier
+
+// Helper: upload a buffer to Cloudinary
+function uploadBufferToCloudinary(buffer, publicId) {
+    return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+            {
+                folder: 'trust-layer/qrcodes',
+                public_id: publicId,
+                format: 'png',
+                overwrite: true
+            },
+            (error, result) => {
+                if (error) reject(error);
+                else resolve(result.secure_url);
+            }
+        );
+        streamifier.createReadStream(buffer).pipe(uploadStream);
+    });
+}
+
 app.post("/add-product", upload.single("image"), async (req, res) => {
     try {
-        if (!req.file) {
-            return res.send("Image upload failed");
-        }
+        if (!req.file) return res.status(400).json({ error: "Image upload failed" });
 
         const brandname = req.user.brandname;
-        const imageUrl = req.file.path;
+        const imageUrl  = req.file.path;
 
-        const {
-            name,
-            description,
-            batchNumber,
-            price,
-            manufacturingDate,
-            expiryDate,
-            quantity
-        } = req.body;
+        const { name, description, batchNumber, price,
+                manufacturingDate, expiryDate, quantity } = req.body;
 
         const qty = parseInt(quantity);
-        if (!qty || qty <= 0) {
-            return res.send("Invalid quantity");
+        if (!qty || qty <= 0) return res.status(400).json({ error: "Invalid quantity" });
+
+        // Step 1 — Pre-generate all product _id's
+        const products = Array.from({ length: qty }, () => new Product({
+            name, description, batchNumber, price,
+            manufacturingDate, expiryDate,
+            image: imageUrl,
+            status: "Genuine",
+            brandname
+        }));
+
+        // Step 2 — For each product: generate QR buffer → upload to Cloudinary → save
+        // Run in batches of 5 to avoid overwhelming Cloudinary API
+        const BATCH_SIZE = 5;
+
+        for (let i = 0; i < products.length; i += BATCH_SIZE) {
+            const chunk = products.slice(i, i + BATCH_SIZE);
+
+            await Promise.all(chunk.map(async (product) => {
+                const verificationURL =
+                    `https://trust-layer-project.vercel.app/check/status/${product._id}`;
+
+                // Generate QR as buffer (no disk I/O)
+                const qrBuffer = await QRCode.toBuffer(verificationURL, {
+                    width: 400,
+                    margin: 2,
+                    color: { dark: '#1a4d1a', light: '#ffffff' }
+                });
+
+                // Upload to Cloudinary with product ID as filename
+                const qrCodeUrl = await uploadBufferToCloudinary(
+                    qrBuffer,
+                    `qr_${product._id}` // unique name per product
+                );
+
+                // Save product with QR URL
+                product.qrCodeUrl = qrCodeUrl;
+                await product.save();
+            }));
         }
 
-        const qrFolder = path.join(__dirname, "public/qrcodes");
-        if (!fs.existsSync(qrFolder)) {
-            fs.mkdirSync(qrFolder, { recursive: true });
-        }
-
-        // Step 1 — create all products and generate QR images
-        const qrPaths = [];
-
-        for (let i = 0; i < qty; i++) {
-            const product = new Product({
-                name,
-                description,
-                batchNumber,
-                price,
-                manufacturingDate,
-                image: imageUrl,
-                status: "Genuine",
-                expiryDate,
-                brandname
-            });
-
-            const verificationURL = `https://trust-layer-r1vk-git-main-eman7866s-projects.vercel.app//check/status/${product._id}`;
-            const qrPath = path.join(qrFolder, `${product._id}.png`);
-
-            await QRCode.toFile(qrPath, verificationURL);
-            await product.save();
-
-            qrPaths.push({ qrPath, productId: product._id.toString() });
-        }
-
-        // Step 2 — build PDF in memory and send to client
-        const doc = new PDFDocument({
-            size: 'A4',
-            margin: 40
+        // Step 3 — Respond with success + redirect info
+        res.json({
+            success: true,
+            message: `${qty} products created successfully`,
+            batchNumber,
+            viewUrl: `/admin/batch/${batchNumber}` // redirect admin here
         });
 
-        // Tell browser to download it as a file
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename="${batchNumber}_qrcodes.pdf"`);
+    } catch (error) {
+        console.error("ERROR in /add-product:", error);
+        if (!res.headersSent) {
+            res.status(500).json({ error: "Error generating products." });
+        }
+    }
+});
 
-        // Pipe PDF directly to response
+// GET /admin/batch/:batchNumber
+// GET /admin/batch/:batchNumber/download-pdf
+app.get("/admin/batch/:batchNumber/download-pdf", async (req, res) => {
+    try {
+        const products = await Product
+            .find({ batchNumber: req.params.batchNumber, brandname: req.user.brandname })
+            .select('_id qrCodeUrl name batchNumber')
+            .sort({ createdAt: 1 })
+            .lean();
+
+        if (!products.length) return res.status(404).json({ error: "Batch not found" });
+
+        // Fetch all QR images from Cloudinary in parallel
+        const qrBuffers = await Promise.all(
+            products.map(async (p) => {
+                const response = await fetch(p.qrCodeUrl);
+                const arrayBuffer = await response.arrayBuffer();
+                return {
+                    buffer: Buffer.from(arrayBuffer),
+                    productId: p._id.toString()
+                };
+            })
+        );
+
+        // Build PDF
+        const doc = new PDFDocument({ size: 'A4', margin: 40 });
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition',
+            `attachment; filename="${req.params.batchNumber}_qrcodes.pdf"`);
         doc.pipe(res);
 
-        // PDF Title page info
-        doc
-            .fontSize(22)
-            .fillColor('#1a4d1a')
-            .text('Trust Layer — QR Codes', { align: 'center' });
-
-        doc
-            .fontSize(11)
-            .fillColor('#555')
-            .text(`Product: ${name}`, { align: 'center' })
-            .text(`Batch: ${batchNumber}`, { align: 'center' })
-            .text(`Total Units: ${qty}`, { align: 'center' })
-            .text(`Generated: ${new Date().toLocaleDateString()}`, { align: 'center' });
-
+        // Title
+        doc.fontSize(20).fillColor('#1a4d1a')
+           .text('Trust Layer — QR Codes', { align: 'center' });
+        doc.fontSize(11).fillColor('#555')
+           .text(`Batch: ${req.params.batchNumber}`, { align: 'center' })
+           .text(`Total: ${products.length} units`, { align: 'center' })
+           .text(`Generated: ${new Date().toLocaleDateString()}`, { align: 'center' });
         doc.moveDown(1.5);
-        doc.moveTo(40, doc.y).lineTo(550, doc.y).strokeColor('#cccccc').stroke();
+        doc.moveTo(40, doc.y).lineTo(550, doc.y).strokeColor('#ccc').stroke();
         doc.moveDown(1);
 
-        // Step 3 — place QR codes in a 3-column grid
-        const qrSize  = 140;   // px size of each QR in the PDF
-        const cols    = 3;
-        const colGap  = 20;
-        const rowGap  = 30;
-        const startX  = 40;
-        const startY  = doc.y;
-        const pageH   = 750;   // safe height before new page
+        // Grid layout
+        const QR_SIZE  = 130;
+        const COLS     = 3;
+        const COL_GAP  = 25;
+        const ROW_GAP  = 40;
+        const MARGIN   = 40;
+        const CELL_W   = (595 - MARGIN * 2 - COL_GAP * (COLS - 1)) / COLS;
+        const SAFE_H   = 800;
 
-        for (let i = 0; i < qrPaths.length; i++) {
-            const col   = i % cols;
-            const row   = Math.floor(i / cols);
-            const x     = startX + col * (qrSize + colGap);
-            const y     = startY + row * (qrSize + rowGap + 20);
+        let gridStartY = doc.y;
 
-            // Add new page if content overflows
-            if (y + qrSize + 40 > pageH && col === 0 && row !== 0) {
-                doc.addPage();
+        for (let i = 0; i < qrBuffers.length; i++) {
+            const col = i % COLS;
+
+            if (col === 0 && i > 0) {
+                const projectedBottom = gridStartY + QR_SIZE + ROW_GAP;
+                if (projectedBottom > SAFE_H) {
+                    doc.addPage();
+                    gridStartY = MARGIN;
+                } else {
+                    gridStartY += QR_SIZE + ROW_GAP;
+                }
             }
 
-            const drawY = col === 0 && row > 0 ? doc.y : y;
-            const finalY = col === 0 && i > 0 ? doc.y : y;
+            const x = MARGIN + col * (CELL_W + COL_GAP);
+            const y = gridStartY;
 
-            // Draw QR image
-            doc.image(qrPaths[i].qrPath, x, finalY, {
-                width: qrSize,
-                height: qrSize
-            });
-
-            // Small label under each QR
-            doc
-                .fontSize(7)
-                .fillColor('#333333')
-                .text(
-                    `#${i + 1} · ${qrPaths[i].productId.slice(-8)}`,
-                    x,
-                    finalY + qrSize + 4,
-                    { width: qrSize, align: 'center' }
-                );
+            doc.image(qrBuffers[i].buffer, x, y, { width: QR_SIZE, height: QR_SIZE });
+            doc.fontSize(7).fillColor('#333')
+               .text(
+                   `#${i + 1} · ${qrBuffers[i].productId.slice(-8)}`,
+                   x, y + QR_SIZE + 4,
+                   { width: CELL_W, align: 'center' }
+               );
         }
 
         doc.end();
 
-    } catch (error) {
-        console.log("ERROR:", error);
-        res.status(500).send("Error occurred while generating products.");
+    } catch (err) {
+        console.error("PDF generation error:", err);
+        if (!res.headersSent) res.status(500).json({ error: err.message });
     }
 });
-
-
-
-
-
 // app.get("/api/scan-stats", async (req, res) => {
    
 //     // const db = client.db("HoneyBrand");
