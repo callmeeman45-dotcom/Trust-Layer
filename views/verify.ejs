@@ -12,23 +12,23 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root{
-  --ink:#060c06;
-  --surface:#0a0f0a;
-  --card:#0d1a0d;
-  --card2:#111811;
-  --border:#1a3a1a;
-  --border2:#2d7a2d;
-  --g50:#e8f5e8;
-  --g100:#c8e6c8;
-  --g200:#a5d6a7;
-  --g400:#66bb6a;
-  --g500:#4caf50;
-  --g600:#2d7a2d;
-  --g700:#1a4d1a;
-  --text-primary:#f0faf0;
-  --text-secondary:#a8d8a8;
-  --text-muted:#6aaa6a;
-  --text-dim:#3a6b3a;
+  --ink:#fdf8f2;
+  --surface:#f5ede0;
+  --card:#fdf6ec;
+  --card2:#f9efe2;
+  --border:#e2cba8;
+  --border2:#6e5830;
+  --g50:#3a2e18;
+  --g100:#4d3c20;
+  --g200:#6e5830;
+  --g400:#8a6e3a;
+  --g500:#6e5830;
+  --g600:#5a4525;
+  --g700:#3a2e18;
+  --text-primary:#2a1f0e;
+  --text-secondary:#5a4525;
+  --text-muted:#8a6e3a;
+  --text-dim:#b89a6a;
 }
 
 html{scroll-behavior:smooth}
@@ -45,7 +45,7 @@ body{
   position:fixed;top:0;left:0;right:0;z-index:500;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 48px;height:68px;
-  background:rgba(6,12,6,0.97);
+  background:rgba(253,248,242,0.97);
   backdrop-filter:blur(20px);
   border-bottom:1px solid var(--border);
 }
@@ -55,7 +55,7 @@ body{
   letter-spacing:.03em;text-decoration:none;
 }
 .nav-brand-icon{
-  width:32px;height:32px;background:var(--g700);
+  width:32px;height:32px;background:var(--card2);
   border:1px solid var(--border2);
   border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
@@ -67,7 +67,7 @@ body{
 .nav-links a:hover{color:var(--text-secondary)}
 .nav-cta{
   font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;
-  padding:9px 20px;background:var(--g600);color:var(--g50);
+  padding:9px 20px;background:var(--g600);color:#fdf8f2;
   border:none;cursor:pointer;transition:background .2s;
   font-family:'Outfit',sans-serif;border-radius:4px;
 }
@@ -90,7 +90,7 @@ body{
 .verified-chip{
   display:inline-flex;align-items:center;gap:8px;
   border:1px solid var(--border2);
-  background:rgba(45,122,45,.12);
+  background:rgba(110,88,48,.10);
   padding:7px 18px;border-radius:100px;
   margin-bottom:36px;align-self:flex-start;
 }
@@ -99,8 +99,8 @@ body{
   animation:pulse 2s ease infinite;
 }
 @keyframes pulse{
-  0%,100%{box-shadow:0 0 0 0 rgba(76,175,80,.4)}
-  50%{box-shadow:0 0 0 6px rgba(76,175,80,0)}
+  0%,100%{box-shadow:0 0 0 0 rgba(110,88,48,.4)}
+  50%{box-shadow:0 0 0 6px rgba(110,88,48,0)}
 }
 .verified-chip span{
   font-size:10px;letter-spacing:.3em;text-transform:uppercase;
@@ -125,8 +125,8 @@ body{
 
 .scan-pill{
   display:inline-flex;align-items:center;gap:10px;
-  background:rgba(45,122,45,.1);
-  border:1px solid rgba(45,122,45,.35);
+  background:rgba(110,88,48,.08);
+  border:1px solid rgba(110,88,48,.30);
   padding:12px 20px;border-radius:6px;
 }
 .scan-pill-dot{
@@ -155,17 +155,17 @@ body{
 .zoom-container img{
   width:100%;height:100%;object-fit:cover;
   transition:transform .1s ease;
-  filter:brightness(.85) saturate(.95);
+  filter:brightness(.95) saturate(.95);
 }
 .zoom-lens{
   position:absolute;width:180px;height:180px;border-radius:50%;
-  border:2px solid rgba(76,175,80,.6);
-  box-shadow:0 10px 30px rgba(0,0,0,.4);
+  border:2px solid rgba(110,88,48,.6);
+  box-shadow:0 10px 30px rgba(0,0,0,.15);
   pointer-events:none;opacity:0;
 }
 .zoom-container::after{
   content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to top,rgba(6,12,6,.65) 0%,transparent 55%);
+  background:linear-gradient(to top,rgba(245,237,224,.65) 0%,transparent 55%);
 }
 
 .img-stamp{position:absolute;bottom:32px;left:32px;z-index:10;}
@@ -174,7 +174,7 @@ body{
   display:flex;align-items:center;gap:9px;
 }
 .stamp-box span{
-  font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--g50);font-weight:500;
+  font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#fdf8f2;font-weight:500;
 }
 .stamp-check{
   width:17px;height:17px;border:1px solid rgba(255,255,255,.5);
@@ -251,14 +251,14 @@ body{
 /* Back button */
 .btn-back{
   display:inline-flex;align-items:center;gap:10px;
-  background:var(--g600);color:var(--g50);
+  background:var(--g600);color:#fdf8f2;
   padding:13px 28px;border:none;cursor:pointer;
   font-family:'Outfit',sans-serif;font-size:11px;
   letter-spacing:.22em;text-transform:uppercase;font-weight:500;
   text-decoration:none;transition:background .2s;
   margin-top:12px;border-radius:4px;
 }
-.btn-back:hover{background:var(--g500);color:var(--g50)}
+.btn-back:hover{background:var(--g500);color:#fdf8f2}
 
 /* Side col */
 .side-col{display:flex;flex-direction:column;gap:20px}
@@ -342,7 +342,7 @@ body{
 .pdf-modal{
   display:none;position:fixed;z-index:9999;
   left:0;top:0;width:100%;height:100%;
-  background:rgba(0,0,0,.75);
+  background:rgba(0,0,0,.45);
 }
 .pdf-container{
   position:relative;width:80%;height:85%;
@@ -368,7 +368,7 @@ body{
 }
 .lab-card:hover{border-color:var(--border2);}
 .lab-icon{
-  width:44px;height:44px;background:rgba(45,122,45,.15);border:1px solid var(--border);
+  width:44px;height:44px;background:rgba(110,88,48,.12);border:1px solid var(--border);
   border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
 }
 .lab-ttl{font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:3px;}
@@ -395,8 +395,8 @@ body{
   <a class="nav-brand" href="/">
     <div class="nav-brand-icon">
       <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#4caf50" opacity=".9"/>
-        <path d="M7 9.5l1.5 1.5 3-3" stroke="#0d1a0d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#6e5830" opacity=".9"/>
+        <path d="M7 9.5l1.5 1.5 3-3" stroke="#fdf8f2" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </div>
     Trust Layer
@@ -505,7 +505,7 @@ body{
       <div class="hash-bottom">
         <span class="hash-ts">Verified · <%= new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}) %></span>
         <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-          <path d="M2 7h14M2 11h14M7 2l-1.5 14M12.5 2L11 16" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M2 7h14M2 11h14M7 2l-1.5 14M12.5 2L11 16" stroke="#b89a6a" stroke-width="1.2" stroke-linecap="round"/>
         </svg>
       </div>
     </div>
@@ -550,8 +550,8 @@ body{
     <!-- <a href="#" class="lab-card" onclick="openPDF(); return false;">
       <div class="lab-icon">
         <svg width="20" height="20" viewBox="0 0 22 22" fill="none"> -->
-          <!-- <rect x="5" y="2" width="12" height="18" rx="1" stroke="#4caf50" stroke-width="1.2"/>
-          <path d="M8 7h6M8 10.5h6M8 14h4" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/>
+          <!-- <rect x="5" y="2" width="12" height="18" rx="1" stroke="#6e5830" stroke-width="1.2"/>
+          <path d="M8 7h6M8 10.5h6M8 14h4" stroke="#6e5830" stroke-width="1.2" stroke-linecap="round"/>
         </svg>
       </div>
       <div>

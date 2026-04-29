@@ -1,288 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard — Trust Layer</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, sans-serif; background: #0a0f0a; color: #e8f5e8; min-height: 100vh; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Scan Dashboard</title>
 
-    /* NAV */
-    .nav {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 40px; height: 64px;
-      background: #060c06; border-bottom: 1px solid #1a3a1a;
-      position: sticky; top: 0; z-index: 100;
-    }
-    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-icon {
-      width: 32px; height: 32px; background: #1a4d1a;
-      border: 1px solid #2d7a2d; border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .nav-name { font-size: 15px; font-weight: 500; color: #a8e6a8; letter-spacing: 0.03em; }
-    .nav-sep { font-size: 11px; color: #1a4d1a; margin: 0 4px; }
-    .nav-sub { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #3a6b3a; }
-    .nav-links { display: flex; align-items: center; gap: 8px; }
-    .nav-link {
-      font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
-      color: #3a6b3a; text-decoration: none; padding: 7px 14px;
-      border-radius: 6px; transition: all 0.2s;
-    }
-    .nav-link:hover { color: #a8e6a8; background: #0d1a0d; }
-    .nav-badge {
-      background: #0d2a0d; border: 1px solid #2d7a2d; color: #4caf50;
-      font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-      padding: 5px 14px; border-radius: 100px;
-    }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    /* PAGE HEADER */
-    .page-header {
-      background: #060c06; border-bottom: 1px solid #1a3a1a;
-      padding: 40px 40px 100px;
-    }
-    .page-header-inner { max-width: 1200px; margin: 0 auto; }
-    .page-tag {
-      font-size: 9px; letter-spacing: 0.4em; text-transform: uppercase;
-      color: #2d7a2d; margin-bottom: 10px;
-      display: flex; align-items: center; gap: 8px;
-    }
-    .page-tag::after { content: ''; flex: 0 0 32px; height: 1px; background: #1a3a1a; }
-    .page-header h1 { font-size: 26px; font-weight: 500; color: #e8f5e8; margin-bottom: 4px; letter-spacing: -0.02em; }
-    .page-header p { font-size: 13px; color: #3a6b3a; line-height: 1.6; }
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-    /* STAT CARDS */
-    .stats-row {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 14px; margin-top: 32px;
-    }
-    .stat-card {
-      background: #0d1a0d; border: 1px solid #1a3a1a; border-radius: 10px;
-      padding: 20px 22px;
-    }
-    .stat-num { font-size: 28px; font-weight: 500; color: #e8f5e8; line-height: 1; margin-bottom: 6px; letter-spacing: -0.02em; }
-    .stat-label {
-      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
-      color: #3a6b3a; display: flex; align-items: center; gap: 6px;
-    }
-    .stat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+body {
+  min-height: 100vh;
+  background: #f5f2ec;
+}
 
-    /* MAIN CONTENT */
-    .main-content {
-      max-width: 1200px; margin: -52px auto 60px;
-      padding: 0 40px; position: relative; z-index: 1;
-    }
+/* ── NAVBAR ── */
+.navbar {
+  background-color: #6e5830 !important;
+  background-image: linear-gradient(135deg, #6e5830, #6e5830);
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+  padding: 0;
+}
 
-    /* TABLE CARD */
-    .table-card {
-      background: #0d1a0d; border: 1px solid #1a3a1a; border-radius: 12px;
-      overflow: hidden;
-      animation: riseUp 0.5s cubic-bezier(0.22,1,0.36,1) 0.1s both;
-    }
-    @keyframes riseUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  width: 100%;
+}
 
-    .table-card-header {
-      padding: 22px 28px; border-bottom: 1px solid #1a3a1a;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 12px;
-    }
-    .table-card-header h2 { font-size: 15px; font-weight: 500; color: #e8f5e8; margin-bottom: 2px; }
-    .table-card-header p { font-size: 11px; color: #3a6b3a; }
+.nav-brand {
+  font-size: 22px;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
 
-    /* SEARCH */
-    .search-wrap { position: relative; }
-    .search-wrap input {
-      padding: 9px 14px 9px 36px;
-      background: #111811; border: 1px solid #1a3a1a; border-radius: 7px;
-      font-size: 12px; color: #e8f5e8; font-family: inherit;
-      width: 220px; outline: none; transition: border-color 0.2s;
-    }
-    .search-wrap input::placeholder { color: #2d4d2d; }
-    .search-wrap input:focus { border-color: #2d7a2d; }
-    .search-wrap svg { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+.nav-subtitle {
+  font-size: 10px;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-left: 14px;
+  padding-left: 14px;
+  border-left: 1px solid rgba(255,255,255,0.25);
+}
 
-    /* TABLE */
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    thead tr { background: #111811; border-bottom: 1px solid #b2b9b2; }
-    thead th {
-      padding: 13px 20px; font-size: 9px; font-weight: 500;
-      letter-spacing: 0.2em; text-transform: uppercase; color: #2d7a2d;
-      white-space: nowrap; text-align: left;
-    }
-    tbody tr { border-bottom: 1px solid #111811; transition: background 0.15s; }
-    tbody tr:last-child { border-bottom: none; }
-    tbody tr:hover { background: #0f1f0f; }
-    tbody td { padding: 14px 20px; font-size: 13px; color: #a8e6a8; vertical-align: middle; }
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
 
-    /* ID PILL */
-    .id-pill {
-      background: #0d2a0d; border: 1px solid #1a4d1a; color: #4caf50;
-      font-size: 10px; font-weight: 500; padding: 4px 10px;
-      border-radius: 100px; white-space: nowrap;
-      letter-spacing: 0.06em; font-family: monospace;
-    }
+.nav-link-item {
+  font-size: 12px;
+  color: rgba(255,255,255,0.8);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
 
-    /* BADGES */
-    .badge-status {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 500;
-      padding: 5px 12px; border-radius: 100px; white-space: nowrap;
-      letter-spacing: 0.05em;
-    }
-    .badge-status::before {
-      content: ''; width: 5px; height: 5px;
-      border-radius: 50%; flex-shrink: 0;
-    }
-    .badge-genuine {
-      background: #0d2a0d; border: 1px solid #2d7a2d; color: #4caf50;
-    }
-    .badge-genuine::before { background: #4caf50; }
-    .badge-counterfeit {
-      background: #1a0d0d; border: 1px solid #5a1a1a; color: #e05a5a;
-    }
-    .badge-counterfeit::before { background: #e05a5a; }
-    .badge-unknown {
-      background: #1a1a0d; border: 1px solid #4d4d1a; color: #d4a017;
-    }
-    .badge-unknown::before { background: #d4a017; }
+.nav-link-item:hover { color: white; }
 
-    .meta-text { font-size: 12px; color: #cfe4cf; }
+.nav-badge {
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  border-radius: 100px;
+}
 
-    /* EMPTY STATE */
-    .empty-state { text-align: center; padding: 60px 20px; }
-    .empty-icon {
-      width: 56px; height: 56px; background: #111811;
-      border: 1px solid #1a3a1a; border-radius: 14px;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 14px;
-    }
-    .empty-state p { font-size: 13px; color: #3a6b3a; }
+/* ── PAGE HEADER ── */
+.page-header {
+  background: #6e5830;
+  background-image: linear-gradient(135deg, #6e5830, #6e5830, #6e5830);
+  padding: 48px 40px 90px;
+  position: relative;
+  overflow: hidden;
+}
 
-    /* TABLE FOOTER */
-    .table-footer {
-      padding: 16px 28px; border-top: 1px solid #1a3a1a;
-      display: flex; align-items: center; justify-content: space-between;
-      flex-wrap: wrap; gap: 10px;
-    }
-    .table-footer p { font-size: 12px; color: #3a6b3a; }
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.07), transparent 55%),
+              radial-gradient(ellipse at 80% 20%, rgba(255,255,255,0.04), transparent 50%);
+  pointer-events: none;
+}
 
-    .btn-export {
-      background: #2d7a2d; color: #e8f5e8;
-      font-size: 11px; font-weight: 500; font-family: inherit;
-      padding: 8px 18px; border: none; border-radius: 6px;
-      cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;
-      display: inline-flex; align-items: center; gap: 7px;
-      transition: background 0.2s;
-    }
-    .btn-export:hover { background: #3a9e3a; }
+.page-header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
 
-    .btn-analytics {
-      background: transparent; color: #4caf50;
-      font-size: 11px; font-weight: 500; font-family: inherit;
-      padding: 8px 18px; border: 1px solid #2d7a2d; border-radius: 6px;
-      cursor: pointer; letter-spacing: 0.1em; text-transform: uppercase;
-      display: inline-flex; align-items: center; gap: 7px;
-      transition: all 0.2s;
-    }
-    .btn-analytics:hover { background: #0d2a0d; }
+.page-header h1 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: white;
+  margin-bottom: 6px;
+}
 
-    /* FOOTER */
-    .site-footer {
-      background: #060c06; border-top: 1px solid #1a3a1a;
-      text-align: center; padding: 22px;
-      font-size: 11px; color: #3a6b3a; letter-spacing: 0.08em;
-      margin-top: 40px;
-    }
-    .site-footer strong { color: #4caf50; }
+.page-header p {
+  font-size: 13px;
+  color: rgba(255,255,255,0.7);
+}
 
-    /* RESPONSIVE */
-    @media (max-width: 900px) {
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-      .page-header { padding: 32px 20px 90px; }
-      .main-content { padding: 0 16px; }
-      .nav { padding: 0 20px; }
-    }
-    @media (max-width: 560px) {
-      .stats-row { grid-template-columns: 1fr 1fr; }
-      .table-card-header { flex-direction: column; align-items: flex-start; }
-      .search-wrap input { width: 100%; }
-      .search-wrap { width: 100%; }
-    }
-  </style>
+/* STAT CARDS row */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.stat-card {
+  background: rgba(255,255,255,0.14);
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 14px;
+  padding: 20px 22px;
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+.stat-card .stat-num {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.stat-card .stat-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.65);
+}
+
+.stat-card .stat-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+/* ── MAIN CONTENT ── */
+.main-content {
+  max-width: 1200px;
+  margin: -48px auto 60px;
+  padding: 0 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* TABLE CARD */
+.table-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(138,118,80,0.15), 0 4px 20px rgba(0,0,0,0.07);
+  overflow: hidden;
+  animation: riseUp 0.6s cubic-bezier(0.22,1,0.36,1) 0.2s both;
+}
+
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Table card header */
+.table-card-header {
+  padding: 24px 32px;
+  border-bottom: 1px solid #f0ece4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.table-card-header h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #3a2e1e;
+  margin: 0;
+}
+
+.table-card-header p {
+  font-size: 12px;
+  color: #aaa;
+  margin: 2px 0 0;
+}
+
+/* Search input */
+.search-wrap {
+  position: relative;
+}
+
+.search-wrap input {
+  padding: 9px 14px 9px 38px;
+  border: 1.5px solid #e0dbd0;
+  border-radius: 10px;
+  font-size: 12px;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  background: #fdfcf9;
+  width: 220px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.search-wrap input:focus {
+  border-color: #6e5830;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(138,118,80,0.1);
+}
+
+.search-wrap svg {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* TABLE */
+.table-wrap { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead tr {
+  background: #f9f7f2;
+  border-bottom: 2px solid #f0ece4;
+}
+
+thead th {
+  padding: 14px 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #6e5830;
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid #f5f2ec;
+  transition: background 0.2s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+
+tbody tr:hover { background: #fdfcf9; }
+
+tbody td {
+  padding: 15px 20px;
+  font-size: 13px;
+  color: #444;
+  vertical-align: middle;
+}
+
+/* Product ID pill */
+.id-pill {
+  background: #f0ece4;
+  color: #6e5830;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 100px;
+  white-space: nowrap;
+  letter-spacing: 0.04em;
+}
+
+/* Status badges */
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.badge-status::before {
+  content: '';
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badge-genuine {
+  background: #eafaf4;
+  color: #019875;
+  border: 1px solid #b7e8d8;
+}
+
+.badge-genuine::before { background: #019875; box-shadow: 0 0 5px #019875; }
+
+.badge-counterfeit {
+  background: #fff5f5;
+  color: #c0392b;
+  border: 1px solid #f5c6c6;
+}
+
+.badge-counterfeit::before { background: #e74c3c; }
+
+.badge-unknown {
+  background: #fdf9f0;
+  color: #6e5830;
+  border: 1px solid #e8e0d0;
+}
+
+.badge-unknown::before { background: #6e5830; }
+
+/* IP & location text */
+.meta-text {
+  font-size: 12px;
+  color: #888;
+  font-weight: 400;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state p {
+  font-size: 14px;
+  color: #bbb;
+  margin-top: 12px;
+}
+
+/* TABLE FOOTER */
+.table-footer {
+  padding: 16px 32px;
+  border-top: 1px solid #f0ece4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.table-footer p {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.btn-export {
+  background: #6e5830;
+  background-image: linear-gradient(135deg, #9d8760, #6e5830);
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  padding: 8px 20px;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-export:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(138,118,80,0.3);
+}
+
+/* FOOTER */
+.site-footer {
+  background: #6e5830;
+  color: rgba(255,255,255,0.65);
+  text-align: center;
+  padding: 20px;
+  font-size: 12px;
+}
+
+.site-footer strong { color: white; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .page-header { padding: 36px 20px 80px; }
+  .main-content { padding: 0 16px; }
+  .nav-inner { padding: 16px 20px; }
+  .nav-subtitle { display: none; }
+  .search-wrap input { width: 160px; }
+}
+
+@media (max-width: 560px) {
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .table-card-header { flex-direction: column; align-items: flex-start; }
+  .search-wrap input { width: 100%; }
+  .search-wrap { width: 100%; }
+}
+</style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-  <a class="nav-brand" href="/">
-    <div class="nav-icon">
-      <svg width="17" height="17" viewBox="0 0 18 18" fill="none">
-        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#4caf50" opacity="0.9"/>
-        <path d="M7 9.5l1.5 1.5 3-3" stroke="#0d1a0d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+<!-- NAVBAR -->
+ 
+<nav class="navbar">
+  <div class="nav-inner">
+    <div style="display:flex;align-items:center;">
+      <a href="/" class="nav-brand">Trust layer</a>
+      <span class="nav-subtitle">Admin Portal</span>
     </div>
-    <span class="nav-name">Trust Layer</span>
-    <span class="nav-sep">·</span>
-    <span class="nav-sub">Admin Portal</span>
-  </a>
-  <div class="nav-links">
-    <a class="nav-link" href="/">← Home</a>
-    <a class="nav-link" href="/all-products">All Products</a>
-    <a class="nav-link" href="/add-product">Add Product</a>
-    <span class="nav-badge">Admin</span>
+    <div class="nav-right">
+      <a href="/" class="nav-link-item">← Back to space</a>
+      <a href="/add-product" class="nav-link-item">Add Product</a>
+      <a href="/all-products" class="nav-link-item">All Products</a>
+      
+    </div>
   </div>
 </nav>
 
 <!-- PAGE HEADER -->
 <div class="page-header">
   <div class="page-header-inner">
-    <div class="page-tag">Admin dashboard</div>
-    <h1>Scan records</h1>
-    <p>Monitor all product verification events and authentication records in real time.</p>
+    <h1>Admin Scan Dashboard</h1>
+    <p>Monitor all product scan activity and authentication records in real time.</p>
 
+    <!-- STATS -->
     <div class="stats-row">
 
       <div class="stat-card">
-        <div class="stat-num"><%= records.length %></div>
-        <div class="stat-label">
-          <span class="stat-dot" style="background:#5a8c5a"></span>
-          Total scans
+        <div class="stat-num">
+          <!-- Count all records -->
+          <%= records.length %>
         </div>
+        <div class="stat-label">Total Scans</div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-num" style="color:#4caf50;">
+        <div class="stat-num" style="color:#a8e6cf;">
           <%= records.filter(r => r.productstatus === 'Genuine').length %>
         </div>
-        <div class="stat-label">
-          <span class="stat-dot" style="background:#4caf50"></span>
-          Genuine
-        </div>
+        <div class="stat-label"><span class="stat-dot" style="background:#a8e6cf;"></span>Genuine</div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-num" style="color:#e05a5a;">
+        <div class="stat-num" style="color:#f5a5a5;">
           <%= records.filter(r => r.productstatus === 'Counterfeit').length %>
         </div>
-        <div class="stat-label">
-          <span class="stat-dot" style="background:#e05a5a"></span>
-          Counterfeit
-        </div>
+        <div class="stat-label"><span class="stat-dot" style="background:#f5a5a5;"></span>Counterfeit</div>
       </div>
 
       <div class="stat-card">
-        <div class="stat-num" style="color:#d4a017;">
+        <div class="stat-num" style="color:rgba(255,255,255,0.6);">
           <%= records.filter(r => r.productstatus !== 'Genuine' && r.productstatus !== 'Counterfeit').length %>
         </div>
-        <div class="stat-label">
-          <span class="stat-dot" style="background:#d4a017"></span>
-          Unknown
-        </div>
+        <div class="stat-label">Unknown</div>
       </div>
 
     </div>
@@ -293,57 +477,46 @@
 <div class="main-content">
   <div class="table-card">
 
+    <!-- Card Header -->
     <div class="table-card-header">
       <div>
-        <h2>All scan records</h2>
-        <p>Every product verification event logged by the system</p>
+        <h2>Scan Records</h2>
+        <p>All product verification events</p>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-        <div class="search-wrap">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-            <circle cx="7" cy="7" r="4.5" stroke="#3a6b3a" stroke-width="1.2"/>
-            <path d="M10.5 10.5L14 14" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/>
-          </svg>
-          <input type="text" id="searchInput" placeholder="Search records…" oninput="filterTable()">
-        </div>
-        <button class="btn-analytics" onclick="exportCSV()">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-            <path d="M2 11l3-3 2.5 2.5 3.5-5L14 11" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Analytics
-        </button>
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <circle cx="11" cy="11" r="8" stroke="#aaa" stroke-width="2"/>
+          <path d="M21 21l-4.35-4.35" stroke="#aaa" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="Search records…" oninput="filterTable()">
       </div>
     </div>
 
-    <!-- TABLE -->
+    <!-- Table -->
     <div class="table-wrap">
       <table id="recordsTable">
         <thead>
           <tr>
             <th>Product ID</th>
-            <th>Scan date</th>
+            <th>Scan Date</th>
             <th>Location</th>
-            <th>IP address</th>
+            <th>IP Address</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-
           <% if(records.length === 0) { %>
           <tr>
             <td colspan="5">
               <div class="empty-state">
-                <div class="empty-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="#1a4d1a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </div>
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none">
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="#ddd" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <p>No scan records found yet.</p>
               </div>
             </td>
           </tr>
           <% } %>
-
           <% for(let record of records) { %>
           <tr>
             <td><span class="id-pill"><%= record.productId %></span></td>
@@ -351,9 +524,9 @@
             <td class="meta-text"><%= record.location %></td>
             <td class="meta-text"><%= record.ipAddress %></td>
             <td>
-              <% if(record.productstatus === 'Genuine') { %>
+              <% if(record.productstatus === 'not used') { %>
                 <span class="badge-status badge-genuine">Genuine</span>
-              <% } else if(record.productstatus === 'Counterfeit') { %>
+              <% } else if(record.productstatus === 'used') { %>
                 <span class="badge-status badge-counterfeit">Counterfeit</span>
               <% } else { %>
                 <span class="badge-status badge-unknown"><%= record.productstatus %></span>
@@ -361,18 +534,16 @@
             </td>
           </tr>
           <% } %>
-
         </tbody>
       </table>
     </div>
 
-    <!-- CARD FOOTER -->
+    <!-- Card Footer -->
     <div class="table-footer">
       <p id="recordCount">Showing <%= records.length %> record<%= records.length !== 1 ? 's' : '' %></p>
-      <button class="btn-export" onclick="downloadCSV()">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
-          <path d="M8 2v9M5 8l3 3 3-3" stroke="#e8f5e8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M2 13h12" stroke="#e8f5e8" stroke-width="1.3" stroke-linecap="round"/>
+      <button class="btn-export" onclick="exportCSV()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
         Export CSV
       </button>
@@ -381,12 +552,14 @@
   </div>
 </div>
 
-<!-- FOOTER -->
-<footer class="site-footer">
-  © 2026 <strong>Trust Layer</strong> · Admin Portal · All rights reserved
-</footer>
+<!-- SITE FOOTER -->
+<div class="site-footer">
+  © 2026 <strong>Trust layer</strong> · Admin Portal · All rights reserved
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+// Live search filter
 function filterTable() {
   const query = document.getElementById('searchInput').value.toLowerCase();
   const rows = document.querySelectorAll('#recordsTable tbody tr');
@@ -398,44 +571,22 @@ function filterTable() {
     if (show) visible++;
   });
   document.getElementById('recordCount').textContent =
-    'Showing ' + visible + ' record' + (visible !== 1 ? 's' : '');
+    `Showing ${visible} record${visible !== 1 ? 's' : ''}`;
 }
 
-function downloadCSV() {
+// Basic CSV export
+function exportCSV() {
   const rows = document.querySelectorAll('#recordsTable tr');
   const csv = Array.from(rows).map(row =>
     Array.from(row.querySelectorAll('th, td'))
-      .map(cell => '"' + cell.textContent.trim() + '"')
+      .map(cell => `"${cell.textContent.trim()}"`)
       .join(',')
   ).join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'trust-layer-scan-records.csv';
+  a.download = 'panadol-scan-records.csv';
   a.click();
-}
-
-function exportCSV() {
-  const rows = document.querySelectorAll('#recordsTable tr');
-  const csv = Array.from(rows).map(row =>
-    Array.from(row.querySelectorAll('th, td'))
-      .map(cell => '"' + cell.textContent.trim() + '"')
-      .join(',')
-  ).join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const file = new File([blob], 'trust-layer-scan-records.csv');
-  const formData = new FormData();
-  formData.append('file', file);
-  fetch('http://localhost:5000/analyze', {
-    method: 'POST',
-    body: formData
-  })
-  .then(response => response.blob())
-  .then(blob => {
-    const url = window.URL.createObjectURL(blob);
-    window.open(url);
-  })
-  .catch(error => console.error('Error:', error));
 }
 </script>
 

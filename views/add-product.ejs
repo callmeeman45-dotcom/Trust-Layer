@@ -1,204 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Product — Trust layer </title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  .ap-wrap { background: #0a0f0a; font-family: system-ui, sans-serif; padding: 24px 20px 40px; }
-  .ap-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 0 24px; border-bottom: 1px solid #1a3a1a; margin-bottom: 32px; }
-  .ap-logo { display: flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 500; color: #a8e6a8; }
-  .ap-logo-icon { width: 30px; height: 30px; background: #1a4d1a; border: 1px solid #2d7a2d; border-radius: 7px; display: flex; align-items: center; justify-content: center; }
-  .ap-nav-back { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: #3a6b3a; background: transparent; border: 1px solid #1a3a1a; padding: 8px 18px; cursor: pointer; font-family: inherit; border-radius: 4px; text-decoration: none; transition: border-color 0.2s, color 0.2s; display: inline-block; }
-  .ap-nav-back:hover { border-color: #2d7a2d; color: #a8e6a8; }
-  .ap-grid { display: grid; grid-template-columns: 1fr 1.7fr; gap: 40px; align-items: start; }
-  .ap-eyebrow { font-size: 10px; letter-spacing: 0.35em; text-transform: uppercase; color: #2d7a2d; margin-bottom: 14px; font-weight: 400; }
-  .ap-h1 { font-size: 2rem; font-weight: 500; line-height: 1.1; color: #e8f5e8; margin-bottom: 14px; letter-spacing: -0.02em; }
-  .ap-h1 em { font-style: italic; color: #4caf50; }
-  .ap-desc { font-size: 12px; color: #3a6b3a; line-height: 1.8; margin-bottom: 32px; }
-  .ap-steps { display: flex; flex-direction: column; }
-  .ap-step { display: flex; gap: 14px; position: relative; }
-  .ap-step:not(:last-child)::after { content: ''; position: absolute; left: 10px; top: 24px; width: 1px; height: calc(100% + 2px); background: #1a3a1a; }
-  .ap-step-num { width: 20px; height: 20px; border-radius: 50%; border: 1px solid #2d7a2d; background: #0d1a0d; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; font-size: 10px; color: #4caf50; font-weight: 500; }
-  .ap-step-body { padding-bottom: 20px; }
-  .ap-step-label { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #2d7a2d; margin-bottom: 3px; }
-  .ap-step-val { font-size: 12px; color: #3a6b3a; }
-  .ap-cert { margin-top: 8px; border-top: 1px solid #1a3a1a; padding-top: 20px; font-size: 11px; letter-spacing: 0.2em; color: #1a3a1a; }
-  .ap-cert strong { color: #4caf50; font-weight: 400; }
-  .ap-card { background: #0d1a0d; border: 1px solid #1a3a1a; border-radius: 10px; overflow: hidden; }
-  .ap-card-head { background: #060c06; padding: 24px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #1a3a1a; }
-  .ap-card-head-icon { width: 42px; height: 42px; background: #0d2a0d; border: 1px solid #2d7a2d; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .ap-card-head-title { font-size: 16px; font-weight: 500; color: #e8f5e8; margin-bottom: 3px; }
-  .ap-card-head-title em { font-style: italic; color: #4caf50; }
-  .ap-card-head-sub { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #2d7a2d; }
-  .ap-card-body { padding: 28px 32px 32px; }
-  .ap-sec-lbl { font-size: 9px; letter-spacing: 0.38em; text-transform: uppercase; color: #2d7a2d; display: flex; align-items: center; gap: 10px; margin-bottom: 18px; margin-top: 28px; }
-  .ap-sec-lbl:first-child { margin-top: 0; }
-  .ap-sec-lbl::after { content: ''; flex: 1; height: 1px; background: #1a3a1a; }
-  .ap-field { margin-bottom: 14px; }
-  .ap-field label { display: block; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #3a6b3a; margin-bottom: 7px; }
-  .ap-input { width: 100%; padding: 11px 14px; background: #111811; border: 1px solid #1a3a1a; border-radius: 4px; font-family: inherit; font-size: 13px; color: #a8e6a8; letter-spacing: 0.03em; outline: none; transition: border-color 0.2s; }
-  .ap-input:focus { border-color: #2d7a2d; box-shadow: 0 0 0 3px rgba(45,122,45,0.15); }
-  .ap-input::placeholder { color: #1a3a1a; font-size: 12px; }
-  .ap-input[type="date"] { color: #5a8c5a; }
-  .ap-input[type="date"]::-webkit-calendar-picker-indicator { opacity: 0.3; filter: invert(1); cursor: pointer; }
-  .ap-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .ap-file-wrap { border: 1px dashed #1a3a1a; background: #111811; border-radius: 4px; padding: 16px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; position: relative; transition: border-color 0.2s; }
-  .ap-file-wrap:hover { border-color: #2d7a2d; }
-  .ap-file-wrap input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
-  .ap-file-icon { width: 32px; height: 32px; background: #0d2a0d; border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .ap-file-main { font-size: 12px; color: #5a8c5a; }
-  .ap-file-sub { font-size: 10px; color: #1a3a1a; letter-spacing: 0.1em; margin-top: 2px; }
-  .ap-btn { width: 100%; padding: 15px; background: #2d7a2d; color: #e8f5e8; border: none; cursor: pointer; font-family: inherit; font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; font-weight: 400; margin-top: 28px; display: flex; align-items: center; justify-content: center; gap: 10px; border-radius: 4px; transition: background 0.2s; }
-  .ap-btn:hover { background: #3a9e3a; }
-  .ap-btn:active { transform: scale(0.998); }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+body {
+  min-height: 100vh;
+  background-color: #6e5830;
+  background-image: linear-gradient(135deg, #6e5830 0%, #6e5830 50%, #6e5830 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Subtle background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(circle at 20% 30%, rgba(255,255,255,0.06) 0%, transparent 50%),
+                    radial-gradient(circle at 80% 70%, rgba(255,255,255,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ── TOP BRAND BAR ── */
+.brand-bar {
+  text-align: center;
+  margin-bottom: 28px;
+  animation: fadeDown 0.5s ease both;
+}
+
+.brand-bar a {
+  font-size: 26px;
+  font-weight: 700;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+
+.brand-bar p {
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ── CARD ── */
+.form-card {
+  background: white;
+  width: 100%;
+  max-width: 660px;
+  border-radius: 20px;
+  box-shadow: 0 30px 70px rgba(0,0,0,0.25), 0 4px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+  animation: riseUp 0.6s cubic-bezier(0.22,1,0.36,1) 0.1s both;
+}
+
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card header strip */
+.card-header-strip {
+  background: #6e5830;
+  background-image: linear-gradient(135deg, #6e5830, #6e5830);
+  padding: 28px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  width: 48px; height: 48px;
+  background: rgba(255,255,255,0.18);
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-header-strip h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.card-header-strip p {
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  margin: 2px 0 0;
+  letter-spacing: 0.06em;
+}
+
+/* ── FORM BODY ── */
+.card-body-inner {
+  padding: 36px 40px 40px;
+}
+
+/* Section divider */
+.form-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6e5830;
+  margin-bottom: 16px;
+  margin-top: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #f0ece4;
+}
+
+.form-section-label:first-child { margin-top: 0; }
+
+/* Two column grid */
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group { margin-bottom: 16px; }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 7px;
+  letter-spacing: 0.04em;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="file"] {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #e0dbd0;
+  border-radius: 10px;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  background: #fdfcf9;
+  transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+}
+
+input:focus {
+  border-color: #6e5830;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(138,118,80,0.12);
+  background: white;
+}
+
+input::placeholder { color: #bbb; }
+
+/* File input styling */
+input[type="file"] {
+  padding: 9px 14px;
+  cursor: pointer;
+  color: #888;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background: #f0ece4;
+  border: 1px solid #ddd6c8;
+  border-radius: 6px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #6e5830;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-right: 10px;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+  background: #e5dfd3;
+}
+
+/* ── SUBMIT BUTTON ── */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: #6e5830;
+  background-image: linear-gradient(135deg, #6e5830, #6e5830, #7a6540);
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  transition: transform 0.25s, box-shadow 0.25s;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(138,118,80,0.4);
+}
+
+.btn-submit:active { transform: translateY(0); }
+
+/* QR icon in button */
+.btn-submit svg { flex-shrink: 0; }
+
+/* ── FOOTER NOTE ── */
+.footer-note {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.6);
+  animation: riseUp 0.5s ease 0.5s both;
+}
+
+.footer-note a {
+  color: rgba(255,255,255,0.9);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .form-row-2 { grid-template-columns: 1fr; }
+  .card-header-strip { padding: 22px 24px; }
+  .card-body-inner { padding: 24px; }
+}
 </style>
+</head>
+<body>
 
-<div class="ap-wrap">
-  <h2 class="sr-only">Add new product batch — Trust Layer form</h2>
+<!-- BRAND -->
+<div class="brand-bar">
+  <a href="/">Trust layer</a>
+  <p>Product Management Portal</p>
+</div>
 
-  <nav class="ap-nav">
-    <div class="ap-logo">
-      <div class="ap-logo-icon">
-        <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-          <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#4caf50" opacity="0.9"/>
-          <path d="M7 9.5l1.5 1.5 3-3" stroke="#0d1a0d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+<!-- FORM CARD -->
+<div class="form-card">
+
+  <!-- Header -->
+  <div class="card-header-strip">
+    <div class="header-icon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="1.8"/>
+        <rect x="14" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="1.8"/>
+        <rect x="3" y="14" width="7" height="7" rx="1" stroke="white" stroke-width="1.8"/>
+        <path d="M14 14h2M14 18h2M18 14v2M18 18v2" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <h2>Add New Product Batch</h2>
+      <p>Fill in the details to generate QR codes</p>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="card-body-inner">
+    <form action="/add-product" method="POST" enctype="multipart/form-data">
+
+      <!-- Product Info -->
+      <div class="form-section-label">Product Information</div>
+
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" name="name" placeholder="e.g. Panadol Extra 500mg" required>
+      </div>
+
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" name="description" placeholder="e.g. Fast relief from headaches and migraines" required>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Batch Number</label>
+          <input type="text" name="batchNumber" placeholder="e.g. PAN-2025-001" required>
+        </div>
+        <div class="form-group">
+          <label>Price(R.S)</label>
+          <input type="number" name="price" placeholder="e.g. 7.99" step="0.01" required>
+        </div>
+      </div>
+
+      <!-- Dates -->
+      <div class="form-section-label">Dates & Stock</div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Manufacturing Date</label>
+          <input type="date" name="manufacturingDate" required>
+        </div>
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input type="date" name="expiryDate" required>
+        </div>
+      </div>
+
+      <div class="form-row-2">
+        <div class="form-group">
+          <label>Quantity (Units)</label>
+          <input type="number" name="quantity" placeholder="e.g. 500" required>
+        </div>
+        <div class="form-group">
+          <label>Product Image</label>
+          <input type="file" name="image" id="image" accept="image/*" required>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn-submit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <rect x="3" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="2"/>
+          <rect x="14" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="2"/>
+          <rect x="3" y="14" width="7" height="7" rx="1" stroke="white" stroke-width="2"/>
+          <path d="M14 14h2M14 18h2M18 14v2M18 18v2" stroke="white" stroke-width="2" stroke-linecap="round"/>
         </svg>
-      </div>
-      Trust Layer
-    </div>
-    <a href="/" class="ap-nav-back">← Back to home</a>
-  </nav>
+        Generate Products &amp; QR Codes
+      </button>
 
-  <div class="ap-grid">
-
-    <div class="ap-left">
-      <p class="ap-eyebrow">Product management portal</p>
-      <h1 class="ap-h1">Register a<br><em>new batch</em></h1>
-      <p class="ap-desc">Fill in the product details to generate unique QR codes for each unit. Every item receives a tamper-proof certificate tied to your registry.</p>
-
-      <div class="ap-steps">
-        <div class="ap-step">
-          <div class="ap-step-num">1</div>
-          <div class="ap-step-body">
-            <p class="ap-step-label">Product details</p>
-            <p class="ap-step-val">Name, description, batch number, price</p>
-          </div>
-        </div>
-        <div class="ap-step">
-          <div class="ap-step-num">2</div>
-          <div class="ap-step-body">
-            <p class="ap-step-label">Dates & quantity</p>
-            <p class="ap-step-val">Manufacturing date, expiry, units to generate</p>
-          </div>
-        </div>
-        <div class="ap-step">
-          <div class="ap-step-num">3</div>
-          <div class="ap-step-body">
-            <p class="ap-step-label">QR generation</p>
-            <p class="ap-step-val">Unique codes per unit, registered to Trust Layer</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="ap-cert">Powered by &nbsp;<strong>Trust Layer Registry</strong></div>
-    </div>
-
-    <div class="ap-card">
-      <div class="ap-card-head">
-        <div class="ap-card-head-icon">
-          <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
-            <rect x="2" y="2" width="7" height="7" rx=".5" stroke="#4caf50" stroke-width="1.3"/>
-            <rect x="13" y="2" width="7" height="7" rx=".5" stroke="#4caf50" stroke-width="1.3"/>
-            <rect x="2" y="13" width="7" height="7" rx=".5" stroke="#4caf50" stroke-width="1.3"/>
-            <path d="M13 13h2M13 17h2M17 13v2M17 17v2" stroke="#4caf50" stroke-width="1.3" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div>
-          <p class="ap-card-head-title">Add new <em>product batch</em></p>
-          <p class="ap-card-head-sub">Generate QR codes for each unit</p>
-        </div>
-      </div>
-
-      <div class="ap-card-body">
-        <form action="/add-product" method="POST" enctype="multipart/form-data">
-
-          <p class="ap-sec-lbl">Product information</p>
-
-          <div class="ap-field">
-            <label>Product name</label>
-            <input class="ap-input" type="text" name="name" placeholder="e.g. Raw Wildflower Honey 350g" required/>
-          </div>
-
-          <div class="ap-field">
-            <label>Description</label>
-            <input class="ap-input" type="text" name="description" placeholder="e.g. Cold-extracted, unfiltered, single origin" required/>
-          </div>
-
-          <div class="ap-grid2">
-            <div class="ap-field">
-              <label>Batch number</label>
-              <input class="ap-input" type="text" name="batchNumber" placeholder="e.g. AH-2025-WF001" required/>
-            </div>
-            <div class="ap-field">
-              <label>Price (RS)</label>
-              <input class="ap-input" type="number" name="price" placeholder="e.g. 1200" step="0.01" required/>
-            </div>
-          </div>
-
-          <p class="ap-sec-lbl">Dates & stock</p>
-
-          <div class="ap-grid2">
-            <div class="ap-field">
-              <label>Manufacturing date</label>
-              <input class="ap-input" type="date" name="manufacturingDate" required/>
-            </div>
-            <div class="ap-field">
-              <label>Expiry date</label>
-              <input class="ap-input" type="date" name="expiryDate" required/>
-            </div>
-          </div>
-
-          <div class="ap-grid2">
-            <div class="ap-field">
-              <label>Quantity (units)</label>
-              <input class="ap-input" type="number" name="quantity" placeholder="e.g. 500" required/>
-            </div>
-            <div class="ap-field">
-              <label>Product image</label>
-              <div class="ap-file-wrap">
-                <input type="file" name="image" id="ap-image" accept="image/*" required/>
-                <div class="ap-file-icon">
-                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
-                    <rect x="2" y="4" width="14" height="11" rx="1" stroke="#4caf50" stroke-width="1.2"/>
-                    <circle cx="6.5" cy="8.5" r="1.5" stroke="#4caf50" stroke-width="1.1"/>
-                    <path d="M2 12l4-3 3 2.5 3-3 4 3.5" stroke="#4caf50" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/>
-                  </svg>
-                </div>
-                <div>
-                  <p class="ap-file-main" id="ap-file-label">Choose image</p>
-                  <p class="ap-file-sub">JPG · PNG · WEBP</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <button type="submit" class="ap-btn">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <rect x="1" y="1" width="5" height="5" rx=".4" stroke="currentColor" stroke-width="1.2"/>
-              <rect x="8" y="1" width="5" height="5" rx=".4" stroke="currentColor" stroke-width="1.2"/>
-              <rect x="1" y="8" width="5" height="5" rx=".4" stroke="currentColor" stroke-width="1.2"/>
-              <path d="M8 8h2M8 11h2M11 8v2M11 11v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-            </svg>
-            Generate products & QR codes
-          </button>
-
-        </form>
-      </div>
-    </div>
-
+    </form>
   </div>
 </div>
 
-<script>
-document.getElementById('ap-image').addEventListener('change', function(){
-  const lbl = document.getElementById('ap-file-label');
-  lbl.textContent = this.files[0] ? this.files[0].name : 'Choose image';
-});
-</script>
+<!-- FOOTER NOTE -->
+<p class="footer-note">
+  ← <a href="/">Back to Trust Layer Home</a>
+</p>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

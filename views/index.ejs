@@ -10,11 +10,11 @@
     .tl-wrap { background: white; color: #f5f0e8; min-height: 100vh; font-family: var(--font-sans, system-ui, sans-serif); }
 
     /* NAV */
-    .tl-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: rgba(10,8,5,0.97); border-bottom: 1px solid #2e2416; position: sticky; top: 0; z-index: 100; }
+    .tl-nav { display: flex; align-items: center; justify-content: space-between; padding: 0 48px; height: 68px; background: #6e5830; border-bottom: 1px solid #2e2416; position: sticky; top: 0; z-index: 100; }
     .tl-logo { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 500; color: #c4aa80; letter-spacing: 0.03em; }
     .tl-logo-icon { width: 32px; height: 32px; background: #2e1f0a; border: 1px solid #5c3e1a; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .tl-nav-links { display: flex; gap: 32px; list-style: none; }
-    .tl-nav-links a { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #6e5830; text-decoration: none; transition: color 0.2s; }
+    .tl-nav-links a { font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; color: #f8f7f4; text-decoration: none; transition: color 0.2s; }
     .tl-nav-links a:hover { color: #c4aa80; }
     .tl-nav-btn { background: #8A7650; color: #f5f0e8; border: none; padding: 9px 22px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; cursor: pointer; border-radius: 4px; transition: background 0.2s; font-family: inherit; }
     .tl-nav-btn:hover { background: #a08c62; }
@@ -47,15 +47,15 @@
       margin: 0 auto;
     }
 
-    .tl-badge { display: inline-flex; align-items: center; gap: 8px; background: #1f1508; border: 1px solid #5c3e1a; padding: 6px 16px; border-radius: 100px; margin-bottom: 28px; }
-    .tl-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #8A7650; flex-shrink: 0; }
-    .tl-badge span { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #8A7650; font-weight: 400; }
+    .tl-badge { display: inline-flex; align-items: center; gap: 8px; background: #6e5830; border: 1px solid #5c3e1a; padding: 6px 16px; border-radius: 100px; margin-bottom: 28px; }
+    .tl-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #f0efee; flex-shrink: 0; }
+    .tl-badge span { font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: #faf8f5; font-weight: 400; }
     .tl-h1 { font-size: clamp(2.2rem, 4vw, 3.2rem); font-weight: 500; line-height: 1.1; color: #33250f; margin-bottom: 20px; letter-spacing: -0.02em; }
     .tl-h1 em { font-style: italic; color: #29200f; }
     .tl-hero-sub { font-size: 14px; color: #6e5830; line-height: 1.8; margin-bottom: 40px; max-width: 440px; font-weight: 400; }
     .tl-hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
-    .tl-btn-primary { background: #8A7650; color: #f5f0e8; border: none; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: background 0.2s; }
-    .tl-btn-primary:hover { background: #a08c62; }
+    .tl-btn-primary { background: #6e5830; color: #f5f0e8; border: none; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: background 0.2s; }
+    .tl-btn-primary:hover { background: #6e5830; }
     .tl-btn-outline { background: transparent; color: #c4aa80; border: 1px solid #8A7650; padding: 13px 28px; font-size: 12px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; border-radius: 4px; font-family: inherit; transition: all 0.2s; }
     .tl-btn-outline:hover { background: #1f1508; border-color: #8A7650; }
 
@@ -80,7 +80,7 @@
     .tl-scan-badge { background: #1f1508; border: 1px solid #8A7650; color: #8A7650; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; }
 
     /* STATS */
-    .tl-stats { background: #8A7650; border-top: 1px solid #2e2416; border-bottom: 1px solid #2e2416; padding: 40px 48px; }
+    .tl-stats { background: #6e5830; border-top: 1px solid #2e2416; border-bottom: 1px solid #2e2416; padding: 40px 48px; }
     .tl-stats-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; }
     .tl-stat { text-align: center; padding: 0 24px; border-right: 1px solid rgba(255,255,255,0.2); }
     .tl-stat:last-child { border-right: none; }
@@ -94,7 +94,7 @@
     .tl-section-title { font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 500; color: #413016; margin-bottom: 12px; }
     .tl-section-sub { font-size: 13px; color: #6e5830; max-width: 480px; line-height: 1.8; margin-bottom: 48px; }
     .tl-services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-    .tl-service-card { background: #8A7650; border: 1px solid #2e2416; border-radius: 10px; padding: 28px 24px; cursor: pointer; transition: border-color 0.25s, background 0.25s; position: relative; overflow: hidden; }
+    .tl-service-card { background: #6e5830; border: 1px solid #2e2416; border-radius: 10px; padding: 28px 24px; cursor: pointer; transition: border-color 0.25s, background 0.25s; position: relative; overflow: hidden; }
     .tl-service-card:hover { border-color: #8A7650; background: #1a1108; }
     .tl-service-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #8A7650, transparent); opacity: 0; transition: opacity 0.25s; }
     .tl-service-card:hover::before { opacity: 1; }
@@ -103,7 +103,7 @@
     .tl-service-desc { font-size: 12px; color: #4a3820; line-height: 1.7; }
 
     /* HOW IT WORKS */
-    .tl-how { background: #8A7650; padding: 80px 48px; border-top: 1px solid #2e2416; }
+    .tl-how { background: #6e5830; padding: 80px 48px; border-top: 1px solid #2e2416; }
     .tl-how-inner { max-width: 1200px; margin: 0 auto; }
     .tl-how-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 48px; position: relative; }
     .tl-how-steps::before { content: ''; position: absolute; top: 28px; left: 10%; right: 10%; height: 1px; background: rgba(255,255,255,0.2); z-index: 0; }
@@ -115,35 +115,35 @@
     /* PRODUCT DEMO */
     .tl-demo { padding: 80px 48px; max-width: 1200px; margin: 0 auto; }
     .tl-demo-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
-    .tl-demo-card { background: #8A7650; border: 1px solid #2e2416; border-radius: 12px; padding: 32px; }
+    .tl-demo-card { background: #6e5830; border: 1px solid #2e2416; border-radius: 12px; padding: 32px; }
     .tl-demo-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
-    .tl-demo-title { font-size: 13px; font-weight: 500; color: #c4aa80; }
-    .tl-verified-badge { background: #1f1508; border: 1px solid #8A7650; color: #8A7650; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; }
-    .tl-vdot { width: 5px; height: 5px; border-radius: 50%; background: #8A7650; }
+    .tl-demo-title { font-size: 13px; font-weight: 500; color: #6e5830; }
+    .tl-verified-badge { background: #1f1508; border: 1px solid #6e5830; color: #6e5830; font-size: 10px; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.1em; display: flex; align-items: center; gap: 6px; }
+    .tl-vdot { width: 5px; height: 5px; border-radius: 50%; background: #6e5830; }
     .tl-product-info { margin-bottom: 20px; }
     .tl-pi-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #2e2416; font-size: 12px; }
     .tl-pi-row:last-child { border-bottom: none; }
     .tl-pi-key { color: #4a3820; letter-spacing: 0.08em; }
     .tl-pi-val { color: #c4aa80; font-weight: 400; }
-    .tl-pi-val.green { color: #8A7650; }
+    .tl-pi-val.green { color: #6e5830; }
     .tl-trace { background: #0f0a03; border: 1px solid #2e2416; border-radius: 8px; padding: 14px 16px; }
-    .tl-trace-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #8A7650; margin-bottom: 8px; }
+    .tl-trace-label { font-size: 9px; letter-spacing: 0.3em; text-transform: uppercase; color: #6e5830; margin-bottom: 8px; }
     .tl-trace-val { font-size: 11px; color: #4a3820; font-family: var(--font-mono, monospace); letter-spacing: 0.05em; }
 
     /* CTA */
-    .tl-cta { background: #1f1508; border-top: 1px solid #2e2416; border-bottom: 1px solid #2e2416; padding: 72px 48px; text-align: center; }
+    .tl-cta { background: #6e5830; border-top: 1px solid #2e2416; border-bottom: 1px solid #2e2416; padding: 72px 48px; text-align: center; }
     .tl-cta h2 { font-size: clamp(1.6rem, 2.8vw, 2.4rem); font-weight: 500; color: #f5f0e8; margin-bottom: 16px; }
-    .tl-cta p { font-size: 14px; color: #6e5830; margin-bottom: 36px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+    .tl-cta p { font-size: 14px; color: #eeece9; margin-bottom: 36px; max-width: 420px; margin-left: auto; margin-right: auto; line-height: 1.7; }
     .tl-cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
     /* FOOTER */
-    .tl-footer { background: #080502; padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
-    .tl-footer-brand { font-size: 14px; color: #4a3820; }
-    .tl-footer-brand strong { color: #8A7650; }
-    .tl-footer-copy { font-size: 10px; letter-spacing: 0.15em; color: #2e2416; }
+    .tl-footer { background: #6e5830; padding: 40px 48px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+    .tl-footer-brand { font-size: 14px; color: #f0eeec; }
+    .tl-footer-brand strong { color: #f3f2ef; }
+    .tl-footer-copy { font-size: 10px; letter-spacing: 0.15em; color: #f7f4f1; }
     .tl-footer-links { display: flex; gap: 24px; }
-    .tl-footer-links a { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #4a3820; text-decoration: none; transition: color 0.2s; }
-    .tl-footer-links a:hover { color: #6e5830; }
+    .tl-footer-links a { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #fdfcfb; text-decoration: none; transition: color 0.2s; }
+    .tl-footer-links a:hover { color: #f0eeec; }
 
     /* ===================== RESPONSIVE ===================== */
 

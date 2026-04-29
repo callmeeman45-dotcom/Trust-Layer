@@ -1,94 +1,117 @@
 
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans,system-ui,sans-serif)}
-.wrap{background:#0a0f0a;color:#e8f5e8;min-height:100vh;display:flex}
-.sidebar{width:220px;background:#060c06;border-right:1px solid #1a3a1a;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
-.sb-logo{padding:24px 20px 20px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #1a3a1a}
-.sb-logo-icon{width:30px;height:30px;background:#1a4d1a;border:1px solid #2d7a2d;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sb-logo span{font-size:14px;font-weight:500;color:#a8e6a8;letter-spacing:0.03em}
-.sb-user{padding:16px 20px;border-bottom:1px solid #1a3a1a}
-.sb-avatar{width:36px;height:36px;background:#1a4d1a;border:1px solid #2d7a2d;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#4caf50;margin-bottom:8px}
-.sb-uname{font-size:13px;font-weight:500;color:#a8e6a8}
-.sb-uemail{font-size:10px;color:#3a6b3a;letter-spacing:0.05em;margin-top:2px}
-.sb-plan{display:inline-flex;align-items:center;gap:5px;background:#0d2a0d;border:1px solid #2d7a2d;padding:3px 9px;border-radius:100px;margin-top:8px}
-.sb-plan span{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#4caf50}
+body{font-family:system-ui,sans-serif}
+.wrap{background:#faf8f4;color:#1a1510;min-height:100vh;display:flex}
+.sidebar{width:220px;background:#6e5830;border-right:1.5px solid #e8dfc8;display:flex;flex-direction:column;flex-shrink:0;position:sticky;top:0;height:100vh}
+.sb-logo{padding:24px 20px 20px;display:flex;align-items:center;gap:10px;border-bottom:1.5px solid #e8dfc8}
+.sb-logo-icon{width:30px;height:30px;background:#332815;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo span{font-size:14px;font-weight:500;color:white;letter-spacing:0.03em}
+.sb-user{padding:16px 20px;border-bottom:1.5px solid #e8dfc8}
+.sb-avatar{width:36px;height:36px;background:#332815;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;color:#6e5830;margin-bottom:8px}
+.sb-uname{font-size:13px;font-weight:500;color:#1a1510}
+.sb-uemail{font-size:10px;color:white;letter-spacing:0.05em;margin-top:2px}
+.sb-plan{display:inline-flex;align-items:center;gap:5px;background:#faf8f4;border:1px solid #c9b48a;padding:3px 9px;border-radius:100px;margin-top:8px}
+.sb-plan span{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#6e5830}
 .sb-nav{padding:12px 0;flex:1}
-.sb-nav-label{font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:#1a4d1a;padding:10px 20px 6px}
-.sb-link{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:12px;color:#3a6b3a;cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;letter-spacing:0.05em}
-.sb-link:hover{color:#a8e6a8;background:#0d1a0d;border-left-color:#2d7a2d}
-.sb-link.active{color:#4caf50;background:#0d1f0d;border-left-color:#4caf50}
+.sb-nav-label{font-size:8px;letter-spacing:0.35em;text-transform:uppercase;color:#c9b48a;padding:10px 20px 6px}
+.sb-link{display:flex;align-items:center;gap:10px;padding:10px 20px;font-size:12px;color:white;cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;letter-spacing:0.05em}
+.sb-link:hover{color:#6e5830;background:#faf8f4;border-left-color:#c9b48a}
+.sb-link.active{color:#6e5830;background:#fdf6ea;border-left-color:#6e5830}
 .sb-link svg{flex-shrink:0}
-.sb-bottom{padding:16px 20px;border-top:1px solid #1a3a1a}
+.sb-bottom{padding:16px 20px;border-top:1.5px solid #e8dfc8}
 .main{flex:1;display:flex;flex-direction:column;overflow:auto}
-.topbar{background:#060c06;border-bottom:1px solid #1a3a1a;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
+.topbar{background:#6e5830;border-bottom:1.5px solid #e8dfc8;padding:0 32px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10}
 .topbar-left{display:flex;align-items:center;gap:8px}
-.topbar-page{font-size:16px;font-weight:500;color:#e8f5e8}
-.topbar-sep{color:#1a4d1a;font-size:12px}
-.topbar-sub{font-size:12px;color:#3a6b3a;letter-spacing:0.1em}
+.topbar-page{font-size:16px;font-weight:500;color:#1a1510}
+.topbar-sep{color:#c9b48a;font-size:12px}
+.topbar-sub{font-size:12px;color:white;letter-spacing:0.1em}
 .topbar-right{display:flex;align-items:center;gap:12px}
-.tb-search{background:#0d1a0d;border:1px solid #1a3a1a;border-radius:6px;padding:7px 14px;font-size:12px;color:#5a8c5a;display:flex;align-items:center;gap:8px;cursor:text;letter-spacing:0.05em}
-.tb-notif{width:32px;height:32px;background:#0d1a0d;border:1px solid #1a3a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.tb-search{background:#332815;border:1px solid #e8dfc8;border-radius:6px;padding:7px 14px;font-size:12px;color:white;display:flex;align-items:center;gap:8px;cursor:text;letter-spacing:0.05em}
+.tb-notif{width:32px;height:32px;background:#332815;border:1px solid #e8dfc8;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .content{padding:32px;flex:1}
 .quick-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
-.qa-card{background:#0d1a0d;border:1px solid #1a3a1a;border-radius:10px;padding:20px 18px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
-.qa-card:hover{border-color:#2d7a2d;background:#0f1f0f}
-.qa-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#2d7a2d,transparent);opacity:0;transition:opacity 0.2s}
+.qa-card{background:#6e5830;border:1.5px solid #e8dfc8;border-radius:10px;padding:20px 18px;cursor:pointer;transition:all 0.2s;position:relative;overflow:hidden}
+.qa-card:hover{border-color:#6e5830;background:#2e2515}
+.qa-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:#6e5830;opacity:0;transition:opacity 0.2s}
 .qa-card:hover::before{opacity:1}
-.qa-icon{width:38px;height:38px;background:#1a3a1a;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
-.qa-title{font-size:13px;font-weight:500;color:#a8e6a8;margin-bottom:4px}
-.qa-desc{font-size:10px;color:#3a6b3a;line-height:1.5;letter-spacing:0.03em}
-.qa-arrow{position:absolute;top:18px;right:18px;color:#2d7a2d;font-size:14px}
+.qa-icon{width:38px;height:38px;background:#faf8f4;border:1px solid #e8dfc8;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.qa-title{font-size:13px;font-weight:500;color:#1a1510;margin-bottom:4px}
+.qa-title a{color:#1a1510;text-decoration:none}
+.qa-title a:hover{color:#6e5830}
+.qa-desc{font-size:10px;color:white;line-height:1.5;letter-spacing:0.03em}
+.qa-arrow{position:absolute;top:18px;right:18px;color:#c9b48a;font-size:14px}
 .section-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .section-row.full{grid-template-columns:1fr}
-.panel{background:#0d1a0d;border:1px solid #1a3a1a;border-radius:10px;padding:22px}
+.panel{background:#6e5830;border:1.5px solid #e8dfc8;border-radius:10px;padding:22px}
 .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
-.panel-title{font-size:13px;font-weight:500;color:#a8e6a8}
-.panel-action{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#2d7a2d;cursor:pointer;background:#0d2a0d;border:1px solid #1a4d1a;padding:5px 12px;border-radius:4px}
-.panel-action:hover{border-color:#2d7a2d;color:#4caf50}
+.panel-title{font-size:13px;font-weight:500;color:#1a1510}
+.panel-action{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#6e5830;cursor:pointer;background:#faf8f4;border:1px solid #e8dfc8;padding:5px 12px;border-radius:4px}
+.panel-action:hover{border-color:#6e5830;color:#3b2e14}
 .stats-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.sm-card{background:#111811;border:1px solid #1a3a1a;border-radius:8px;padding:14px 12px;text-align:center}
-.sm-num{font-size:22px;font-weight:500;color:#4caf50;letter-spacing:-0.02em;display:block}
-.sm-lbl{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:#3a6b3a;margin-top:3px}
-.product-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #1a3a1a}
+.sm-card{background:#faf8f4;border:1px solid #e8dfc8;border-radius:8px;padding:14px 12px;text-align:center}
+.sm-num{font-size:22px;font-weight:500;color:#6e5830;letter-spacing:-0.02em;display:block}
+.sm-lbl{font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:white;margin-top:3px}
+.product-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0e8d8}
 .product-row:last-child{border-bottom:none}
-.pr-icon{width:32px;height:32px;background:#1a3a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pr-icon{width:32px;height:32px;background:#faf8f4;border:1px solid #e8dfc8;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .pr-info{flex:1}
-.pr-name{font-size:12px;font-weight:500;color:#a8e6a8}
-.pr-id{font-size:10px;color:#3a6b3a;font-family:var(--font-mono,monospace);letter-spacing:0.05em;margin-top:1px}
+.pr-name{font-size:12px;font-weight:500;color:#1a1510}
+.pr-id{font-size:10px;color:white;font-family:monospace;letter-spacing:0.05em;margin-top:1px}
 .pr-badge{font-size:9px;padding:3px 9px;border-radius:100px;letter-spacing:0.1em;border:1px solid}
-.pr-badge.active{background:#0d2a0d;border-color:#2d7a2d;color:#4caf50}
-.pr-badge.warn{background:#1a1200;border-color:#5a3c00;color:#d4a017}
-.pr-scans{font-size:11px;color:#3a6b3a;text-align:right;margin-left:auto}
-.pr-scans strong{display:block;font-size:13px;color:#a8e6a8;font-weight:500;text-align:right}
-.activity-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #1a3a1a}
+.pr-badge.active{background:#fdf6ea;border-color:#c9b48a;color:#6e5830}
+.pr-badge.warn{background:#fef9ec;border-color:#e8c84a;color:#a07800}
+.pr-scans{font-size:11px;color:white;text-align:right;margin-left:auto}
+.pr-scans strong{display:block;font-size:13px;color:#1a1510;font-weight:500;text-align:right}
+.activity-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid #f0e8d8}
 .activity-row:last-child{border-bottom:none}
 .act-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
-.act-dot.green{background:#4caf50}
+.act-dot.green{background:#6e5830}
 .act-dot.amber{background:#d4a017}
 .act-dot.blue{background:#378add}
 .act-info{flex:1}
-.act-msg{font-size:12px;color:#a8e6a8;line-height:1.5}
-.act-time{font-size:10px;color:#3a6b3a;margin-top:2px;letter-spacing:0.05em}
+.act-msg{font-size:12px;color:#1a1510;line-height:1.5}
+.act-time{font-size:10px;color:white;margin-top:2px;letter-spacing:0.05em}
 .scan-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-.scan-bar-label{font-size:11px;color:#5a8c5a;width:110px;flex-shrink:0}
-.scan-bar-track{flex:1;background:#1a3a1a;border-radius:4px;height:6px;overflow:hidden}
-.scan-bar-fill{height:100%;background:#2d7a2d;border-radius:4px;transition:width 0.4s}
-.scan-bar-val{font-size:11px;color:#3a6b3a;width:40px;text-align:right;flex-shrink:0}
+.scan-bar-label{font-size:11px;color:#6e5830;width:110px;flex-shrink:0}
+.scan-bar-track{flex:1;background:#f0e8d8;border-radius:4px;height:6px;overflow:hidden}
+.scan-bar-fill{height:100%;background:#6e5830;border-radius:4px;transition:width 0.4s}
+.scan-bar-val{font-size:11px;color:white;width:40px;text-align:right;flex-shrink:0}
 .empty-state{text-align:center;padding:40px 20px}
-.empty-icon{width:48px;height:48px;background:#1a3a1a;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
-.empty-text{font-size:13px;color:#3a6b3a;margin-bottom:12px}
-.add-btn{display:inline-flex;align-items:center;gap:6px;background:#2d7a2d;color:#e8f5e8;border:none;padding:8px 18px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:4px;font-family:inherit}
-.add-btn:hover{background:#3a9e3a}
-.logout-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;background:transparent;border:1px solid #1a3a1a;border-radius:6px;color:#3a6b3a;font-size:11px;letter-spacing:0.1em;cursor:pointer;font-family:inherit;transition:all 0.2s}
-.logout-btn:hover{border-color:#2d4a2d;color:#5a8c5a}
+.empty-icon{width:48px;height:48px;background:#faf8f4;border:1px solid #e8dfc8;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.empty-text{font-size:13px;color:white;margin-bottom:12px}
+.add-btn{display:inline-flex;align-items:center;gap:6px;background:#6e5830;color:#6e5830;border:none;padding:8px 18px;font-size:11px;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;border-radius:4px;font-family:inherit}
+.add-btn:hover{background:#5a4825}
+.logout-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;background:transparent;border:1px solid #e8dfc8;border-radius:6px;color:white;font-size:11px;letter-spacing:0.1em;cursor:pointer;font-family:inherit;transition:all 0.2s}
+.logout-btn:hover{border-color:#6e5830;color:#6e5830}
+
+@media(max-width:768px){
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1.5px solid #e8dfc8}
+  .sb-logo{border-bottom:none;padding:16px}
+  .sb-user{border-bottom:none;padding:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .sb-avatar{margin-bottom:0}
+  .sb-plan{margin-top:0}
+  .sb-nav{display:none}
+  .sb-bottom{display:none}
+  .wrap{flex-direction:column}
+  .quick-actions{grid-template-columns:repeat(2,1fr)}
+  .section-row{grid-template-columns:1fr}
+  .topbar{padding:0 16px}
+  .content{padding:16px}
+  .stats-mini{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:480px){
+  .quick-actions{grid-template-columns:1fr}
+  .stats-mini{grid-template-columns:1fr}
+  .tb-search{display:none}
+}
 </style>
 
 <div class="wrap">
   <aside class="sidebar">
     <div class="sb-logo">
       <div class="sb-logo-icon">
-        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#4caf50" opacity="0.9"/><path d="M7 9.5l1.5 1.5 3-3" stroke="#0d1a0d" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="#6e5830" opacity="0.95"/><path d="M7 9.5l1.5 1.5 3-3" stroke="#2e2416" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
       <span>Trust Layer</span>
     </div>
@@ -96,44 +119,44 @@ body{font-family:var(--font-sans,system-ui,sans-serif)}
       <div class="sb-avatar">AR</div>
       <div class="sb-uname"><%= username %></div>
       <div class="sb-uemail"><%= email %></div>
-      <div class="sb-plan"><div style="width:5px;height:5px;border-radius:50%;background:#4caf50"></div><span>Pro plan</span></div>
+      <div class="sb-plan"><div style="width:5px;height:5px;border-radius:50%;background:#6e5830"></div><span>Pro plan</span></div>
     </div>
     <nav class="sb-nav">
       <div class="sb-nav-label">Workspace</div>
       <div class="sb-link active" onclick="setActive(this)">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#4caf50" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#4caf50" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#4caf50" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#4caf50" stroke-width="1.2"/></svg>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="#6e5830" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="#6e5830" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="#6e5830" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="#6e5830" stroke-width="1.2"/></svg>
         Dashboard
       </div>
       <div class="sb-link" onclick="setActive(this)">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h5" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h5" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
         All Products
       </div>
       <div class="sb-link" onclick="setActive(this)">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="0.5" stroke="#3a6b3a" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx="0.5" stroke="#3a6b3a" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx="0.5" stroke="#3a6b3a" stroke-width="1.2"/><path d="M11.5 9v5M9 11.5h5" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="0.5" stroke="white" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx="0.5" stroke="white" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx="0.5" stroke="white" stroke-width="1.2"/><path d="M11.5 9v5M9 11.5h5" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
         Add Product
       </div>
       <div class="sb-link" onclick="setActive(this)">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 12l3-3 2.5 2.5 3.5-4.5 3 5" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 12l3-3 2.5 2.5 3.5-4.5 3 5" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Analytics
       </div>
       <div class="sb-nav-label" style="margin-top:8px">Tools</div>
       <div class="sb-link" onclick="setActive(this)">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="#3a6b3a" stroke-width="1.2"/><circle cx="8" cy="8" r="2" stroke="#3a6b3a" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="white" stroke-width="1.2"/><circle cx="8" cy="8" r="2" stroke="white" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
         Scan Monitor
       </div>
       <div class="sb-link" onclick="setActive(this)">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="#3a6b3a" stroke-width="1.2"/><path d="M5 7h6M5 10h4" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="white" stroke-width="1.2"/><path d="M5 7h6M5 10h4" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
         Lab Reports
       </div>
       <div class="sb-link" onclick="setActive(this)">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="#3a6b3a" stroke-width="1.2"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="white" stroke-width="1.2"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
         Account Settings
       </div>
     </nav>
     <form action="/logout" method="POST">
     <div class="sb-bottom">
       <button class="logout-btn" type="submit">
-        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 5l3 3-3 3M14 8H7" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 5l3 3-3 3M14 8H7" stroke="white" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         Sign out
       </button>
     </div>
@@ -149,133 +172,56 @@ body{font-family:var(--font-sans,system-ui,sans-serif)}
       </div>
       <div class="topbar-right">
         <div class="tb-search">
-          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#3a6b3a" stroke-width="1.2"/><path d="M10.5 10.5L14 14" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="white" stroke-width="1.2"/><path d="M10.5 10.5L14 14" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
           <span>Search products...</span>
         </div>
         <div class="tb-notif">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2a5 5 0 00-5 5v3l-1 1.5h12L13 10V7a5 5 0 00-5-5z" stroke="#3a6b3a" stroke-width="1.2"/><path d="M6.5 13.5a1.5 1.5 0 003 0" stroke="#3a6b3a" stroke-width="1.2" stroke-linecap="round"/></svg>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2a5 5 0 00-5 5v3l-1 1.5h12L13 10V7a5 5 0 00-5-5z" stroke="white" stroke-width="1.2"/><path d="M6.5 13.5a1.5 1.5 0 003 0" stroke="white" stroke-width="1.2" stroke-linecap="round"/></svg>
         </div>
       </div>
     </div>
 
     <div class="content">
-
       <div class="quick-actions">
-        <div class="qa-card" onclick="sendPrompt('I want to add a new product to Trust Layer — guide me through the product registration process')">
+        <div class="qa-card">
           <div class="qa-arrow">↗</div>
           <div class="qa-icon">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#4caf50" stroke-width="1.2"/><path d="M10 7v6M7 10h6" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#6e5830" stroke-width="1.2"/><path d="M10 7v6M7 10h6" stroke="#6e5830" stroke-width="1.2" stroke-linecap="round"/></svg>
           </div>
-         <a href="/add-product"> <div class="qa-title">Add new product</div></a>
+          <a href="/add-product"><div class="qa-title">Add new product</div></a>
           <div class="qa-desc">Register a product unit and generate its unique QR code</div>
         </div>
-        <div class="qa-card" onclick="sendPrompt('Show me all my registered products and their current status on Trust Layer')">
+        <div class="qa-card">
           <div class="qa-arrow">↗</div>
           <div class="qa-icon">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h10M3 14h7" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h10M3 14h7" stroke="#6e5830" stroke-width="1.2" stroke-linecap="round"/></svg>
           </div>
           <a href="/all-products"><div class="qa-title">View all products</div></a>
           <div class="qa-desc">Browse every registered product and its scan history</div>
         </div>
-        <div class="qa-card" onclick="sendPrompt('Add a new product batch to Trust Layer — I want to register multiple products at once')">
+        <div class="qa-card">
           <div class="qa-arrow">↗</div>
           <div class="qa-icon">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="16" height="12" rx="1.5" stroke="#4caf50" stroke-width="1.2"/><path d="M5 5V4a3 3 0 016 0v1" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/><path d="M8 11v2M8 11a1 1 0 110-2 1 1 0 010 2z" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="16" height="12" rx="1.5" stroke="#6e5830" stroke-width="1.2"/><path d="M5 5V4a3 3 0 016 0v1" stroke="#6e5830" stroke-width="1.2" stroke-linecap="round"/><path d="M8 11v2M8 11a1 1 0 110-2 1 1 0 010 2z" stroke="#6e5830" stroke-width="1.2" stroke-linecap="round"/></svg>
           </div>
           <a href="/add-product"><div class="qa-title">Add product batch</div></a>
           <div class="qa-desc">Upload a full product batch and generate QR codes in bulk</div>
         </div>
-        <div class="qa-card" onclick="sendPrompt('Show me the analytics and scan data for my Trust Layer products — any counterfeit alerts?')">
+        <div class="qa-card">
           <div class="qa-arrow">↗</div>
           <div class="qa-icon">
-            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 15l4-5 3 3 3.5-5L17 15" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 15l4-5 3 3 3.5-5L17 15" stroke="#6e5830" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
-         <a href="/admin/dashboard"> <div class="qa-title">Analytics & scans</div></a>
+          <a href="/admin/dashboard"><div class="qa-title">Analytics & scans</div></a>
           <div class="qa-desc">Real-time scan data, geography, and counterfeit alerts</div>
         </div>
       </div>
 
-      <!-- <div class="stats-mini">
-        <div class="sm-card"><span class="sm-num">47</span><span class="sm-lbl">Products registered</span></div>
-        <div class="sm-card"><span class="sm-num">1,284</span><span class="sm-lbl">Total scans</span></div>
-        <div class="sm-card"><span class="sm-num" style="color:#d4a017">2</span><span class="sm-lbl">Counterfeit alerts</span></div>
-      </div>
-
-      <div class="section-row">
-        <div class="panel">
-          <div class="panel-head">
-            <span class="panel-title">Recent products</span>
-            <span class="panel-action" onclick="sendPrompt('Show me all my registered products on Trust Layer with full details')">View all ↗</span>
-          </div>
-          <div class="product-row">
-            <div class="pr-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#4caf50" stroke-width="1.2"/><path d="M7 10h6M10 7v6" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-            <div class="pr-info"><div class="pr-name">Sidr Honey 500g</div><div class="pr-id">TL-0042-SH5</div></div>
-            <div class="pr-badge active">Active</div>
-            <div class="pr-scans"><strong>312</strong>scans</div>
-          </div>
-          <div class="product-row">
-            <div class="pr-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="#4caf50" stroke-width="1.2"/><path d="M10 6v4l2.5 2.5" stroke="#4caf50" stroke-width="1.2" stroke-linecap="round"/></svg></div>
-            <div class="pr-info"><div class="pr-name">Wild Forest Honey</div><div class="pr-id">TL-0091-WF3</div></div>
-            <div class="pr-badge active">Active</div>
-            <div class="pr-scans"><strong>198</strong>scans</div>
-          </div>
-          <div class="product-row">
-            <div class="pr-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M10 3l-7 4v4c0 3.5 3 6.5 7 7.2 4-.7 7-3.7 7-7.2V7L10 3z" stroke="#d4a017" stroke-width="1.2"/></svg></div>
-            <div class="pr-info"><div class="pr-name">Black Seed Oil 250ml</div><div class="pr-id">TL-0108-BS2</div></div>
-            <div class="pr-badge warn">Alert</div>
-            <div class="pr-scans"><strong>87</strong>scans</div>
-          </div>
-          <div class="product-row">
-            <div class="pr-icon"><svg width="16" height="16" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#4caf50" stroke-width="1.2"/></svg></div>
-            <div class="pr-info"><div class="pr-name">Saffron 5g Premium</div><div class="pr-id">TL-0117-SF1</div></div>
-            <div class="pr-badge active">Active</div>
-            <div class="pr-scans"><strong>64</strong>scans</div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">
-            <span class="panel-title">Activity feed</span>
-            <span class="panel-action" onclick="sendPrompt('Show me detailed scan activity and counterfeit alerts for my Trust Layer products')">Details ↗</span>
-          </div>
-          <div class="activity-row">
-            <div class="act-dot green"></div>
-            <div class="act-info"><div class="act-msg">Sidr Honey TL-0042-SH5 scanned — first scan, verified authentic</div><div class="act-time">2 minutes ago · Lahore, Punjab</div></div>
-          </div>
-          <div class="activity-row">
-            <div class="act-dot amber"></div>
-            <div class="act-info"><div class="act-msg">Black Seed Oil TL-0108-BS2 — duplicate scan detected, counterfeit alert raised</div><div class="act-time">18 minutes ago · Karachi</div></div>
-          </div>
-          <div class="activity-row">
-            <div class="act-dot green"></div>
-            <div class="act-info"><div class="act-msg">Wild Forest Honey TL-0091-WF3 scanned — authentic, first scan</div><div class="act-time">1 hour ago · Islamabad</div></div>
-          </div>
-          <div class="activity-row">
-            <div class="act-dot blue"></div>
-            <div class="act-info"><div class="act-msg">New batch registered — Saffron 5g Premium, 200 units, QR codes generated</div><div class="act-time">3 hours ago</div></div>
-          </div>
-          <div class="activity-row">
-            <div class="act-dot green"></div>
-            <div class="act-info"><div class="act-msg">Saffron TL-0117-SF1 scanned — verified authentic in Rawalpindi</div><div class="act-time">5 hours ago · Rawalpindi</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel" style="margin-bottom:0">
-        <div class="panel-head">
-          <span class="panel-title">Scan distribution by product</span>
-          <span class="panel-action" onclick="sendPrompt('Give me a detailed scan analytics breakdown for all my Trust Layer products')">Full analytics ↗</span>
-        </div>
-        <div class="scan-bar-row"><div class="scan-bar-label">Sidr Honey 500g</div><div class="scan-bar-track"><div class="scan-bar-fill" style="width:82%"></div></div><div class="scan-bar-val">312</div></div>
-        <div class="scan-bar-row"><div class="scan-bar-label">Wild Forest Honey</div><div class="scan-bar-track"><div class="scan-bar-fill" style="width:52%"></div></div><div class="scan-bar-val">198</div></div>
-        <div class="scan-bar-row"><div class="scan-bar-label">Black Seed Oil</div><div class="scan-bar-track"><div class="scan-bar-fill" style="width:23%;background:#d4a017"></div></div><div class="scan-bar-val">87</div></div>
-        <div class="scan-bar-row"><div class="scan-bar-label">Saffron 5g</div><div class="scan-bar-track"><div class="scan-bar-fill" style="width:17%"></div></div><div class="scan-bar-val">64</div></div>
-        <div class="scan-bar-row"><div class="scan-bar-label">Other products</div><div class="scan-bar-track"><div class="scan-bar-fill" style="width:50%"></div></div><div class="scan-bar-val">623</div></div>
-      </div>
+      <!-- stats-mini, section-row, scan bars — all commented out as in original -->
 
     </div>
   </div>
-</div> -->
+</div>
 
 <script>
 function setActive(el){
