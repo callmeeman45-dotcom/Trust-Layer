@@ -46,12 +46,10 @@ const ProductSchema=new mongoose.Schema({
             qrCodeUrl: {
                type: String,
             },
-            Recall:{
-                enum:{
-                    type: String,
-                    enum: ["recalled", "not recalled"],
-                    default: "not recalled",
-                }
-            }
+            Recall: {             // ✅ flat and correct
+    type: String,
+    enum: ["recalled", "not recalled"],
+    default: "not recalled",
+}
         });
 module.exports=mongoose.model('Product',ProductSchema);      

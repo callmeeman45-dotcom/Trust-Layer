@@ -485,8 +485,10 @@
         <!-- FIX: name="recalled" matches the API; selected option pre-filled from product data -->
         <div class="select-wrap">
           <select id="Recall" name="Recall" required >
-            <option value="not recalled" <%=product.Recall === 'not recalled' ? 'selected' : '' %>>Not Recalled</option>
-            <option value="recalled"     <%=product.Recall === 'recalled'     ? 'selected' : '' %>>Recalled</option>
+           <select name="Recall">
+  <option value="recalled"     <%= product.Recall === 'recalled'     ? 'selected' : '' %>>Recalled</option>
+  <option value="not recalled" <%= product.Recall === 'not recalled' ? 'selected' : '' %>>Not Recalled</option>
+</select>
           </select>
         </div>
 
