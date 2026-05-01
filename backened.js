@@ -164,7 +164,7 @@ app.post("/edit-batch/:batchNumber", upload.single("image"), async (req, res) =>
             { batchNumber: req.params.batchNumber, brandname: req.user.brandname },
             { $set: updateData }
         );
-
+console.log("Batch updated with:", updateData);
         res.redirect("/admin/space");
     } catch (err) {
         console.error("Error updating batch:", err);

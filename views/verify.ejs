@@ -524,16 +524,19 @@ body::after{
         <td class="dv"><%= product.expiryDate %></td>
       </tr>
       <tr>
-       <% if(product.Recall === "recalled") { %>
-    <div class="recall-banner">
+  <td colspan="5">  <!-- match your table's column count -->
+    <% if(product.Recall === "recalled") { %>
+      <div class="recall-banner">
         <span>⚠️</span>
         <div>
-            <strong>Product Recalled</strong>
-            <p>This product has been recalled due to safety concerns. 
-               Please stop using it immediately and return it to the retailer.</p>
+          <strong>Product Recalled</strong>
+          <p>This product has been recalled due to safety concerns. 
+             Please stop using it immediately and return it to the retailer.</p>
         </div>
-    </div>
-<% } %>
+      </div>
+    <% } %>
+  </td>
+</tr>
       <tr>
         <td class="dk">Scan Status</td>
         <!-- ✅ ORIGINAL: hardcoded First Scan (same as your original file) -->
