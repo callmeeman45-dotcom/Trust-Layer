@@ -614,7 +614,7 @@ app.get("/check/status/:id", async (req, res) => {
         if (product.status === 'Genuine') {
             res.render("verify", { product });
         } else {
-            res.render("counterfiet1");
+            res.render("counterfeit1");
         }
 
         // ===============================
