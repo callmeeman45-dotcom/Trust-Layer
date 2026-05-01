@@ -387,7 +387,7 @@
       <div  class="flex">
         <div class="products-grid">
       <% for (let product of products) { %>
-          <form  class="form"  action="/admin/batch/<%=product._id %>/download-pdf" method="get">
+          
           <div class="product-card">
 
             <div class="card-img-wrap">
@@ -429,12 +429,11 @@
                   <span class="count-text"><%= product.count %> unit<%= product.count !== 1 ? 's' : '' %></span>
                 </div>
                
-                <button class="view-btn" type="submit">Download Pdf↗</button>
-                
+                 <a href="/batch/edit/<%=product._id %>"><button class="view-btn">Edit</button></a>
               </div>
             </div>
 
-          </form>
+          
           </div>
         <% } %>
     </div>

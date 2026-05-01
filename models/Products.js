@@ -49,8 +49,8 @@ const ProductSchema=new mongoose.Schema({
             Recall:{
                 enum:{
                     type: String,
-                    enum: ["Recalled", "Not Recalled"],
-                    default: "Not Recalled",
+                    enum: ["recalled", "not recalled"],
+                    default: "not recalled",
                 }
             }
         });

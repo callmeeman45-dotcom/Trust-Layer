@@ -123,13 +123,31 @@ app.get("/batch/edit/:batchNumber", async (req, res) => {
     if (!product) {
         return res.status(404).send("Batch not found");
     }
-    res.render("edit", {product})
+    res.render("edit-batch", {product})
 });
+app.get("/edit-product",async(req,res)=>{
+    const brandname = req.user.brandname;
 
+    const grouped_products = await Product.aggregate([
+        {
+            $match: { brandname: brandname }  // filter by brand first
+        },
+        {
+            $group: {
+                _id: "$batchNumber",
+                count: { $sum: 1 },
+                price: { $first: "$price" },         // grab these fields
+                description: { $first: "$description" }, // directly in the
+                image: { $first: "$image" }          // aggregation pipeline
+            }
+        }
+    ]);
+    res.render("edit-product", { products:grouped_products });
+});
 
 app.post("/edit-batch/:batchNumber", upload.single("image"), async (req, res) => {
     try {
-        const { name, description, price, manufacturingDate, expiryDate, Recall } = req.body;
+        const { name, description, price, manufacturingDate, expiryDate, Recall} = req.body;
 
         // Only include fields that were actually provided
         const updateData = {
@@ -138,7 +156,7 @@ app.post("/edit-batch/:batchNumber", upload.single("image"), async (req, res) =>
             ...(price             && { price }),
             ...(manufacturingDate && { manufacturingDate }),
             ...(expiryDate        && { expiryDate }),
-            ...(Recall          !== undefined && { Recall }),
+            ...(Recall         !== undefined && { Recall }),
             ...(req.file          && { image: req.file.path }),
         };
 
