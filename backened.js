@@ -612,7 +612,7 @@ app.get("/check/status/:id", async (req, res) => {
 
         // 🚀 Send response immediately
         if (product.status === 'Genuine') {
-            res.render("verify", { product });
+            res.render("verify1", { product });
         } else {
             res.render("counterfiet");
         }
