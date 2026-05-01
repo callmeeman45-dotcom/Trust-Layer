@@ -1,0 +1,172 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500&display=swap');
+  .tl-wrap{font-family:'Outfit',sans-serif;background:#FAF5EC;min-height:100vh;padding:40px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;}
+  .tl-wrap::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.15;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='.04'/%3E%3C/svg%3E");}
+  .tl-brand{text-align:center;margin-bottom:28px;animation:tl-down .6s ease both;}
+  .tl-brand-icon{width:42px;height:42px;background:#C8821A;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;}
+  .tl-brand-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:500;color:#3D2B0E;letter-spacing:.04em;}
+  .tl-brand-sub{font-size:9px;color:#D4BFA0;letter-spacing:.3em;text-transform:uppercase;margin-top:4px;font-weight:300;}
+  .tl-card{background:#FEFCF8;width:100%;max-width:540px;border:1px solid #E4D5BC;overflow:hidden;animation:tl-up .7s .1s ease both;}
+  .tl-card-top{background:#1A1208;padding:40px 44px 36px;text-align:center;position:relative;overflow:hidden;}
+  .tl-card-top::before{content:'';position:absolute;top:-80px;left:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(200,130,26,.15) 0%,transparent 65%);pointer-events:none;}
+  .tl-card-top::after{content:'';position:absolute;bottom:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(232,168,48,.08) 0%,transparent 65%);pointer-events:none;}
+  .tl-top-grid{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M 40 0 L 0 0 0 40' fill='none' stroke='%23C8821A' stroke-width='1'/%3E%3C/svg%3E");}
+  .tl-icon-ring{width:80px;height:80px;border-radius:50%;border:1px solid rgba(200,130,26,.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;position:relative;z-index:1;animation:tl-pulse 2.5s ease infinite;}
+  .tl-icon-ring-inner{width:56px;height:56px;border-radius:50%;background:rgba(200,130,26,.12);border:1px solid rgba(200,130,26,.25);display:flex;align-items:center;justify-content:center;}
+  @keyframes tl-pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,130,26,0)}50%{box-shadow:0 0 0 10px rgba(200,130,26,.08)}}
+  .tl-card-top h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:500;color:#fff;margin-bottom:8px;position:relative;z-index:1;letter-spacing:-.01em;}
+  .tl-card-top h2 em{font-style:italic;color:#E8A830;}
+  .tl-card-top p{font-size:11px;color:rgba(255,255,255,.4);font-weight:300;letter-spacing:.06em;position:relative;z-index:1;}
+  .tl-scan-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(232,168,48,.3);padding:6px 14px;margin-top:18px;position:relative;z-index:1;}
+  .tl-badge-dot{width:6px;height:6px;border-radius:50%;background:#E8A830;animation:tl-glow 2s ease infinite;}
+  @keyframes tl-glow{0%,100%{box-shadow:0 0 6px rgba(232,168,48,.6)}50%{box-shadow:0 0 14px rgba(232,168,48,1)}}
+  .tl-scan-badge span{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:#E8A830;font-weight:300;}
+  .tl-body{padding:36px 40px 40px;}
+  .tl-sec{font-size:8px;letter-spacing:.45em;text-transform:uppercase;color:#D4BFA0;font-weight:300;margin-bottom:14px;margin-top:28px;display:flex;align-items:center;gap:10px;}
+  .tl-sec::after{content:'';flex:1;height:1px;background:#E4D5BC;}
+  .tl-sec:first-of-type{margin-top:0;}
+  .tl-alert{background:#FAF5EC;border:1px solid #E4D5BC;border-left:2px solid #C8821A;padding:18px 20px;display:flex;gap:16px;align-items:flex-start;margin-bottom:0;}
+  .tl-alert-icon{width:36px;height:36px;background:#F2E9D8;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .tl-alert-label{font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:#3D2B0E;margin-bottom:5px;}
+  .tl-alert-text{font-size:11px;color:#6B4C1E;line-height:1.8;font-weight:300;}
+  .tl-scan-timeline{margin-bottom:0;}
+  .tl-scan-row{display:flex;align-items:flex-start;gap:16px;position:relative;}
+  .tl-scan-row:not(:last-child)::after{content:'';position:absolute;left:11px;top:26px;width:1px;height:calc(100% + 4px);background:linear-gradient(to bottom,rgba(200,130,26,.3),transparent);}
+  .tl-scan-dot{width:22px;height:22px;border-radius:50%;border:1px solid rgba(200,130,26,.4);background:rgba(200,130,26,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;}
+  .tl-scan-dot-in{width:7px;height:7px;border-radius:50%;background:#C8821A;}
+  .tl-scan-dot.warn{border-color:rgba(200,130,26,.7);background:rgba(200,130,26,.2);}
+  .tl-scan-dot.warn .tl-scan-dot-in{background:#E8A830;box-shadow:0 0 8px rgba(232,168,48,.7);}
+  .tl-scan-info{padding-bottom:20px;}
+  .tl-scan-lbl{font-size:8px;letter-spacing:.3em;text-transform:uppercase;color:#D4BFA0;font-weight:300;margin-bottom:3px;}
+  .tl-scan-val{font-size:11px;color:#3D2B0E;font-weight:400;letter-spacing:.02em;}
+  .tl-scan-meta{font-size:10px;color:#6B4C1E;font-weight:300;margin-top:2px;letter-spacing:.03em;}
+  .tl-info-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:0;}
+  .tl-info-box{background:#FAF5EC;border:1px solid #E4D5BC;padding:14px 16px;}
+  .tl-info-lbl{font-size:8px;text-transform:uppercase;letter-spacing:.25em;color:#D4BFA0;margin-bottom:5px;font-weight:300;}
+  .tl-info-val{font-size:11px;font-weight:400;color:#3D2B0E;letter-spacing:.03em;}
+  .tl-actions{margin-top:28px;display:flex;flex-direction:column;gap:10px;}
+  .tl-btn-primary{width:100%;padding:14px 24px;background:#1A1208;color:#FAF5EC;border:none;font-family:'Outfit',sans-serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;font-weight:400;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .25s;position:relative;overflow:hidden;}
+  .tl-btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(200,130,26,.12),transparent);transform:translateX(-100%);transition:transform .5s ease;}
+  .tl-btn-primary:hover{background:#3D2B0E;}
+  .tl-btn-primary:hover::before{transform:translateX(100%);}
+  .tl-btn-outline{width:100%;padding:13px 24px;background:transparent;color:#6B4C1E;border:1px solid #E4D5BC;font-family:'Outfit',sans-serif;font-size:10px;letter-spacing:.25em;text-transform:uppercase;font-weight:300;cursor:pointer;transition:border-color .25s,color .25s;}
+  .tl-btn-outline:hover{border-color:#C8821A;color:#C8821A;}
+  .tl-cert{font-family:'Playfair Display',serif;font-size:9px;letter-spacing:.2em;color:#D4BFA0;border-top:1px solid #E4D5BC;padding-top:18px;margin-top:28px;font-weight:400;text-align:center;}
+  .tl-cert strong{color:#C8821A;font-weight:400;}
+  .tl-footer{margin-top:22px;font-size:10px;color:#D4BFA0;letter-spacing:.06em;font-weight:300;text-align:center;animation:tl-down .6s .3s ease both;}
+  .tl-footer a{color:#6B4C1E;text-decoration:none;transition:color .2s;}
+  .tl-footer a:hover{color:#C8821A;}
+  @keyframes tl-down{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes tl-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  @media(max-width:540px){
+    .tl-body{padding:28px 24px 32px;}
+    .tl-card-top{padding:32px 24px 28px;}
+    .tl-info-row{grid-template-columns:1fr;}
+  }
+</style>
+
+<div class="tl-wrap">
+  <div class="tl-brand">
+    <div class="tl-brand-icon">
+      <svg width="20" height="20" viewBox="0 0 18 18" fill="none">
+        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="white" opacity=".9"/>
+        <path d="M7 9.5l1.5 1.5 3-3" stroke="rgba(200,130,26,0.9)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="tl-brand-name">Trust Layer</div>
+    <div class="tl-brand-sub">Product Authentication</div>
+  </div>
+
+  <div class="tl-card">
+    <div class="tl-card-top">
+      <div class="tl-top-grid"></div>
+      <div class="tl-icon-ring">
+        <div class="tl-icon-ring-inner">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 9v6M14 19h.02" stroke="#E8A830" stroke-width="2.2" stroke-linecap="round"/>
+            <path d="M11.5 4.2L2.3 19.5A2.5 2.5 0 004.7 23.5h18.5a2.5 2.5 0 002.2-3.8L16.5 4.2a2.5 2.5 0 00-5 0z" stroke="rgba(232,168,48,.7)" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </div>
+      <h2>Duplicate Scan <em>Detected</em></h2>
+      <p>This QR code has already been scanned before</p>
+      <div class="tl-scan-badge">
+        <div class="tl-badge-dot"></div>
+        <span>Possible counterfeit · Scan #2</span>
+      </div>
+    </div>
+
+    <div class="tl-body">
+
+      <p class="tl-sec">Scan history</p>
+
+      <div class="tl-scan-timeline">
+        <div class="tl-scan-row">
+          <div class="tl-scan-dot">
+            <div class="tl-scan-dot-in"></div>
+          </div>
+          <div class="tl-scan-info">
+            <p class="tl-scan-lbl">First scan — original</p>
+            <p class="tl-scan-val">Verified successfully</p>
+            <p class="tl-scan-meta">14 Apr 2025 &nbsp;·&nbsp; 09:42 AM &nbsp;·&nbsp; Lahore, PK</p>
+          </div>
+        </div>
+        <div class="tl-scan-row">
+          <div class="tl-scan-dot warn">
+            <div class="tl-scan-dot-in"></div>
+          </div>
+          <div class="tl-scan-info">
+            <p class="tl-scan-lbl">Second scan — this device</p>
+            <p class="tl-scan-val">Flagged as duplicate</p>
+            <p class="tl-scan-meta">30 Apr 2025 &nbsp;·&nbsp; 02:17 PM &nbsp;·&nbsp; Karachi, PK</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="tl-sec">Warning</p>
+
+      <div class="tl-alert">
+        <div class="tl-alert-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 9v4M12 17h.01" stroke="#C8821A" stroke-width="2" stroke-linecap="round"/>
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#C8821A" stroke-width="1.6" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div>
+          <div class="tl-alert-label">Counterfeit Risk</div>
+          <div class="tl-alert-text">Each genuine product has a unique QR code scanned only once. This code was already used — the product you are holding may be a counterfeit copy or a re-used label.</div>
+        </div>
+      </div>
+
+     
+          
+      
+
+      <div class="tl-actions">
+        <button class="tl-btn-primary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="4" y1="22" x2="4" y2="15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          Report Counterfeit Product
+        </button>
+        <button class="tl-btn-outline">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="display:inline;vertical-align:middle;margin-right:8px;">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.66A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Contact Authorised Seller
+        </button>
+      </div>
+
+      <div class="tl-cert">
+        Trust Layer &nbsp;<strong>v2.4.1</strong>
+        &nbsp;·&nbsp; Registry ID: <strong>QR-SH5-00042-0481</strong>
+        &nbsp;·&nbsp; Encrypted at rest
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tl-footer">← <a href="#">Back to Trust Layer Home</a></div>
+</div>

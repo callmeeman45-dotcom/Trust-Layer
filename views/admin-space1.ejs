@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trust Layer — Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    :root{
+      --ink:#1A1208;
+      --bark:#3D2B0E;
+      --umber:#6B4C1E;
+      --honey:#C8821A;
+      --amber:#E8A830;
+      --cream:#FAF5EC;
+      --parchment:#F2E9D8;
+      --beige:#E4D5BC;
+      --warm:#D4BFA0;
+      --sage:#8E9E7E;
+      --white:#FEFCF8;
+      --sidebar-w:240px;
+    }
+
+    html,body{height:100%;overflow:hidden}
+    body{
+      font-family:'Outfit',sans-serif;
+      background:var(--cream);
+      color:var(--ink);
+      display:flex;
+    }
+
+    /* grain */
+    body::after{
+      content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.22;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='.04'/%3E%3C/svg%3E");
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar{
+      width:var(--sidebar-w);flex-shrink:0;
+      background:var(--ink);
+      display:flex;flex-direction:column;
+      height:100vh;position:sticky;top:0;
+      border-right:1px solid rgba(255,255,255,.05);
+      animation:fadeLeft .6s ease both;
+    }
+
+    .sb-brand{
+      padding:28px 24px 22px;
+      display:flex;align-items:center;gap:12px;
+      border-bottom:1px solid rgba(255,255,255,.05);
+      flex-shrink:0;
+    }
+    .sb-brand-icon{
+      width:34px;height:34px;background:var(--honey);
+      border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .sb-brand-name{
+      font-family:'Playfair Display',serif;
+      font-size:16px;font-weight:500;color:rgba(255,255,255,.9);letter-spacing:.04em;
+    }
+
+    .sb-user{
+      padding:20px 24px;
+      border-bottom:1px solid rgba(255,255,255,.05);
+      flex-shrink:0;
+    }
+    .sb-avatar{
+      width:58px;height:48px;border-radius:50%;
+      background:rgba(200,130,26,.18);border:1px solid rgba(200,130,26,.35);
+      display:flex;align-items:center;justify-content:center;
+      font-size:13px;font-weight:500;color:var(--amber);
+      margin-bottom:10px;letter-spacing:.04em;
+    }
+    .sb-uname{font-size:13px;font-weight:400;color:rgba(255,255,255,.85);margin-bottom:2px;letter-spacing:.02em}
+    .sb-uemail{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.08em;font-weight:300}
+    .sb-plan{
+      display:inline-flex;align-items:center;gap:6px;
+      border:1px solid rgba(200,130,26,.3);
+      padding:3px 10px;margin-top:10px;
+    }
+    .sb-plan-dot{width:5px;height:5px;border-radius:50%;background:var(--amber);animation:glow 2s ease infinite}
+    @keyframes glow{0%,100%{box-shadow:0 0 6px rgba(232,168,48,.7)}50%{box-shadow:0 0 14px rgba(232,168,48,1)}}
+    .sb-plan span{font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--amber);font-weight:300}
+
+    .sb-nav{flex:1;padding:20px 0;overflow-y:auto}
+    .sb-nav::-webkit-scrollbar{width:3px}
+    .sb-nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1)}
+
+    .sb-nav-label{
+      font-size:8px;letter-spacing:.45em;text-transform:uppercase;
+      color:rgba(255,255,255,.18);padding:10px 24px 6px;font-weight:300;
+    }
+    .sb-link{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 24px;font-size:11px;
+      color:rgba(255,255,255,.38);cursor:pointer;
+      transition:all .2s;
+      border-left:2px solid transparent;letter-spacing:.08em;font-weight:300;
+    }
+    .sb-link:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.03);border-left-color:rgba(255,255,255,.15)}
+    .sb-link.active{color:var(--amber);background:rgba(200,130,26,.08);border-left-color:var(--honey)}
+    .sb-link svg{flex-shrink:0;opacity:.7}
+    .sb-link.active svg{opacity:1}
+
+    .sb-bottom{
+      padding:18px 20px;border-top:1px solid rgba(255,255,255,.05);flex-shrink:0;
+    }
+    .logout-btn{
+      display:flex;align-items:center;gap:8px;width:100%;
+      padding:9px 14px;background:transparent;
+      border:1px solid rgba(255,255,255,.1);
+      color:rgba(255,255,255,.35);font-size:10px;
+      letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
+      font-family:'Outfit',sans-serif;font-weight:300;
+      transition:all .25s;
+    }
+    .logout-btn:hover{border-color:rgba(200,130,26,.4);color:var(--amber)}
+
+    /* ── MAIN AREA ── */
+    .main{
+      flex:1;display:flex;flex-direction:column;
+      height:100vh;overflow:hidden;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar{
+      background:var(--white);
+      border-bottom:1px solid var(--beige);
+      padding:0 36px;height:64px;
+      display:flex;align-items:center;justify-content:space-between;
+      flex-shrink:0;
+      animation:slideDown .6s ease both;
+    }
+    .topbar-left{display:flex;align-items:center;gap:10px}
+    .topbar-page{
+      font-family:'Playfair Display',serif;
+      font-size:18px;font-weight:500;color:var(--ink);
+    }
+    .topbar-sep{color:var(--beige);font-size:14px;margin:0 2px}
+    .topbar-sub{font-size:11px;color:var(--warm);letter-spacing:.1em;font-weight:300}
+
+    .topbar-right{display:flex;align-items:center;gap:12px}
+    .tb-search{
+      background:var(--parchment);
+      border:1px solid var(--beige);
+      padding:8px 16px;font-size:11px;
+      color:var(--warm);display:flex;align-items:center;gap:9px;
+      cursor:text;letter-spacing:.06em;font-weight:300;
+      transition:border-color .2s;
+    }
+    .tb-search:hover{border-color:var(--warm)}
+    .tb-search span{color:var(--warm)}
+    .tb-btn{
+      width:50px;height:34px;background:var(--parchment);
+      border:1px solid var(--beige);
+      display:flex;align-items:center;justify-content:center;
+      cursor:pointer;transition:border-color .2s;flex-shrink:0;
+    }
+    .tb-btn:hover{border-color:var(--honey)}
+
+    /* ── CONTENT ── */
+    .content{
+      flex:1;overflow-y:auto;padding:32px 36px;
+      background:var(--cream);
+    }
+    .content::-webkit-scrollbar{width:4px}
+    .content::-webkit-scrollbar-thumb{background:var(--beige)}
+
+    /* Section headers */
+    .section-eyebrow{
+      display:flex;align-items:center;gap:10px;
+      font-size:8px;letter-spacing:.45em;text-transform:uppercase;
+      color:var(--honey);font-weight:300;margin-bottom:18px;
+    }
+    .section-eyebrow::after{content:'';flex:0 0 36px;height:1px;background:var(--beige)}
+
+    /* ── STATS STRIP ── */
+    .stats-strip{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      gap:1px;background:var(--beige);
+      border:1px solid var(--beige);
+      margin-bottom:28px;
+      animation:fadeUp .7s .1s ease both;
+    }
+    .stat-cell{
+      background:var(--white);
+      padding:22px 24px;
+      position:relative;overflow:hidden;
+    }
+    .stat-cell::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,var(--honey),transparent);
+      opacity:0;transition:opacity .3s;
+    }
+    .stat-cell:hover::before{opacity:1}
+    .stat-eyebrow{font-size:8px;letter-spacing:.32em;text-transform:uppercase;color:var(--warm);font-weight:300;margin-bottom:10px}
+    .stat-num{
+      font-family:'Playfair Display',serif;
+      font-size:2rem;font-weight:500;color:var(--ink);
+      letter-spacing:-.02em;display:block;margin-bottom:4px;
+    }
+    .stat-change{font-size:10px;color:var(--sage);letter-spacing:.08em;font-weight:300;display:flex;align-items:center;gap:4px}
+    .stat-change.warn{color:var(--honey)}
+
+    /* ── QUICK ACTIONS ── */
+    .qa-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      gap:12px;margin-bottom:28px;
+      animation:fadeUp .7s .15s ease both;
+    }
+    .qa-card{
+      background:var(--white);border:1px solid var(--beige);
+      padding:22px 20px;cursor:pointer;
+      transition:border-color .25s,background .25s;
+      position:relative;overflow:hidden;
+      text-decoration:none;display:block;
+    }
+    .qa-card::before{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(90deg,var(--honey),transparent);
+      transform:scaleX(0);transform-origin:left;transition:transform .3s;
+    }
+    .qa-card:hover{border-color:var(--honey);background:var(--parchment)}
+    .qa-card:hover::before{transform:scaleX(1)}
+    .qa-icon{
+      width:38px;height:38px;background:var(--parchment);
+      display:flex;align-items:center;justify-content:center;
+      margin-bottom:16px;flex-shrink:0;
+    }
+    .qa-arrow{
+      position:absolute;top:18px;right:18px;
+      font-size:13px;color:var(--beige);
+      transition:color .2s,transform .2s;
+    }
+    .qa-card:hover .qa-arrow{color:var(--honey);transform:translate(2px,-2px)}
+    .qa-title{
+      font-family:'Playfair Display',serif;
+      font-size:13px;font-weight:500;color:var(--ink);margin-bottom:5px;
+    }
+    .qa-desc{font-size:10px;color:var(--warm);line-height:1.6;font-weight:300;letter-spacing:.03em}
+
+    /* ── TWO-COL PANELS ── */
+    .panels{
+      display:grid;grid-template-columns:1.1fr .9fr;
+      gap:16px;margin-bottom:16px;
+      animation:fadeUp .7s .2s ease both;
+    }
+    .panel{
+      background:var(--white);border:1px solid var(--beige);
+      padding:24px;
+      position:relative;
+    }
+    .panel::before,.panel::after{
+      content:'';position:absolute;
+      border-color:rgba(200,130,26,.2);border-style:solid;width:14px;height:14px;
+    }
+    .panel::before{top:12px;left:12px;border-width:1px 0 0 1px}
+    .panel::after{bottom:12px;right:12px;border-width:0 1px 1px 0}
+
+    .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+    .panel-title{
+      font-family:'Playfair Display',serif;
+      font-size:14px;font-weight:500;color:var(--ink);
+    }
+    .panel-action{
+      font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+      color:var(--honey);cursor:pointer;
+      background:transparent;border:1px solid var(--beige);
+      padding:5px 12px;font-family:'Outfit',sans-serif;font-weight:300;
+      transition:border-color .2s,color .2s;
+    }
+    .panel-action:hover{border-color:var(--honey);color:var(--umber)}
+
+    /* product rows */
+    .product-row{
+      display:flex;align-items:center;gap:12px;
+      padding:11px 0;border-bottom:1px solid var(--parchment);
+    }
+    .product-row:last-child{border-bottom:none}
+    .pr-icon{
+      width:32px;height:32px;background:var(--parchment);
+      border:1px solid var(--beige);
+      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    }
+    .pr-name{font-size:12px;font-weight:400;color:var(--ink);letter-spacing:.02em}
+    .pr-id{font-size:9px;color:var(--warm);font-family:monospace;letter-spacing:.08em;margin-top:2px}
+    .pr-badge{
+      font-size:8px;padding:3px 9px;letter-spacing:.15em;
+      font-weight:300;border:1px solid;text-transform:uppercase;
+    }
+    .pr-badge.ok{border-color:rgba(142,158,126,.4);color:var(--sage);background:rgba(142,158,126,.06)}
+    .pr-badge.warn{border-color:rgba(200,130,26,.4);color:var(--honey);background:rgba(200,130,26,.06)}
+    .pr-scans{text-align:right;margin-left:auto}
+    .pr-scans strong{display:block;font-family:'Playfair Display',serif;font-size:15px;font-weight:500;color:var(--ink)}
+    .pr-scans span{font-size:9px;color:var(--warm);letter-spacing:.1em;font-weight:300}
+
+    /* activity rows */
+    .act-row{
+      display:flex;align-items:flex-start;gap:12px;
+      padding:11px 0;border-bottom:1px solid var(--parchment);
+    }
+    .act-row:last-child{border-bottom:none}
+    .act-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+    .act-dot.green{background:var(--sage)}
+    .act-dot.amber{background:var(--honey);animation:glow 2s ease infinite}
+    .act-dot.blue{background:#378add}
+    .act-msg{font-size:11px;color:var(--ink);line-height:1.6;letter-spacing:.02em}
+    .act-time{font-size:9px;color:var(--warm);margin-top:3px;letter-spacing:.1em;font-weight:300}
+
+    /* ── SCAN BAR CHART ── */
+    .scan-bar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .scan-bar-row:last-child{margin-bottom:0}
+    .scan-label{font-size:10px;color:var(--umber);width:100px;flex-shrink:0;letter-spacing:.04em;font-weight:400}
+    .scan-track{flex:1;background:var(--parchment);height:5px;position:relative}
+    .scan-fill{height:100%;background:var(--honey);transition:width .6s ease}
+    .scan-val{font-size:10px;color:var(--warm);width:36px;text-align:right;flex-shrink:0;font-weight:300}
+
+    /* ── HASH / VERIFY CARD ── */
+    .hash-card{
+      background:var(--ink);padding:24px 28px;
+      position:relative;overflow:hidden;
+    }
+    .hash-card::before{
+      content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;
+      background:radial-gradient(circle,rgba(200,130,26,.12),transparent 65%);
+    }
+    .hash-lbl{font-size:8px;letter-spacing:.35em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:12px;font-weight:300}
+    .hash-val{
+      font-family:'Playfair Display',serif;font-size:12px;
+      color:var(--amber);letter-spacing:.08em;line-height:1.8;word-break:break-all;
+    }
+    .hash-footer{
+      margin-top:16px;padding-top:16px;
+      border-top:1px solid rgba(255,255,255,.06);
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .hash-ts{font-size:9px;color:rgba(255,255,255,.2);letter-spacing:.12em;font-weight:300}
+
+    /* ── EMPTY STATE ── */
+    .empty{text-align:center;padding:40px 20px}
+    .empty-icon{
+      width:44px;height:44px;background:var(--parchment);
+      border:1px solid var(--beige);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 14px;
+    }
+    .empty-text{font-size:12px;color:var(--warm);margin-bottom:14px;font-weight:300;letter-spacing:.04em}
+    .add-btn{
+      display:inline-flex;align-items:center;gap:6px;
+      background:var(--ink);color:var(--cream);border:none;
+      padding:9px 20px;font-size:10px;letter-spacing:.2em;
+      text-transform:uppercase;cursor:pointer;
+      font-family:'Outfit',sans-serif;font-weight:300;transition:background .25s;
+    }
+    .add-btn:hover{background:var(--bark)}
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideDown{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeLeft{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1024px){
+      :root{--sidebar-w:200px}
+      .qa-grid{grid-template-columns:repeat(2,1fr)}
+      .stats-strip{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:768px){
+      html,body{height:auto;overflow:auto}
+      body{flex-direction:column}
+      .sidebar{
+        width:100%;height:auto;position:relative;
+        flex-direction:row;flex-wrap:wrap;
+        border-right:none;border-bottom:1px solid rgba(255,255,255,.05);
+        animation:none;
+      }
+      .sb-brand{border-bottom:none;padding:16px 20px;flex:0 0 auto}
+      .sb-user{padding:14px 20px;border-bottom:none;display:flex;align-items:center;gap:12px;flex-wrap:wrap;flex:1}
+      .sb-avatar{margin-bottom:0}
+      .sb-plan{margin-top:0}
+      .sb-nav,.sb-bottom{display:none}
+      .main{height:auto;overflow:visible}
+      .topbar{padding:0 20px}
+      .content{padding:20px}
+      .stats-strip{grid-template-columns:repeat(2,1fr)}
+      .qa-grid{grid-template-columns:1fr 1fr}
+      .panels{grid-template-columns:1fr}
+      .tb-search{display:none}
+    }
+    @media(max-width:480px){
+      .qa-grid{grid-template-columns:1fr}
+      .stats-strip{grid-template-columns:1fr}
+    }
+    .nostyling{
+        text-decoration:none;color:inherit;
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-icon">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="white" opacity=".9"/>
+        <path d="M7 9.5l1.5 1.5 3-3" stroke="rgba(200,130,26,0.9)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div class="sb-brand-name">Trust Layer</div>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-avatar"><%=brandname%></div>
+    <div class="sb-uname"><%=username%></div>
+    <div class="sb-uemail"><%=email%></div>
+    <div class="sb-plan">
+      <div class="sb-plan-dot"></div>
+      <span>Pro plan</span>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-nav-label">Workspace</div>
+    <a class="nostyling"  href="/admin/dashboard">
+    <div class="sb-link active" onclick="setActive(this)">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="1" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="6" height="6" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+      Dashboard
+    </a>
+    </div>
+    <a  class="nostyling"  href="/all-products">
+    <div class="sb-link" onclick="setActive(this)">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h8M2 12h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      All Products
+    </a>
+    </div>
+    <div class="sb-link" onclick="setActive(this)">
+        <a  class="nostyling"  href="/add-product">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx=".5" stroke="currentColor" stroke-width="1.2"/><path d="M11.5 9v5M9 11.5h5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Add Product
+      </a>
+    </div>
+    <div class="sb-link" onclick="setActive(this)">
+        <a  class="nostyling"  href="/admin/dashboard">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M2 12l3-3 2.5 2.5 3.5-4.5 3 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Analytics
+      </a>
+    </div>
+
+    <div class="sb-nav-label" style="margin-top:8px">Tools</div>
+    <div class="sb-link" onclick="setActive(this)">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.2"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Scan Monitor
+    </div>
+    <div class="sb-link" onclick="setActive(this)">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 7h6M5 10h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Lab Reports
+    </div>
+    <div class="sb-link" onclick="setActive(this)">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      Account
+    </div>
+  </nav>
+
+  <form action="/logout" method="POST">
+    <div class="sb-bottom">
+      <button class="logout-btn" type="submit">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M6 2H3a1 1 0 00-1 1v10a1 1 0 001 1h3M11 5l3 3-3 3M14 8H7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sign out
+      </button>
+    </div>
+  </form>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <span class="topbar-page">Dashboard</span>
+      <span class="topbar-sep">·</span>
+      <span class="topbar-sub">Welcome back, <%=username%></span>
+    </div>
+    <div class="topbar-right">
+      <div class="tb-search">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="#D4BFA0" stroke-width="1.3"/><path d="M10.5 10.5L14 14" stroke="#D4BFA0" stroke-width="1.3" stroke-linecap="round"/></svg>
+        <span>Search products...</span>
+      </div>
+      <div class="tb-btn">
+        <svg width="34" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2a5 5 0 00-5 5v3l-1 1.5h12L13 10V7a5 5 0 00-5-5z" stroke="#D4BFA0" stroke-width="1.2"/><path d="M6.5 13.5a1.5 1.5 0 003 0" stroke="#D4BFA0" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="tb-btn" style="width:34px;height:34px">
+        <div style="width:48px;height:28px;border-radius:50%;background:rgba(200,130,26,.15);border:1px solid rgba(200,130,26,.3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--amber);font-weight:500;letter-spacing:.04em"><%=brandname%></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- STATS STRIP -->
+    <p class="section-eyebrow">Overview</p>
+    <div class="stats-strip">
+      <div class="stat-cell">
+        <div class="stat-eyebrow">Products registered</div>
+        <span class="stat-num">12,084</span>
+        <div class="stat-change">↑ 128 this month</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-eyebrow">Total scans</div>
+        <span class="stat-num">94,327</span>
+        <div class="stat-change">↑ 3.2k this week</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-eyebrow">Counterfeit alerts</div>
+        <span class="stat-num">0</span>
+        <div class="stat-change">✔ Clean registry</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-eyebrow">Scan accuracy</div>
+        <span class="stat-num">98.7%</span>
+        <div class="stat-change warn">↓ 0.1% from last week</div>
+      </div>
+    </div>
+
+    <!-- QUICK ACTIONS -->
+    <p class="section-eyebrow" style="margin-bottom:14px">Quick actions</p>
+    <div class="qa-grid">
+      <a href="/add-product" class="qa-card">
+        <div class="qa-arrow">↗</div>
+        <div class="qa-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="2" stroke="#C8821A" stroke-width="1.2"/><path d="M10 7v6M7 10h6" stroke="#C8821A" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="qa-title">Add new product</div>
+        <div class="qa-desc">Register a unit and generate its unique QR code</div>
+      </a>
+      <a href="/all-products" class="qa-card">
+        <div class="qa-arrow">↗</div>
+        <div class="qa-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 6h14M3 10h10M3 14h7" stroke="#C8821A" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="qa-title">View all products</div>
+        <div class="qa-desc">Browse every registered product and its scan history</div>
+      </a>
+      <a href="/add-product" class="qa-card">
+        <div class="qa-arrow">↗</div>
+        <div class="qa-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><rect x="2" y="5" width="16" height="12" rx="1.5" stroke="#C8821A" stroke-width="1.2"/><path d="M5 5V4a3 3 0 016 0v1" stroke="#C8821A" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="11" r="1" fill="#C8821A"/></svg>
+        </div>
+        <div class="qa-title">Batch upload</div>
+        <div class="qa-desc">Upload a full product batch and generate QR codes in bulk</div>
+      </a>
+      <a href="/admin/dashboard" class="qa-card">
+        <div class="qa-arrow">↗</div>
+        <div class="qa-icon">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M3 15l4-5 3 3 3.5-5L17 15" stroke="#C8821A" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="qa-title">Analytics &amp; scans</div>
+        <div class="qa-desc">Real-time scan data, geography, and counterfeit alerts</div>
+      </a>
+    </div>
+
+    <!-- TWO-COL PANELS -->
+    <div class="panels">
+
+      <!-- RECENT PRODUCTS -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Recent products</div>
+          <button class="panel-action">View all ↗</button>
+        </div>
+        <div class="product-row">
+          <div class="pr-icon">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 4 5 4 10C4 13 6.2 15 9 15C11.8 15 14 13 14 10C14 5 9 2 9 2Z" fill="#C8821A" opacity=".6"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="pr-name">Sidr Honey 500g</div>
+            <div class="pr-id">TL-0042-SH5</div>
+          </div>
+          <div class="pr-badge ok">Authentic</div>
+          <div class="pr-scans"><strong>247</strong><span>scans</span></div>
+        </div>
+        <div class="product-row">
+          <div class="pr-icon">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 4 5 4 10C4 13 6.2 15 9 15C11.8 15 14 13 14 10C14 5 9 2 9 2Z" fill="#C8821A" opacity=".6"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="pr-name">Wild Forest Honey 1kg</div>
+            <div class="pr-id">TL-0038-WH2</div>
+          </div>
+          <div class="pr-badge ok">Authentic</div>
+          <div class="pr-scans"><strong>183</strong><span>scans</span></div>
+        </div>
+        <div class="product-row">
+          <div class="pr-icon">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="12" rx="2" stroke="#C8821A" stroke-width="1.1" opacity=".6"/><rect x="6" y="6" width="6" height="6" rx="1" fill="#C8821A" opacity=".35"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="pr-name">Black Seed Oil 250ml</div>
+            <div class="pr-id">TL-0031-BS9</div>
+          </div>
+          <div class="pr-badge warn">Rescan</div>
+          <div class="pr-scans"><strong>94</strong><span>scans</span></div>
+        </div>
+        <div class="product-row">
+          <div class="pr-icon">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><path d="M9 2C9 2 4 5 4 10C4 13 6.2 15 9 15C11.8 15 14 13 14 10C14 5 9 2 9 2Z" fill="#C8821A" opacity=".6"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="pr-name">Thal Desert Honey 250g</div>
+            <div class="pr-id">TL-0029-TD3</div>
+          </div>
+          <div class="pr-badge ok">Authentic</div>
+          <div class="pr-scans"><strong>61</strong><span>scans</span></div>
+        </div>
+        <div class="product-row">
+          <div class="pr-icon">
+            <svg width="16" height="16" viewBox="0 0 18 18" fill="none"><rect x="3" y="3" width="12" height="12" rx="2" stroke="#C8821A" stroke-width="1.1" opacity=".6"/><rect x="6" y="6" width="6" height="6" rx="1" fill="#C8821A" opacity=".35"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="pr-name">Raw Propolis Extract</div>
+            <div class="pr-id">TL-0024-RP7</div>
+          </div>
+          <div class="pr-badge ok">Authentic</div>
+          <div class="pr-scans"><strong>38</strong><span>scans</span></div>
+        </div>
+      </div>
+
+      <!-- RIGHT COL -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+
+        <!-- ACTIVITY -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Live activity</div>
+            <button class="panel-action">Monitor ↗</button>
+          </div>
+          <div class="act-row">
+            <div class="act-dot green"></div>
+            <div>
+              <div class="act-msg">TL-0042-SH5 scanned · First scan confirmed</div>
+              <div class="act-time">2 minutes ago · Lahore, PK</div>
+            </div>
+          </div>
+          <div class="act-row">
+            <div class="act-dot green"></div>
+            <div>
+              <div class="act-msg">TL-0038-WH2 registered · QR generated</div>
+              <div class="act-time">14 minutes ago · System</div>
+            </div>
+          </div>
+          <div class="act-row">
+            <div class="act-dot amber"></div>
+            <div>
+              <div class="act-msg">TL-0031-BS9 — second scan detected, monitoring</div>
+              <div class="act-time">1 hour ago · Karachi, PK</div>
+            </div>
+          </div>
+          <div class="act-row">
+            <div class="act-dot blue"></div>
+            <div>
+              <div class="act-msg">Lab report attached to TL-0042-SH5</div>
+              <div class="act-time">3 hours ago · System</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SCAN GEOGRAPHY -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Scan geography</div>
+          </div>
+          <div class="scan-bar-row">
+            <div class="scan-label">Lahore</div>
+            <div class="scan-track"><div class="scan-fill" style="width:82%"></div></div>
+            <div class="scan-val">82%</div>
+          </div>
+          <div class="scan-bar-row">
+            <div class="scan-label">Karachi</div>
+            <div class="scan-track"><div class="scan-fill" style="width:54%"></div></div>
+            <div class="scan-val">54%</div>
+          </div>
+          <div class="scan-bar-row">
+            <div class="scan-label">Islamabad</div>
+            <div class="scan-track"><div class="scan-fill" style="width:38%"></div></div>
+            <div class="scan-val">38%</div>
+          </div>
+          <div class="scan-bar-row">
+            <div class="scan-label">Faisalabad</div>
+            <div class="scan-track"><div class="scan-fill" style="width:21%"></div></div>
+            <div class="scan-val">21%</div>
+          </div>
+          <div class="scan-bar-row">
+            <div class="scan-label">Other</div>
+            <div class="scan-track"><div class="scan-fill" style="width:14%"></div></div>
+            <div class="scan-val">14%</div>
+          </div>
+        </div>
+
+        <!-- VERIFICATION HASH -->
+        <div class="hash-card">
+          <div class="hash-lbl">Last verification hash</div>
+          <div class="hash-val">0x3f7a1b92 · e08c4d5f<br>0e6a2b84 · 1c3d9f7e</div>
+          <div class="hash-footer">
+            <span class="hash-ts">Verified · 30 Apr 2026 · 14:32 UTC</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="color:rgba(255,255,255,.12)">
+              <path d="M2 6h12M2 10h12M6 2l-1.5 12M11.5 2L10 14" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  function setActive(el){
+    document.querySelectorAll('.sb-link').forEach(l=>l.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  // Animate scan bars on load
+  window.addEventListener('load',()=>{
+    document.querySelectorAll('.scan-fill').forEach(el=>{
+      const w=el.style.width;
+      el.style.width='0';
+      setTimeout(()=>{el.style.width=w},200);
+    });
+  });
+</script>
+</body>
+</html>

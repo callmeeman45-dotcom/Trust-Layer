@@ -59,6 +59,7 @@ passport.deserializeUser(User.deserializeUser());
 
 const isloggedin=(req,res,next)=>{
     if(req.isAuthenticated()){
+     req.session.redirectURL=req.originalUrl;
         return next();
     }
     res.redirect("/login");
@@ -86,13 +87,18 @@ app.post("/register",async(req,res)=>{
 });
 
 app.get("/admin/space",isloggedin,(req,res)=>{
-    res.render("admin-space",{username:req.user.username,brandname:req.user.brandname,email:req.user.email});
+    res.render("admin-space1",{username:req.user.username,brandname:req.user.brandname,email:req.user.email});
 });
 app.post("/login",passport.authenticate("local",{
-    successRedirect:"/",
+    successRedirect:"/admin/space",
     failureRedirect:"/login",
     // failureFlash:true
 }),async(req,res)=>{
+     if(!res.locals.originalurl){
+    return res.redirect("/listings");
+  }
+  res.redirect(res.locals.originalurl);
+
    
 });
 const storage = new CloudinaryStorage({
@@ -109,7 +115,43 @@ app.use(cors());
 
 main().catch(err=>console.log(err));
 app.get("/add-product",(req,res)=>{
-    res.render("add-product");
+    res.render("add-product1");
+});
+
+app.get("/batch/edit/:batchNumber", async (req, res) => {
+    const product = await Product.findOne({ batchNumber: req.params.batchNumber, brandname: req.user.brandname });
+    if (!product) {
+        return res.status(404).send("Batch not found");
+    }
+    res.render("edit", {product})
+});
+
+
+app.post("/edit-batch/:batchNumber", upload.single("image"), async (req, res) => {
+    try {
+        const { name, description, price, manufacturingDate, expiryDate, Recall } = req.body;
+
+        // Only include fields that were actually provided
+        const updateData = {
+            ...(name              && { name }),
+            ...(description       && { description }),
+            ...(price             && { price }),
+            ...(manufacturingDate && { manufacturingDate }),
+            ...(expiryDate        && { expiryDate }),
+            ...(Recall          !== undefined && { Recall }),
+            ...(req.file          && { image: req.file.path }),
+        };
+
+        await Product.updateMany(
+            { batchNumber: req.params.batchNumber, brandname: req.user.brandname },
+            { $set: updateData }
+        );
+
+        res.redirect("/admin/space");
+    } catch (err) {
+        console.error("Error updating batch:", err);
+        res.status(500).json({ error: "Failed to update batch" });
+    }
 });
 // app.post("/add-product", upload.single("image"), async (req, res) => {
 //     try {
@@ -553,7 +595,7 @@ app.get("/all-products", async (req, res) => {
 });
 app.get("/",async( req,res)=>{
     // res.send("Welcome to the product details API");
-    res.render("index");
+    res.render("index1");
 });
 
 const geoip = require("geoip-lite");
