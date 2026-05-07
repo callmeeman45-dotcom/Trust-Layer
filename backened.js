@@ -700,9 +700,214 @@ res.render("dashboard", { records});
 });
 
 
-app.get("/analytics", async (req, res) => {
-    res.render("analytics");
+
+
+
+// routes/analytics.js
+// Drop this into your existing Express routes folder and require it in app.js
+
+const { MongoClient } = require('mongodb');
+
+// ── MongoDB connection ────────────────────────────────────────────────────────
+const MONGO_URI = process.env.mongodb_cloud_address;
+const DB_NAME   = "test"; // your database name;
+const COLLECTION = 'scanrecords'; // your collection name;
+let client;
+async function getCollection() {
+  if (!client) {
+    client = new MongoClient(MONGO_URI);
+    await client.connect();
+  }
+  return client.db(DB_NAME).collection(COLLECTION);
+}
+
+// ── Helper: parse "Mon Apr 27 2026 17:09:44 GMT+0000 (...)" → Date ───────────
+function parseDate(str) {
+  return new Date(str);
+}
+
+// ── GET /analytics ────────────────────────────────────────────────────────────
+app.get('/analytics', isloggedin,async (req, res) => {
+    const brandname = req.user.brandname;
+    console.log("Loading analytics dashboard...");
+  try {
+    const col  = await getCollection();
+    const docs = await col.find({brandname: brandname}).toArray();
+    console.log(docs);
+
+    // ── 1. Genuine vs Counterfeit ─────────────────────────────────────────────
+    const statusCount = { Genuine: 0, Counterfeit: 0 };
+    docs.forEach(d => {
+      const s = (d.productstatus || '').trim();
+      if (s === 'Genuine')    statusCount.Genuine++;
+      if (s === 'Counterfeit') statusCount.Counterfeit++;
+    });
+
+    // ── 2. Scans Over Time (daily) ────────────────────────────────────────────
+    const dailyMap = {};
+    docs.forEach(d => {
+      const dt = parseDate(d['scanDate']);
+      if (isNaN(dt)) return;
+      const day = dt.toISOString().slice(0, 10); // "YYYY-MM-DD"
+      if (!dailyMap[day]) dailyMap[day] = { Genuine: 0, Counterfeit: 0 };
+      const s = (d.productstatus || '').trim();
+      if (s === 'Genuine')    dailyMap[day].Genuine++;
+      if (s === 'Counterfeit') dailyMap[day].Counterfeit++;
+    });
+    const sortedDays = Object.keys(dailyMap).sort();
+    const scansOverTime = {
+      labels:       sortedDays,
+      genuine:      sortedDays.map(d => dailyMap[d].Genuine),
+      counterfeit:  sortedDays.map(d => dailyMap[d].Counterfeit),
+    };
+
+    // ── 3. Scans by IP Address (Top 12, colored by dominant status) ───────────
+    // const ipMap = {};
+    // docs.forEach(d => {
+    //   const ip = (d['ipAddress'] || 'Unknown').trim();
+    //   const s  = (d.productstatus || '').trim();
+    //   if (!ipMap[ip]) ipMap[ip] = { Genuine: 0, Counterfeit: 0, total: 0 };
+    //   ipMap[ip].total++;
+    //   if (s === 'Genuine')    ipMap[ip].Genuine++;
+    //   if (s === 'Counterfeit') ipMap[ip].Counterfeit++;
+    // });
+    // const topIPs = Object.entries(ipMap)
+    //   .sort((a, b) => b[1].total - a[1].total)
+    //   .slice(0, 12);
+    // const ipChart = {
+    //   labels:      topIPs.map(([ip]) => ip),
+    //   genuine:     topIPs.map(([, v]) => v.Genuine),
+    //   counterfeit: topIPs.map(([, v]) => v.Counterfeit),
+    // };
+
+
+
+    // ── 3. Scans by IP Address
+const ipMap = {};
+docs.forEach(d => {
+  const ip  = (d.ipAddress || 'Unknown').trim();
+  const s   = (d.productstatus || '').trim();
+  const pid = d.productId ? d.productId.toHexString() : 'Unknown';
+
+  if (!ipMap[ip]) ipMap[ip] = {
+    Genuine: 0, Counterfeit: 0, total: 0,
+    genuineProducts: {},
+    counterfeitProducts: {}
+  };
+
+  ipMap[ip].total++;
+
+  if (s === 'Genuine') {
+    ipMap[ip].Genuine++;
+    if (!ipMap[ip].genuineProducts[pid]) ipMap[ip].genuineProducts[pid] = 0;
+    ipMap[ip].genuineProducts[pid]++;
+  }
+
+  if (s === 'Counterfeit') {
+    ipMap[ip].Counterfeit++;
+    if (!ipMap[ip].counterfeitProducts[pid]) ipMap[ip].counterfeitProducts[pid] = 0;
+    ipMap[ip].counterfeitProducts[pid]++;
+  }
 });
+const topIPs = Object.entries(ipMap)
+  .sort((a, b) => b[1].total - a[1].total)
+  .slice(0, 12);
+const ipChart = {
+  labels:              topIPs.map(([ip]) => ip),
+  genuine:             topIPs.map(([, v]) => v.Genuine),
+  counterfeit:         topIPs.map(([, v]) => v.Counterfeit),
+  genuineProducts:     topIPs.map(([, v]) => v.genuineProducts),
+  counterfeitProducts: topIPs.map(([, v]) => v.counterfeitProducts),
+};
+    // ── 4. Multi-Scan Products (products scanned > 1 time) ───────────────────
+const productMap = {};
+docs.forEach(d => {
+  const pid = d.productId ? `${d.productId}` : 'Unknown';
+  const s   = (d.productstatus || '').trim();
+  const ip  = d.ipAddress || d.ip || 'Unknown IP';
+
+  if (!productMap[pid]) productMap[pid] = { 
+    Genuine: 0, 
+    Counterfeit: 0, 
+    total: 0, 
+    genuineIPs: new Set(),      // ← IPs that scanned as Genuine
+    counterfeitIPs: new Set()   // ← IPs that scanned as Counterfeit
+  };
+
+  productMap[pid].total++;
+
+  if (s === 'Genuine') {
+    productMap[pid].Genuine++;
+    productMap[pid].genuineIPs.add(ip);
+  }
+  if (s === 'Counterfeit') {
+    productMap[pid].Counterfeit++;
+    productMap[pid].counterfeitIPs.add(ip);
+  }
+});
+
+const multiScan = Object.entries(productMap)
+//   .filter(([, v]) => v.total > 1)
+  .sort((a, b) => b[1].total - a[1].total);
+
+const productChart = {
+  labels:         multiScan.map(([pid]) => '…' + pid.slice(-6)),
+  fullIds:        multiScan.map(([pid]) => pid),
+  genuine:        multiScan.map(([, v]) => v.Genuine),
+  counterfeit:    multiScan.map(([, v]) => v.Counterfeit),
+  total:          multiScan.map(([, v]) => v.total),
+  genuineIPs:     multiScan.map(([, v]) => [...v.genuineIPs]),     // ← new
+  counterfeitIPs: multiScan.map(([, v]) => [...v.counterfeitIPs]), // ← new
+};
+    // ── 5. Geographic Summary ─────────────────────────────────────────────────
+    const geoMap = {};
+    docs.forEach(d => {
+      const loc   = (d.location || 'Unknown').trim();
+      const parts = loc.split(',').map(p => p.trim());
+      const country = parts[0] || 'Unknown';
+      const city    = parts[1] || 'Unknown';
+      const key     = country;
+      if (!geoMap[key]) geoMap[key] = { country, city, Genuine: 0, Counterfeit: 0, total: 0 };
+      geoMap[key].total++;
+      const s = (d.productstatus || '').trim();
+      if (s === 'Genuine')    geoMap[key].Genuine++;
+      if (s === 'Counterfeit') geoMap[key].Counterfeit++;
+    });
+    const geoData = Object.values(geoMap).sort((a, b) => b.total - a.total);
+    const geoChart = {
+      labels:      geoData.map(g => g.country),
+      genuine:     geoData.map(g => g.Genuine),
+      counterfeit: geoData.map(g => g.Counterfeit),
+      rates:       geoData.map(g => ((g.Counterfeit / g.total) * 100).toFixed(1)),
+      totals:      geoData.map(g => g.total),
+    };
+console.log("Status Count:", statusCount);
+console.log("Scans Over Time:", scansOverTime);
+console.log("IP Chart:", ipChart);
+console.log("Product Chart:", productChart);
+console.log("Geo Chart:", geoChart);
+    // ── Render ─────────────────────────────────────────────────────────────────
+    res.render('analytics2', {
+      totalScans:docs.length,
+      statusCount,
+      scansOverTime,
+      ipChart,
+      productChart,
+      geoChart,
+      geoData,
+      lastUpdated:   new Date().toLocaleString(),
+      brandname: req.user.brandname
+    });
+
+  } catch (err) {
+    console.error('Analytics error:', err);
+    res.status(500).send('Error loading analytics: ' + err.message);
+  }
+});
+
+
+
+
 
 
 app.listen(3000, () => {

@@ -558,9 +558,11 @@
   const timeLabels   = <%- JSON.stringify(scansOverTime.labels) %>;
   const timeGenuine  = <%- JSON.stringify(scansOverTime.genuine) %>;
   const timeCounterf = <%- JSON.stringify(scansOverTime.counterfeit) %>;
-  const ipLabels     = <%- JSON.stringify(ipChart.labels) %>;
-  const ipGenuine    = <%- JSON.stringify(ipChart.genuine) %>;
-  const ipCounterf   = <%- JSON.stringify(ipChart.counterfeit) %>;
+  const ipLabels           = <%- JSON.stringify(ipChart.labels) %>;
+  const ipGenuine          = <%- JSON.stringify(ipChart.genuine) %>;
+  const ipCounterf         = <%- JSON.stringify(ipChart.counterfeit) %>;
+  const ipGenuineProds     = <%- JSON.stringify(ipChart.genuineProducts) %>;
+  const ipCounterfeitProds = <%- JSON.stringify(ipChart.counterfeitProducts) %>;
   const prodLabels   = <%- JSON.stringify(productChart.labels) %>;
   const prodGenuine  = <%- JSON.stringify(productChart.genuine) %>;
   const prodCounterf = <%- JSON.stringify(productChart.counterfeit) %>;
@@ -568,8 +570,8 @@
   const geoLabels    = <%- JSON.stringify(geoChart.labels) %>;
   const geoGenuine   = <%- JSON.stringify(geoChart.genuine) %>;
   const geoCounterf  = <%- JSON.stringify(geoChart.counterfeit) %>;
-  // Add this line alongside the other ipChart data injections
-const ipProducts = <%- JSON.stringify(ipChart.products) %>;
+  const prodGenuineIPs     = <%- JSON.stringify(productChart.genuineIPs) %>;
+  const prodCounterfIPs = <%- JSON.stringify(productChart.counterfeitIPs) %>;
 
   // ── 1. Donut ────────────────────────────────────────────────────────────────
   new Chart(document.getElementById('donutChart'), {
@@ -650,18 +652,22 @@ const ipProducts = <%- JSON.stringify(ipChart.products) %>;
 
   // ── 3. IP Chart ─────────────────────────────────────────────────────────────
   new Chart(document.getElementById('ipChart'), {
-  type: 'bar',
-  data: {
-    labels: ipLabels,
-    datasets: [
-      { label: 'Genuine',     data: ipGenuine,  backgroundColor: G + 'cc', borderRadius: 3, stack: 'ip' },
-      { label: 'Counterfeit', data: ipCounterf, backgroundColor: C + 'cc', borderRadius: 3, stack: 'ip' }
-    ]
-  },
-  options: {
-    indexAxis: 'y',
-    responsive: true, maintainAspectRatio: false,
- plugins: {
+    type: 'bar',
+    data: {
+      labels: ipLabels,
+      datasets: [
+        { label: 'Genuine',     data: ipGenuine,  backgroundColor: G + 'cc', borderRadius: 3, stack: 'ip' },
+        { label: 'Counterfeit', data: ipCounterf, backgroundColor: C + 'cc', borderRadius: 3, stack: 'ip' }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true, maintainAspectRatio: false,
+      // plugins: {
+      //   legend: { display: false },
+      //   tooltip: { backgroundColor: INK, titleColor: AMB, bodyColor: 'rgba(255,255,255,.6)' }
+      // },
+      plugins: {
   legend: { display: false },
   tooltip: {
     backgroundColor: INK,
@@ -699,39 +705,78 @@ const ipProducts = <%- JSON.stringify(ipChart.products) %>;
     }
   }
 },
-    scales: {
-      x: { grid: gridOpts, ticks: { ...tickOpts, stepSize: 1 }, stacked: true, beginAtZero: true },
-      y: { grid: { display: false }, ticks: { ...tickOpts, font: { family: 'monospace', size: 10 } }, stacked: true }
-    }
-  }
-});
-
-  // ── 4. Products ─────────────────────────────────────────────────────────────
-  new Chart(document.getElementById('productChart'), {
-    type: 'bar',
-    data: {
-      labels: prodLabels,
-      datasets: [
-        { label: 'Genuine',     data: prodGenuine,  backgroundColor: G + 'cc', borderRadius: 3, stack: 'prod' },
-        { label: 'Counterfeit', data: prodCounterf, backgroundColor: C + 'cc', borderRadius: 3, stack: 'prod' }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: INK, titleColor: AMB, bodyColor: 'rgba(255,255,255,.6)',
-          callbacks: { title: ctx => 'ID: ' + prodFull[ctx[0].dataIndex] }
-        }
-      },
       scales: {
-        x: { grid: { display: false }, ticks: { ...tickOpts, font: { family: 'monospace', size: 10 } }, stacked: true },
-        y: { grid: gridOpts, ticks: { ...tickOpts, stepSize: 1 }, stacked: true, beginAtZero: true }
+        x: { grid: gridOpts, ticks: { ...tickOpts, stepSize: 1 }, stacked: true, beginAtZero: true },
+        y: { grid: { display: false }, ticks: { ...tickOpts, font: { family: 'monospace', size: 10 } }, stacked: true }
       }
     }
   });
 
+  // ── 4. Products ─────────────────────────────────────────────────────────────
+ new Chart(document.getElementById('productChart'), {
+  type: 'bar',
+  data: {
+    labels: prodLabels,
+    datasets: [
+      { label: 'Genuine',     data: prodGenuine,  backgroundColor: G + 'cc', borderRadius: 3, stack: 'prod' },
+      { label: 'Counterfeit', data: prodCounterf, backgroundColor: C + 'cc', borderRadius: 3, stack: 'prod' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+
+      // ↓ REPLACE your old tooltip block with this entire tooltip object
+      tooltip: {
+        backgroundColor: INK,
+        titleColor: AMB,
+        bodyColor: 'rgba(255,255,255,.6)',
+        callbacks: {
+          title(ctx) {
+            return 'ID: ' + prodFull[ctx[0].dataIndex];
+          },
+          label(ctx) {
+            return ctx.dataset.label + ': ' + ctx.parsed.y;
+          },
+          afterLabel(ctx) {
+            if (ctx.datasetIndex !== ctx.chart.data.datasets.length - 1) return;
+
+            const i           = ctx.dataIndex;
+            const genuineIPs  = prodGenuineIPs?.[i]  || [];
+            const counterfIPs = prodCounterfIPs?.[i] || [];
+
+            const lines = ['──────────────────'];
+
+            if (genuineIPs.length > 0) {
+              lines.push('✅ Genuine scans:');
+              genuineIPs.forEach(ip => lines.push('   • ' + ip));
+            } else {
+              lines.push('✅ Genuine scans: none');
+            }
+
+            lines.push('');
+
+            if (counterfIPs.length > 0) {
+              lines.push('🚨 Counterfeit scans:');
+              counterfIPs.forEach(ip => lines.push('   • ' + ip));
+            } else {
+              lines.push('🚨 Counterfeit scans: none');
+            }
+
+            return lines;
+          }
+        }
+      }
+      // ↑ end of tooltip
+
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { ...tickOpts, font: { family: 'monospace', size: 10 } }, stacked: true },
+      y: { grid: gridOpts, ticks: { ...tickOpts, stepSize: 1 }, stacked: true, beginAtZero: true }
+    }
+  }
+});
   // ── 5. Geo Bar ──────────────────────────────────────────────────────────────
   new Chart(document.getElementById('geoChart'), {
     type: 'bar',

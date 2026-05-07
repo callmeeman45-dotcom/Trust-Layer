@@ -362,8 +362,8 @@ tbody td {
 }
 
 .btn-export {
-  background: #6e5830;
-  background-image: linear-gradient(135deg, #9d8760, #6e5830);
+  background: #352912;
+  background-image: linear-gradient(135deg, #2b200e, #6e5830);
   color: white;
   font-size: 11px;
   font-weight: 600;
@@ -386,7 +386,7 @@ tbody td {
 
 /* FOOTER */
 .site-footer {
-  background: #6e5830;
+  background: #31240d;
   color: rgba(255,255,255,0.65);
   text-align: center;
   padding: 20px;
@@ -410,6 +410,23 @@ tbody td {
   .table-card-header { flex-direction: column; align-items: flex-start; }
   .search-wrap input { width: 100%; }
   .search-wrap { width: 100%; }
+}
+#analytics-btn{
+   background: #352912;
+  background-image: linear-gradient(135deg, #2b200e, #6e5830);
+  border: 1 px solid #3f3014;
+  border-radius: 10px;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  padding: 8px 20px;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 </style>
 </head>
@@ -548,6 +565,7 @@ tbody td {
         </svg>
         Export CSV
       </button>
+      <a id="analytics-btn"   href="/analytics">View Analytics</a>
     </div>
 
   </div>
