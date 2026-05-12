@@ -648,22 +648,20 @@ const isPrivateIp = /^(127\.|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip
         const product = await Product.findById(id);
         const scanrecord=await ScanRecord.findOne({productId:id,ipAddress:ip,productstatus:"Genuine"});
         
+    let currentStatus = "Unknown";
+      if (product.status === 'Genuine' || scanrecord) {
+    currentStatus = "Genuine";
+    res.render("verify", { product });
 
-        if (!product) {
-            return res.status(404).send("Product not found");
-        }
-
-        // 🚀 Send response immediately
-        if (product.status === 'Genuine' || scanrecord) {
-            res.render("verify", { product });
-            const productupdate=await Product.updateOne(
-                { _id: id },
-                { status: 'Genuine' }
-            );
-        } else {
-            res.render("counterfeit1");
-        }
-
+    if (product.status === 'Genuine') {
+        // First scan — flip to counterfeit for strangers
+        Product.updateOne({ _id: id }, { status: 'Counterfeit' })
+            .catch(err => console.log("Update Error:", err));
+    }
+} else {
+    currentStatus = "Counterfeit";
+    res.render("counterfeit1");
+}
         // ===============================
         // ALWAYS insert scan record below
         // ===============================
@@ -678,7 +676,7 @@ const scanRecord = new ScanRecord({
             ? "Local Network"
             : "Unknown",
     ipAddress: ip,
-    productstatus: product.status,
+    productstatus: currentStatus,
     brandname: product.brandname
 });
         // Don't block response
