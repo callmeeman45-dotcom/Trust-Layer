@@ -646,7 +646,7 @@ console.log("IP:", ip, "| GEO:", geo);
 const isPrivateIp = /^(127\.|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
 
         const product = await Product.findById(id);
-        const scanrecord=await ScanRecord.findOne({productId:id,ipAddress:ip,status:"Genuine"});
+        const scanrecord=await ScanRecord.findOne({productId:id,ipAddress:ip,productstatus:"Genuine"});
         
 
         if (!product) {
