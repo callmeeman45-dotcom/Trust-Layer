@@ -622,24 +622,8 @@ app.get("/check/status/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
-        const product = await Product.findById(id);
 
-        if (!product) {
-            return res.status(404).send("Product not found");
-        }
-
-        // 🚀 Send response immediately
-        if (product.status === 'Genuine') {
-            res.render("verify", { product });
-        } else {
-            res.render("counterfeit1");
-        }
-
-        // ===============================
-        // ALWAYS insert scan record below
-        // ===============================
-
-        let ip =
+            let ip =
     req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
     req.socket.remoteAddress ||
     "Unknown";
@@ -660,6 +644,31 @@ const geo = geoip.lookup(ip);
 console.log("IP:", ip, "| GEO:", geo);
 
 const isPrivateIp = /^(127\.|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
+
+        const product = await Product.findById(id);
+        const scanrecord=await ScanRecord.findOne({productId:id,ipAddress:ip,status:"Genuine"});
+        
+
+        if (!product) {
+            return res.status(404).send("Product not found");
+        }
+
+        // 🚀 Send response immediately
+        if (product.status === 'Genuine' || scanrecord) {
+            res.render("verify", { product });
+            const productupdate=await Product.updateOne(
+                { _id: id },
+                { status: 'Genuine' }
+            );
+        } else {
+            res.render("counterfeit1");
+        }
+
+        // ===============================
+        // ALWAYS insert scan record below
+        // ===============================
+
+    
 
 const scanRecord = new ScanRecord({
     productId: product._id,
