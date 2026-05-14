@@ -16,7 +16,10 @@ require("dotenv").config();
 const ScanRecord=require('./models/scanrecord');
 const bodyParser = require("body-parser");
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cookieParser = require('cookie-parser');
+const { v4: uuidv4 } = require('uuid');
 
+app.use(cookieParser());
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({ 
 cloud_name: process.env.CLOUD_NAME, 
@@ -618,78 +621,176 @@ app.get("/",async( req,res)=>{
 
 const geoip = require("geoip-lite");
 
+// app.get("/check/status/:id", async (req, res) => {
+//     try {
+//         const id = req.params.id;
+
+
+//             let ip =
+//     req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
+//     req.socket.remoteAddress ||
+//     "Unknown";
+
+// // Normalize IPv6 mapped IPv4 addresses (e.g. ::ffff:192.168.1.1 → 192.168.1.1)
+// if (ip.startsWith("::ffff:")) {
+//     ip = ip.substring(7);
+// }
+
+// // Handle IPv6 localhost
+// if (ip === "::1") {
+//     ip = "127.0.0.1";
+// }
+
+// const geo = geoip.lookup(ip);
+
+// // Debug: log what you're actually looking up
+// console.log("IP:", ip, "| GEO:", geo);
+
+// const isPrivateIp = /^(127\.|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
+
+//         const product = await Product.findById(id);
+//         const scanrecord=await ScanRecord.findOne({productId:id,ipAddress:ip,productstatus:"Genuine"});
+        
+//     let currentStatus = "Unknown";
+//       if (product.status === 'Genuine' ||scanrecord) {
+//     currentStatus = "Genuine";
+//     res.render("verify", { product });
+
+//     if (product.status === 'Genuine') {
+//         // First scan — flip to counterfeit for strangers
+//         Product.updateOne({ _id: id }, { status: 'Counterfeit' })
+//             .catch(err => console.log("Update Error:", err));
+//             Product.save().catch(err => console.log("Product Save Error:", err));
+//     }
+// } else {
+//     currentStatus = "Counterfeit";
+//     res.render("counterfeit1");
+// }
+//         // ===============================
+//         // ALWAYS insert scan record below
+//         // ===============================
+
+    
+
+// const scanRecord = new ScanRecord({
+//     productId: product._id,
+//     location: geo
+//         ? `${geo.country || "Unknown"}, ${geo.city || "Unknown"}, ${geo.region || "Unknown"}`
+//         : isPrivateIp
+//             ? "Local Network"
+//             : "Unknown",
+//     ipAddress: ip,
+//     productstatus: currentStatus,
+//     brandname: product.brandname
+// });
+//         // Don't block response
+//         scanRecord.save().catch(err => console.log("Scan Save Error:", err));
+//         console.log("Scan record saved:", scanRecord);
+
+//         // Update status only if not used
+//         if (product.status === 'Genuine') {
+//             Product.updateOne(
+//                 { _id: id },
+//                 { status: 'Counterfeit' }
+//             ).catch(err => console.log("Update Error:", err));
+//         }
+
+//     } catch (error) {
+//         console.log(error);
+//         res.status(500).send("Server Error");
+//     }
+// });
+
+
+
+
 app.get("/check/status/:id", async (req, res) => {
     try {
         const id = req.params.id;
 
+        // ===============================
+        // UUID COOKIE SYSTEM
+        // ===============================
+        let deviceId = req.cookies?.deviceId;
+        const isFirstVisit = !deviceId;
 
-            let ip =
-    req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
-    req.socket.remoteAddress ||
-    "Unknown";
+        if (isFirstVisit) {
+            deviceId = uuidv4();
+            res.cookie("deviceId", deviceId, {
+                maxAge: 10 * 365 * 24 * 60 * 60 * 1000, // 10 years
+                httpOnly: true,
+                sameSite: "Lax",
+                secure: process.env.NODE_ENV === "production",
+            });
+        }
 
-// Normalize IPv6 mapped IPv4 addresses (e.g. ::ffff:192.168.1.1 → 192.168.1.1)
-if (ip.startsWith("::ffff:")) {
-    ip = ip.substring(7);
-}
+        // ===============================
+        // GEO LOOKUP (kept for location info only)
+        // ===============================
+        let ip =
+            req.headers["x-forwarded-for"]?.split(",")[0].trim() ||
+            req.socket.remoteAddress ||
+            "Unknown";
 
-// Handle IPv6 localhost
-if (ip === "::1") {
-    ip = "127.0.0.1";
-}
+        if (ip.startsWith("::ffff:")) ip = ip.substring(7);
+        if (ip === "::1") ip = "127.0.0.1";
 
-const geo = geoip.lookup(ip);
+        const geo = geoip.lookup(ip);
+        console.log("DeviceID:", deviceId, "| IP:", ip, "| GEO:", geo);
 
-// Debug: log what you're actually looking up
-console.log("IP:", ip, "| GEO:", geo);
+        const isPrivateIp = /^(127\.|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
+        const locationStr = geo
+            ? `${geo.country || "Unknown"}, ${geo.city || "Unknown"}, ${geo.region || "Unknown"}`
+            : isPrivateIp
+                ? "Local Network"
+                : "Unknown";
 
-const isPrivateIp = /^(127\.|192\.168\.|10\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip);
-
+        // ===============================
+        // PRODUCT & SCAN LOOKUP (UUID-based)
+        // ===============================
         const product = await Product.findById(id);
-        const scanrecord=await ScanRecord.findOne({productId:id,ipAddress:ip,productstatus:"Genuine"});
-        
-    let currentStatus = "Unknown";
-      if (product.status === 'Genuine' || scanrecord) {
-    currentStatus = "Genuine";
-    res.render("verify", { product });
+        if (!product) return res.status(404).send("Product not found");
 
-    if (product.status === 'Genuine') {
-        // First scan — flip to counterfeit for strangers
-        Product.updateOne({ _id: id }, { status: 'Counterfeit' })
-            .catch(err => console.log("Update Error:", err));
-    }
-} else {
-    currentStatus = "Counterfeit";
-    res.render("counterfeit1");
-}
+        const existingScan = await ScanRecord.findOne({
+            productId: id,
+            deviceId: deviceId,        // <-- UUID instead of IP
+            productstatus: "Genuine",
+        });
+
         // ===============================
-        // ALWAYS insert scan record below
+        // STATUS LOGIC
         // ===============================
+        let currentStatus = "Unknown";
 
-    
+        if (product.status === "Genuine" || existingScan) {
+            currentStatus = "Genuine";
+            res.render("verify", { product });
 
-const scanRecord = new ScanRecord({
-    productId: product._id,
-    location: geo
-        ? `${geo.country || "Unknown"}, ${geo.city || "Unknown"}, ${geo.region || "Unknown"}`
-        : isPrivateIp
-            ? "Local Network"
-            : "Unknown",
-    ipAddress: ip,
-    productstatus: currentStatus,
-    brandname: product.brandname
-});
-        // Don't block response
+            // Flip to Counterfeit only on the very first genuine scan
+            if (product.status === "Genuine") {
+                Product.updateOne({ _id: id }, { status: "Counterfeit" })
+                    .catch(err => console.log("Update Error:", err));
+            }
+        } else {
+            currentStatus = "Counterfeit";
+            res.render("counterfeit1");
+        }
+
+        // ===============================
+        // SAVE SCAN RECORD (UUID-based)
+        // ===============================
+        const scanRecord = new ScanRecord({
+            productId: product._id,
+            deviceId: deviceId,        // <-- UUID stored here
+            isFirstVisit: isFirstVisit,
+            location: locationStr,
+            ipAddress: ip,             // kept for reference/debugging
+            productstatus: currentStatus,
+            brandname: product.brandname,
+        });
+
         scanRecord.save().catch(err => console.log("Scan Save Error:", err));
         console.log("Scan record saved:", scanRecord);
-
-        // Update status only if not used
-        if (product.status === 'Genuine') {
-            Product.updateOne(
-                { _id: id },
-                { status: 'Counterfeit' }
-            ).catch(err => console.log("Update Error:", err));
-        }
 
     } catch (error) {
         console.log(error);

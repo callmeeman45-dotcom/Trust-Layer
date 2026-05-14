@@ -18,6 +18,8 @@ const scanrecordSchema=new mongoose.Schema({
         type: String,
         required: true
     },
+    deviceId:  
+        { type: String, required: true },
     productstatus:{
         type:String,
         required:true
