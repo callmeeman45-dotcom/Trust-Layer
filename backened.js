@@ -17,9 +17,9 @@ const ScanRecord=require('./models/scanrecord');
 const bodyParser = require("body-parser");
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cookieParser = require('cookie-parser');
+app.use(cookieParser());
 const { v4: uuidv4 } = require('uuid');
 
-app.use(cookieParser());
 const cloudinary = require("cloudinary").v2;
 cloudinary.config({ 
 cloud_name: process.env.CLOUD_NAME, 
