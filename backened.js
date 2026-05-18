@@ -807,7 +807,8 @@ const records = await ScanRecord.find({ brandname: req.user.brandname });
 });
 
 const nodemailer = require('nodemailer');
-app.post("/contact", (req, res) => {
+
+app.post("/contact", async (req, res) => {  // ← add async
   const { name, email, message } = req.body;
 
   if (!name || !email || !message) {
@@ -815,14 +816,14 @@ app.post("/contact", (req, res) => {
   }
 
   const transport = nodemailer.createTransport({
-    host: 'smtp.gmail.com',  // replace 'service' with explicit host
-  port: 465,
-  secure: true, 
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASSWORD
-    }                               // ← was missing closing brace here
-  });                               // ← and closing parenthesis here
+    }
+  });
 
   const mailOptions = {
     from: `"${name}" <${process.env.EMAIL}>`,
@@ -831,18 +832,16 @@ app.post("/contact", (req, res) => {
     text: `You have a new message from the contact form:\n\nName: ${name}\nEmail: ${email}\nMessage:\n${message}`
   };
 
-  transport.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error('Mail error:', error);
-      return res.status(500).send('Failed to send message.');
-    }
+  try {
+    const info = await transport.sendMail(mailOptions);  // ← await
     console.log('Mail sent:', info.response);
-    res.send("Email sent successfully!"); // or
-    // res.redirect('/#contact');      // or res.send('Message sent!')
-  });
+    res.send("Email sent successfully!");
+  } catch (error) {
+    console.error('Mail error:', error);  // ← now visible in Vercel logs
+    res.status(500).send('Failed to send message.');
+  }
 
 });
-
 
 
 
