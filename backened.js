@@ -815,7 +815,9 @@ app.post("/contact", (req, res) => {
   }
 
   const transport = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',  // replace 'service' with explicit host
+  port: 465,
+  secure: true, 
     auth: {
       user: process.env.EMAIL,
       pass: process.env.PASSWORD
