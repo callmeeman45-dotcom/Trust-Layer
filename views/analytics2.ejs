@@ -345,7 +345,7 @@
 <div class="page-header">
   <div class="header-inner">
     <p class="header-eyebrow">Scan Intelligence</p>
-    <h1>Brand <em>Analytics</em> Dashboard</h1>
+    <h1><%=brandname %>  <em>Analytics</em> Dashboard</h1>
     <div class="header-meta">
       <span><div class="live-dot"></div> Live data · All registries online</span>
       <span>·</span>
@@ -446,7 +446,7 @@
         <span class="legend-item"><span class="legend-dot" style="background:#B94040"></span>Counterfeit</span>
       </div>
       <div class="chart-wrap" style="height:280px">
-        <canvas id="ipChart"></canvas>
+        <canvas id="deviceChart"></canvas>
       </div>
     </div>
 
@@ -558,11 +558,11 @@
   const timeLabels   = <%- JSON.stringify(scansOverTime.labels) %>;
   const timeGenuine  = <%- JSON.stringify(scansOverTime.genuine) %>;
   const timeCounterf = <%- JSON.stringify(scansOverTime.counterfeit) %>;
-  const ipLabels           = <%- JSON.stringify(ipChart.labels) %>;
-  const ipGenuine          = <%- JSON.stringify(ipChart.genuine) %>;
-  const ipCounterf         = <%- JSON.stringify(ipChart.counterfeit) %>;
-  const ipGenuineProds     = <%- JSON.stringify(ipChart.genuineProducts) %>;
-  const ipCounterfeitProds = <%- JSON.stringify(ipChart.counterfeitProducts) %>;
+  const ipLabels           = <%- JSON.stringify(deviceChart.labels) %>;
+  const ipGenuine          = <%- JSON.stringify(deviceChart.genuine) %>;
+  const ipCounterf         = <%- JSON.stringify(deviceChart.counterfeit) %>;
+  const ipGenuineProds     = <%- JSON.stringify(deviceChart.genuineProducts) %>;
+  const ipCounterfeitProds = <%- JSON.stringify(deviceChart.counterfeitProducts) %>;
   const prodLabels   = <%- JSON.stringify(productChart.labels) %>;
   const prodGenuine  = <%- JSON.stringify(productChart.genuine) %>;
   const prodCounterf = <%- JSON.stringify(productChart.counterfeit) %>;
@@ -572,7 +572,9 @@
   const geoCounterf  = <%- JSON.stringify(geoChart.counterfeit) %>;
   const prodGenuineIPs     = <%- JSON.stringify(productChart.genuineIPs) %>;
   const prodCounterfIPs = <%- JSON.stringify(productChart.counterfeitIPs) %>;
-
+// ADD these lines after existing ipLabels declarations
+const ipFullIds = <%- JSON.stringify(deviceChart.fullIds) %>;
+const ipIPs     = <%- JSON.stringify(deviceChart.ips) %>;
   // ── 1. Donut ────────────────────────────────────────────────────────────────
   new Chart(document.getElementById('donutChart'), {
     type: 'doughnut',
@@ -651,7 +653,7 @@
   });
 
   // ── 3. IP Chart ─────────────────────────────────────────────────────────────
-  new Chart(document.getElementById('ipChart'), {
+  new Chart(document.getElementById('deviceChart'), {
     type: 'bar',
     data: {
       labels: ipLabels,
@@ -670,40 +672,39 @@
       plugins: {
   legend: { display: false },
   tooltip: {
-    backgroundColor: INK,
-    titleColor: AMB,
-    bodyColor: 'rgba(255,255,255,.7)',
-    padding: 14,
-    boxPadding: 6,
-    callbacks: {
-      title: ctx => `IP: ${ctx[0].label}`,
-      label: ctx => ` ${ctx.dataset.label}: ${ctx.raw} scan(s)`,
-      afterBody: ctx => {
-        const idx = ctx[0].dataIndex;
-        const lines = [];
+  backgroundColor: INK,
+  titleColor: AMB,
+  bodyColor: 'rgba(255,255,255,.6)',
+  callbacks: {
+    title: (items) => {
+      const i = items[0].dataIndex;
+      return 'Device: ' + ipFullIds[i];  // ← was deviceChart.fullIds (undefined)
+    },
+    afterBody: (items) => {
+      const i = items[0].dataIndex;
 
-        const gProds = ipGenuineProds[idx];
-        if (gProds && Object.keys(gProds).length > 0) {
-          lines.push('');
-          lines.push('✔ Genuine products:');
-          Object.entries(gProds).forEach(([pid, count]) => {
-            lines.push(`   ${pid}  ×${count}`);
-          });
-        }
+      const ipLines = ipIPs[i].map(ip => '  • ' + ip);  // ← was deviceChart.ips
 
-        const cProds = ipCounterfeitProds[idx];
-        if (cProds && Object.keys(cProds).length > 0) {
-          lines.push('');
-          lines.push('✘ Counterfeit products:');
-          Object.entries(cProds).forEach(([pid, count]) => {
-            lines.push(`   ${pid}  ×${count}`);
-          });
-        }
+      const gProds = Object.entries(ipGenuineProds[i])
+        .map(([pid, count]) => `  • ${pid} (×${count})`);
 
-        return lines;
-      }
+      const cProds = Object.entries(ipCounterfeitProds[i])
+        .map(([pid, count]) => `  • ${pid} (×${count})`);
+
+      return [
+        '',
+        '🌐 IPs Used:',
+        ...ipLines,
+        '',
+        '✅ Genuine Products:',
+        ...(gProds.length ? gProds : ['  None']),
+        '',
+        '❌ Counterfeit Products:',
+        ...(cProds.length ? cProds : ['  None']),
+      ];
     }
   }
+}
 },
       scales: {
         x: { grid: gridOpts, ticks: { ...tickOpts, stepSize: 1 }, stacked: true, beginAtZero: true },

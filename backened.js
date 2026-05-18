@@ -616,7 +616,7 @@ app.get("/all-products", async (req, res) => {
 });
 app.get("/",async( req,res)=>{
     // res.send("Welcome to the product details API");
-    res.render("index1");
+    res.render("index2");
 });
 
 const geoip = require("geoip-lite");
@@ -803,9 +803,44 @@ app.get("/admin/dashboard", async (req, res) => {
 
 const records = await ScanRecord.find({ brandname: req.user.brandname });
 
-   
-res.render("dashboard", { records});
+    res.render("dashboard", { records});
 });
+
+const nodemailer = require('nodemailer');
+app.post("/contact", (req, res) => {
+  const { name, email, message } = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).send('All fields are required.');
+  }
+
+  const transport = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.PASSWORD
+    }                               // ← was missing closing brace here
+  });                               // ← and closing parenthesis here
+
+  const mailOptions = {
+    from: `"${name}" <${process.env.EMAIL}>`,
+    to: process.env.EMAIL,
+    subject: `Trust Layer Contact Form Submission from ${name}`,
+    text: `You have a new message from the contact form:\n\nName: ${name}\nEmail: ${email}\nMessage:\n${message}`
+  };
+
+  transport.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Mail error:', error);
+      return res.status(500).send('Failed to send message.');
+    }
+    console.log('Mail sent:', info.response);
+    res.send("Email sent successfully!"); // or
+    // res.redirect('/#contact');      // or res.send('Message sent!')
+  });
+
+});
+
 
 
 
@@ -891,41 +926,51 @@ app.get('/analytics', isloggedin,async (req, res) => {
 
 
     // ── 3. Scans by IP Address
-const ipMap = {};
-docs.forEach(d => {
-  const ip  = (d.ipAddress || 'Unknown').trim();
-  const s   = (d.productstatus || '').trim();
-  const pid = d.productId ? d.productId.toHexString() : 'Unknown';
+const deviceMap = {};
 
-  if (!ipMap[ip]) ipMap[ip] = {
-    Genuine: 0, Counterfeit: 0, total: 0,
+docs.forEach(d => {
+  const deviceId = (d.deviceId || 'Unknown').trim();
+  const ip       = (d.ipAddress || 'Unknown').trim();
+  const s        = (d.productstatus || '').trim();
+  const pid      = d.productId ? d.productId.toHexString() : 'Unknown';
+
+  if (!deviceMap[deviceId]) deviceMap[deviceId] = {
+    Genuine: 0,
+    Counterfeit: 0,
+    total: 0,
     genuineProducts: {},
-    counterfeitProducts: {}
+    counterfeitProducts: {},
+    ips: new Set()          // collect all IPs this device ever used
   };
 
-  ipMap[ip].total++;
+  deviceMap[deviceId].total++;
+  deviceMap[deviceId].ips.add(ip);   // store every IP seen for this device
 
   if (s === 'Genuine') {
-    ipMap[ip].Genuine++;
-    if (!ipMap[ip].genuineProducts[pid]) ipMap[ip].genuineProducts[pid] = 0;
-    ipMap[ip].genuineProducts[pid]++;
+    deviceMap[deviceId].Genuine++;
+    if (!deviceMap[deviceId].genuineProducts[pid]) deviceMap[deviceId].genuineProducts[pid] = 0;
+    deviceMap[deviceId].genuineProducts[pid]++;
   }
 
   if (s === 'Counterfeit') {
-    ipMap[ip].Counterfeit++;
-    if (!ipMap[ip].counterfeitProducts[pid]) ipMap[ip].counterfeitProducts[pid] = 0;
-    ipMap[ip].counterfeitProducts[pid]++;
+    deviceMap[deviceId].Counterfeit++;
+    if (!deviceMap[deviceId].counterfeitProducts[pid]) deviceMap[deviceId].counterfeitProducts[pid] = 0;
+    deviceMap[deviceId].counterfeitProducts[pid]++;
   }
 });
-const topIPs = Object.entries(ipMap)
+
+const topDevices = Object.entries(deviceMap)
   .sort((a, b) => b[1].total - a[1].total)
   .slice(0, 12);
-const ipChart = {
-  labels:              topIPs.map(([ip]) => ip),
-  genuine:             topIPs.map(([, v]) => v.Genuine),
-  counterfeit:         topIPs.map(([, v]) => v.Counterfeit),
-  genuineProducts:     topIPs.map(([, v]) => v.genuineProducts),
-  counterfeitProducts: topIPs.map(([, v]) => v.counterfeitProducts),
+
+const deviceChart = {
+  labels:              topDevices.map(([id]) => id.slice(0, 8) + '...'),  // short UUID for y-axis
+  fullIds:             topDevices.map(([id]) => id),                       // full UUID for hover
+  genuine:             topDevices.map(([, v]) => v.Genuine),
+  counterfeit:         topDevices.map(([, v]) => v.Counterfeit),
+  genuineProducts:     topDevices.map(([, v]) => v.genuineProducts),
+  counterfeitProducts: topDevices.map(([, v]) => v.counterfeitProducts),
+  ips:                 topDevices.map(([, v]) => [...v.ips]),              // Set → Array for JSON
 };
     // ── 4. Multi-Scan Products (products scanned > 1 time) ───────────────────
 const productMap = {};
@@ -991,7 +1036,7 @@ const productChart = {
     };
 console.log("Status Count:", statusCount);
 console.log("Scans Over Time:", scansOverTime);
-console.log("IP Chart:", ipChart);
+console.log("Device Chart:", deviceChart);
 console.log("Product Chart:", productChart);
 console.log("Geo Chart:", geoChart);
     // ── Render ─────────────────────────────────────────────────────────────────
@@ -999,7 +1044,7 @@ console.log("Geo Chart:", geoChart);
       totalScans:docs.length,
       statusCount,
       scansOverTime,
-      ipChart,
+      deviceChart,
       productChart,
       geoChart,
       geoData,

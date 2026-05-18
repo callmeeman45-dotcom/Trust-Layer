@@ -383,6 +383,12 @@ tbody td {
   transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(138,118,80,0.3);
 }
+.buttons{
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 340px;
+}
 
 /* FOOTER */
 .site-footer {
@@ -501,6 +507,15 @@ tbody td {
         <h2>Scan Records</h2>
         <p>All product verification events</p>
       </div>
+      <div class="buttons">
+      <button class="btn-export" onclick="exportCSV()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Export CSV
+      </button>
+      <a id="analytics-btn"   href="/analytics">View Analytics</a>
+      </div>
       <div class="search-wrap">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
           <circle cx="11" cy="11" r="8" stroke="#aaa" stroke-width="2"/>
@@ -519,6 +534,7 @@ tbody td {
             <th>Scan Date</th>
             <th>Location</th>
             <th>IP Address</th>
+            <th>Device ID</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -560,13 +576,7 @@ tbody td {
     <!-- Card Footer -->
     <div class="table-footer">
       <p id="recordCount">Showing <%= records.length %> record<%= records.length !== 1 ? 's' : '' %></p>
-      <button class="btn-export" onclick="exportCSV()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
-          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        Export CSV
-      </button>
-      <a id="analytics-btn"   href="/analytics">View Analytics</a>
+      
     </div>
 
   </div>
