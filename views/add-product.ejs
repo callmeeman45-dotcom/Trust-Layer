@@ -241,9 +241,28 @@
 
     /* image preview */
     .img-preview {
-      width:100%;max-height:160px;object-fit:cover;
-      border:1px solid var(--beige);display:none;margin-top:12px;
-      border-radius: 6px;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #ffffff;
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      padding: 15px;
+    }
+
+    .custom-file-upload.has-image {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      background: var(--honey);
+      color: #fff;
+      border: none;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      padding: 8px 16px;
+      z-index: 20;
     }
 
     /* ── SUBMIT ── */
@@ -350,7 +369,7 @@
 
           <div class="field">
             <div class="upload-container" id="fileZone">
-              <div class="upload-folder">
+              <div class="upload-folder" id="uploadFolder">
                 <div class="front-side">
                   <div class="tip"></div>
                   <div class="cover"></div>
@@ -359,13 +378,13 @@
                   <div class="cover"></div>
                 </div>
               </div>
-              <label class="custom-file-upload">
+              <label class="custom-file-upload" id="uploadLabel">
                 <input type="file" name="image" id="imageInput" accept="image/*" required/>
-                <span>Choose Image</span>
+                <span id="uploadText">Choose Image</span>
               </label>
               <div class="file-name" id="fileName"></div>
+              <img class="img-preview" id="imgPreview" alt="Preview"/>
             </div>
-            <img class="img-preview" id="imgPreview" alt="Preview"/>
           </div>
 
           <!-- Submit -->
@@ -395,12 +414,14 @@
 
   input.addEventListener('change', function(){
     if(this.files && this.files[0]){
-      fname.textContent = this.files[0].name;
-      fname.style.display = 'block';
       const reader = new FileReader();
       reader.onload = e => {
         prev.src = e.target.result;
         prev.style.display = 'block';
+        document.getElementById('uploadFolder').style.display = 'none';
+        document.getElementById('uploadText').innerText = 'Change Image';
+        document.getElementById('uploadLabel').classList.add('has-image');
+        fname.style.display = 'none';
       };
       reader.readAsDataURL(this.files[0]);
     }
