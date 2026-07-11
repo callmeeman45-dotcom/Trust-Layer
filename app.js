@@ -110,6 +110,8 @@ const store = MongoStore.create({
     touchAfter: 24 * 3600,
 });
 
+app.set('trust proxy', 1);
+
 app.use(session({
     store,
     secret: process.env.SECRET,
@@ -945,7 +947,7 @@ app.get("/admin/dashboard", isloggedin, async (req, res) => {
             .populate("productId", "name")
             .sort({ scanDate: -1 })
             .lean();
-            
+
         res.render("dashboard", { records });
     } catch (error) {
         console.error("Dashboard Error:", error);
