@@ -178,6 +178,16 @@
       color: #64748B;
     }
 
+    /* Override browser autofill background */
+    .input-wrap input:-webkit-autofill,
+    .input-wrap input:-webkit-autofill:hover,
+    .input-wrap input:-webkit-autofill:focus,
+    .input-wrap input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px #0F172A inset !important;
+      -webkit-text-fill-color: #F1F5F9 !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
     .eye-btn {
       background: none;
       border: none;

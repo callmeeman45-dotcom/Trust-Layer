@@ -280,6 +280,7 @@
     }
 
     .mobile-cta-wrap .nav-cta {
+      display: flex !important;
       width: 100%;
       text-align: center;
       padding: 13px;
@@ -2486,8 +2487,11 @@
     <li><a href="#" onclick="toggleMenu()">Products</a></li>
     <li><a href="#" onclick="toggleMenu()">Dashboard</a></li>
     <li><a href="#" onclick="toggleMenu()">Contact</a></li>
-    <li class="mobile-cta-wrap"><button class="nav-cta" style="width:100%;padding:13px;font-size:11px"
-        onclick="alert('Admin Space coming soon.')">Admin Space</button></li>
+    <li class="mobile-cta-wrap">
+      <a href="/admin/space" style="text-decoration: none; width: 100%; display: block;">
+        <button class="nav-cta" style="width:100%;padding:13px;font-size:11px;justify-content:center;">Admin Space</button>
+      </a>
+    </li>
   </ul>
 
   <!-- HERO -->

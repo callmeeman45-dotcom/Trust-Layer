@@ -10,448 +10,374 @@
     rel="stylesheet" />
   <style>
     :root {
-      --honey: #FA5716; /* Vibrant Orange */
-      --amber: #0F5C5B; /* Deep Teal */
-      --umber: #94A3B8; /* Muted Slate */
+      --honey: #FA5716;
+      --amber: #0F5C5B;
       --ink: #0F172A;
-      --cream: #F8FAFC;
     }
 
-    /* Reset and page base styling */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      background-color: #1B242C;
-      background-image: radial-gradient(ellipse 80% 60% at 20% 80%, rgba(15, 92, 91, 0.35) 0%, transparent 70%), 
-                        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(250, 87, 22, 0.15) 0%, transparent 70%), 
-                        linear-gradient(160deg, #1B242C 0%, #0F5C5B 40%, #1B242C 70%, #2a1a0e 100%);
+      background-color: #0F172A;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(15, 92, 91, 0.3) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(250, 87, 22, 0.12) 0%, transparent 70%),
+        linear-gradient(160deg, #0F172A 0%, #0d3d3c 50%, #0F172A 100%);
       padding: 20px;
+      font-family: 'Outfit', sans-serif;
     }
 
-    /* Gradient container form matching contact-form-card */
-    .form {
-      display: flex;
-      align-items: stretch;
-      flex-direction: column;
-      gap: 16px;
-      background-image: linear-gradient(45deg, #1B242C, #13191e);
-      border-radius: 2em;
-      padding: 45px 35px;
+    /* ── CARD ── */
+    .card {
       width: 100%;
-      max-width: 460px;
-      box-sizing: border-box;
+      max-width: 440px;
+      background: #1E293B;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 24px;
+      padding: 44px 36px 36px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       position: relative;
-      z-index: 1;
-      margin: 0 auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      overflow: hidden;
     }
 
-    .form::before {
+    .card::before {
       content: '';
-      background-image: linear-gradient(45deg, var(--honey), var(--amber));
       position: absolute;
-      top: -4px;
-      left: -4px;
-      right: -4px;
-      bottom: -4px;
-      z-index: -2;
-      border-radius: 2.2em;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--amber), var(--honey), var(--amber));
     }
 
-    .form-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 24px;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 2px;
-      text-align: center;
-    }
-
-    .form-sub {
-      font-size: 11px;
-      font-family: 'Outfit', sans-serif;
-      color: #ffffff;
-      text-align: center;
-      margin-bottom: 16px;
-      letter-spacing: 0.05em;
-    }
-
-    .flex-column {
+    /* ── SHIELD ── */
+    .shield-wrap {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
-      width: 100%;
+      justify-content: center;
+      margin-bottom: 24px;
     }
 
-    .flex-column > label {
-      font-size: 8px;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      color: rgba(243, 235, 217, 0.8) !important;
-      font-weight: 500;
-      display: block;
-      margin-left: 4px;
-      font-family: 'Outfit', sans-serif;
-    }
-
-    /* Styled input groups wrapper */
-    .inputForm {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid transparent;
-      border-bottom: 1.5px solid var(--honey);
-      outline: none;
-      background-color: rgba(255, 255, 255, 0.02);
-      color: #fff;
-      font-family: 'Outfit', sans-serif;
-      font-size: 13px;
-      transition: all 0.2s ease;
-      box-sizing: border-box;
-      border-radius: 6px 6px 0 0;
+    .shield-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: rgba(250, 87, 22, 0.1);
+      border: 1px solid rgba(250, 87, 22, 0.2);
       display: flex;
       align-items: center;
-      height: 48px;
+      justify-content: center;
+      animation: glow 2.5s ease-in-out infinite;
     }
 
-    .inputForm:focus-within {
-      background-color: rgba(255, 255, 255, 0.06);
-      border-bottom: 1.5px solid var(--honey);
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(250, 87, 22, 0.15); }
+      50% { box-shadow: 0 0 0 10px rgba(250, 87, 22, 0); }
     }
 
-    .input {
-      margin-left: 10px;
+    /* ── HEADINGS ── */
+    .eyebrow {
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--honey);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: #F1F5F9;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #94A3B8;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    /* ── ERROR BANNER ── */
+    .error-banner {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      color: #FCA5A5;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 20px;
+      animation: shakeIn .4s ease;
+    }
+
+    @keyframes shakeIn {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-3px); }
+    }
+
+    /* ── FORM FIELDS ── */
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: #CBD5E1;
+      margin-bottom: 8px;
+    }
+
+    .input-wrap {
+      display: flex;
+      align-items: center;
+      background: #0F172A;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 0 16px;
+      height: 50px;
+      transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .input-wrap:focus-within {
+      border-color: var(--amber);
+      box-shadow: 0 0 0 3px rgba(15, 92, 91, 0.15);
+    }
+
+    .input-wrap svg {
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+
+    .input-wrap input {
+      flex: 1;
       background: transparent;
       border: none;
-      color: #fff;
-      width: 100%;
-      height: 100%;
-      font-family: 'Outfit', sans-serif;
-      font-size: 13px;
       outline: none;
-    }
-
-    .input::placeholder {
-      color: rgba(243, 235, 217, 0.5) !important;
-    }
-
-    .err {
-      font-size: 10px;
-      color: #f87171;
-      margin-top: 2px;
-      padding-left: 4px;
-      display: none;
+      color: #F1F5F9;
       font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      height: 100%;
     }
 
-    .flex-row {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 10px;
-      justify-content: space-between;
-      font-family: 'Outfit', sans-serif;
-      margin-top: 4px;
+    .input-wrap input::placeholder {
+      color: #64748B;
     }
 
-    .forgot-link {
-      font-size: 12px;
-      color: rgba(243, 235, 217, 0.8);
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-decoration: underline;
-      font-family: inherit;
-    }
-
-    .forgot-link:hover {
-      color: var(--honey);
-    }
-
-    /* make sure input form prefix icons look clean and readable */
-    .inputForm > svg * {
-      stroke: #ffffff !important;
+    /* Override browser autofill background */
+    .input-wrap input:-webkit-autofill,
+    .input-wrap input:-webkit-autofill:hover,
+    .input-wrap input:-webkit-autofill:focus,
+    .input-wrap input:-webkit-autofill:active {
+      -webkit-box-shadow: 0 0 0 30px #0F172A inset !important;
+      -webkit-text-fill-color: #F1F5F9 !important;
+      transition: background-color 5000s ease-in-out 0s;
     }
 
     .eye-btn {
       background: none;
       border: none;
       cursor: pointer;
-      color: rgba(255, 255, 255, 0.85);
+      color: #64748B;
       display: flex;
       align-items: center;
-      justify-content: center;
-      padding-right: 4px;
+      padding: 4px;
       transition: color 0.2s;
     }
 
-    .eye-btn:hover {
-      color: var(--honey);
+    .eye-btn:hover { color: var(--amber); }
+
+    /* ── REMEMBER & FORGOT ── */
+    .flex-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
     }
 
-    .button-submit {
-      margin-top: 12px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .25em;
-      text-transform: uppercase;
-      background: var(--honey);
-      color: #ffffff;
-      padding: 13px;
+    .checkbox-wrap {
       display: flex;
       align-items: center;
-      justify-content: center;
-      border: 2px solid transparent;
-      border-radius: 5em;
-      overflow: hidden;
-      transition: all 0.2s ease;
+      gap: 8px;
       cursor: pointer;
-      width: 100%;
-      box-sizing: border-box;
     }
 
-    .button-submit:hover {
-      border: 2px solid var(--honey);
-      background: transparent;
-      color: var(--honey);
-    }
-
-    .button-submit:active {
-      transform: scale(0.98);
-    }
-
-    .p {
-      text-align: center;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 13px;
-      margin: 15px 0 5px 0;
-      font-family: 'Outfit', sans-serif;
-    }
-
-    .span {
-      font-size: 13px;
-      margin-left: 5px;
-      color: var(--honey);
-      font-weight: 600;
+    .checkbox-wrap input {
+      accent-color: var(--honey);
+      width: 14px;
+      height: 14px;
       cursor: pointer;
-      text-decoration: none;
     }
 
-    .span:hover {
-      text-decoration: underline;
-    }
-
-    .nostyling {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    /* ── UIVERSE CREATIVE BUTTON (Li-Deheng) ── */
-    .btn-create-acc {
-      --main-size: 11px;
-      --color-text: #ffffff;
-      --color-background: var(--honey);
-      --color-background-hover: #ff7034;
-      --color-outline: rgba(250, 87, 22, 0.25);
-      --color-shadow: rgba(0, 0, 0, 0.3);
+    .checkbox-wrap span {
+      font-size: 12px;
+      color: #FFFFFF;
       cursor: pointer;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    }
+
+    .forgot-link {
+      font-size: 12px;
+      color: #94A3B8;
       text-decoration: none;
+      transition: color 0.2s;
+      background: none;
       border: none;
-      border-radius: 100em;
-      padding: 12px 12px 12px 20px;
-      font-family: 'Outfit', sans-serif;
-      font-weight: 600;
-      font-size: var(--main-size);
-      color: var(--color-text);
-      background: var(--color-background);
-      box-shadow: 0 0 0.2em 0 var(--color-background);
-      transition: 1s;
-      margin-top: 10px;
-      box-sizing: border-box;
-      letter-spacing: .05em;
-      text-transform: uppercase;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .forgot-link:hover {
+      color: #F1F5F9;
+    }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn-submit {
       width: 100%;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--honey);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
     }
 
-    .btn-create-acc:active {
-      transform: scale(0.95);
+    .btn-submit:hover {
+      background: #e04c10;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(250, 87, 22, 0.3);
     }
 
-    .btn-create-acc:hover {
-      outline: 0.1em solid transparent;
-      outline-offset: 0.2em;
-      box-shadow: 0 0 1em 0 var(--color-background);
-      animation:
-        ripple 1s linear infinite,
-        colorize 1s infinite;
-      transition: 0.5s;
+    .btn-submit:active {
+      transform: translateY(0);
+      box-shadow: none;
     }
 
-    .btn-create-acc span {
-      margin-right: 0.3em;
-      transition: 0.5s;
-      color: #ffffff !important;
-    }
-
-    .btn-create-acc:hover span {
-      text-shadow: 5px 5px 5px var(--color-shadow);
-      color: #ffffff !important;
-    }
-
-    .btn-create-acc:active span {
-      text-shadow: none;
-    }
-
-    .btn-create-acc svg {
-      height: 1.1em;
-      fill: var(--color-text);
-      margin-right: -0.16em;
-      position: relative;
-      transition: 0.5s;
-    }
-
-    .btn-create-acc:hover svg {
-      margin-right: 0.66em;
-      transition: 0.5s;
-      filter: drop-shadow(5px 5px 2.5px var(--color-shadow));
-    }
-
-    .btn-create-acc:active svg {
-      filter: none;
-    }
-
-    .btn-create-acc svg polygon {
-      fill: var(--color-text) !important;
-      stroke: none !important;
-    }
-
-    .btn-create-acc svg polygon:nth-child(1) {
-      transition: 0.4s;
-      transform: translateX(-60%);
-    }
-
-    .btn-create-acc svg polygon:nth-child(2) {
-      transition: 0.5s;
-      transform: translateX(-30%);
-    }
-
-    .btn-create-acc:hover svg polygon:nth-child(1) {
-      transform: translateX(0%);
-      animation: opacity 1s infinite 0.6s;
-    }
-
-    .btn-create-acc:hover svg polygon:nth-child(2) {
-      transform: translateX(0%);
-      animation: opacity 1s infinite 0.4s;
-    }
-
-    .btn-create-acc:hover svg polygon:nth-child(3) {
-      animation: opacity 1s infinite 0.2s;
-    }
-
-    @keyframes opacity {
-      0% {
-        opacity: 1;
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .card {
+        padding: 36px 24px 28px;
+        border-radius: 18px;
       }
-      50% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-    @keyframes colorize {
-      0% {
-        background: var(--color-background);
-      }
-      50% {
-        background: var(--color-background-hover);
-      }
-      100% {
-        background: var(--color-background);
-      }
-    }
-
-    @keyframes ripple {
-      0% {
-        outline: 0em solid transparent;
-        outline-offset: -0.1em;
-      }
-      50% {
-        outline: 0.2em solid var(--color-outline);
-        outline-offset: 0.2em;
-      }
-      100% {
-        outline: 0.4em solid transparent;
-        outline-offset: 0.4em;
-      }
+      .title { font-size: 22px; }
+      .subtitle { font-size: 12px; }
     }
   </style>
 </head>
 
 <body>
 
-  <form class="form" action="/login" method="post" onsubmit="return handleLogin(event)">
-    <div class="form-title">Welcome Back</div>
-    <div class="form-sub">Sign in to your brand protection space</div>
+  <div class="card">
 
-    <!-- Username field -->
-    <div class="flex-column">
-      <label for="username">Username</label>
-      <div class="inputForm">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-          <circle cx="8" cy="5" r="3" stroke="#64748b" stroke-width="1.2" />
-          <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="#64748b" stroke-width="1.2" stroke-linecap="round" />
+    <!-- Top Accent handled by ::before -->
+
+    <!-- Shield -->
+    <div class="shield-wrap">
+      <div class="shield-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#FA5716" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 12l2 2 4-4" stroke="#FA5716" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-        <input type="text" class="input" id="username" name="username" placeholder="Enter your username" required>
       </div>
-      <div class="err" id="err-u">Please enter your username.</div>
     </div>
 
-    <!-- Password field -->
-    <div class="flex-column">
-      <label for="password">Password</label>
-      <div class="inputForm">
-        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-          <rect x="2" y="7" width="12" height="8" rx="1.5" stroke="#64748b" stroke-width="1.2" />
-          <path d="M5 7V5a3 3 0 016 0v2" stroke="#64748b" stroke-width="1.2" stroke-linecap="round" />
-        </svg>
-        <input type="password" class="input" id="password" name="password" placeholder="Enter your password" required>
-        <button class="eye-btn" onclick="togglePw()" type="button" aria-label="Toggle password visibility">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-            <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.2" />
-            <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2" />
+    <!-- Headings -->
+    <div class="eyebrow">Trust Layer</div>
+    <h1 class="title">Brand Portal</h1>
+    <p class="subtitle">Sign in to your brand protection space to manage registries and products.</p>
+
+    <!-- Error -->
+    <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+    <div class="error-banner" id="errorBanner" style="display: block;">
+      <span id="errorText"><%= error %></span>
+    </div>
+    <script>
+      // Force clear fields after a slight delay to override browser password managers
+      window.addEventListener('DOMContentLoaded', () => {
+        setTimeout(() => {
+          document.getElementById('username').value = '';
+          document.getElementById('password').value = '';
+        }, 50);
+      });
+    </script>
+    <% } %>
+
+    <div class="error-banner" id="jsErrorBanner" style="display: none;">
+      <span id="jsErrorText">Please fill in all fields.</span>
+    </div>
+
+    <!-- Form -->
+    <form id="loginForm" method="POST" action="/login" onsubmit="return handleLogin(event)">
+
+      <!-- Username -->
+      <div class="field">
+        <label for="username">Username</label>
+        <div class="input-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="#64748B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="7" r="4" stroke="#64748B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-        </button>
+          <input type="text" id="username" name="username" placeholder="Enter your username" required autocomplete="username">
+        </div>
       </div>
-      <div class="err" id="err-p">Please enter your password.</div>
-    </div>
 
-    <!-- Remember & Forgot -->
-    <div class="flex-row">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <input type="checkbox" id="rem">
-        <label for="rem" style="font-size: 13px; color: rgba(243, 235, 217, 0.8); font-weight: 400; cursor: pointer;">Keep me signed in</label>
+      <!-- Password -->
+      <div class="field">
+        <label for="password">Password</label>
+        <div class="input-wrap">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="11" width="18" height="11" rx="2" stroke="#64748B" stroke-width="1.5"/>
+            <path d="M7 11V7a5 5 0 0110 0v4" stroke="#64748B" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+          <button class="eye-btn" type="button" onclick="togglePw()" aria-label="Toggle password">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </button>
+        </div>
       </div>
-      <button class="forgot-link" type="button" onclick="alert('Password reset link sent to your email.')">Forgot password?</button>
-    </div>
 
-    <!-- Submit -->
-    <button class="button-submit" type="submit">Sign In</button>
-  </form>
+      <!-- Remember & Forgot -->
+      <div class="flex-row">
+        <label class="checkbox-wrap">
+          <input type="checkbox" id="rem">
+          <span>Keep me signed in</span>
+        </label>
+        <button class="forgot-link" type="button" onclick="alert('Password reset link sent to your email.')">Forgot password?</button>
+      </div>
+
+      <!-- Submit -->
+      <button class="btn-submit" type="submit" id="submitBtn">
+        Sign In
+      </button>
+    </form>
+
+  </div>
 
   <script>
     function togglePw() {
@@ -462,17 +388,15 @@
     function handleLogin(event) {
       var u = document.getElementById('username').value.trim();
       var p = document.getElementById('password').value.trim();
-      var eu = document.getElementById('err-u');
-      var ep = document.getElementById('err-p');
-      eu.style.display = 'none';
-      ep.style.display = 'none';
-      var ok = true;
-      if (!u) { eu.style.display = 'block'; ok = false; }
-      if (!p) { ep.style.display = 'block'; ok = false; }
-      if (!ok) {
+      var errBox = document.getElementById('jsErrorBanner');
+      
+      if (!u || !p) {
+        errBox.style.display = 'block';
         event.preventDefault();
+        return false;
       }
-      return ok;
+      errBox.style.display = 'none';
+      return true;
     }
   </script>
 

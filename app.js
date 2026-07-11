@@ -171,7 +171,11 @@ const isloggedin = (req, res, next) => {
     res.redirect("/login");
 };
 app.get("/login", (req, res) => {
-    res.render("login");
+    if (req.isAuthenticated()) {
+        return res.redirect("/admin/space");
+    }
+    const errorMsg = req.query.error ? "Invalid username or password. Please try again." : null;
+    res.render("login", { error: errorMsg });
 });
 
 
@@ -184,6 +188,9 @@ const superAdminAuth = (req, res, next) => {
 };
 
 app.get("/super-admin/login", (req, res) => {
+    if (req.session && req.session.isSuperAdmin === true) {
+        return res.redirect("/register");
+    }
     res.render("super-admin-login", { error: null });
 });
 
@@ -287,8 +294,7 @@ app.get("/admin/space", isloggedin, async (req, res) => {
 });
 
 app.post("/login", passport.authenticate("local", {
-    failureRedirect: "/login",
-    // failureFlash:true
+    failureRedirect: "/login?error=1",
 }), async (req, res) => {
     req.session.save((err) => {
         if (err) {
