@@ -39,20 +39,20 @@ const configSchema = new mongoose.Schema({
 const Config = mongoose.models.Config || mongoose.model('Config', configSchema);
 
 // --- FIREWORKS RAG HELPERS ---
-async function generateEmbedding(text) {
-    // 1. Try env var first
+async function getFireworksApiKey() {
     let apiKey = process.env.FIREWORKS_API_KEY;
-    
-    // 2. Fallback to database (securely bypasses Vercel dashboard without hardcoding on GitHub)
     if (!apiKey) {
         const dbConfig = await Config.findOne({ key: 'FIREWORKS_API_KEY' });
         if (dbConfig) apiKey = dbConfig.value;
     }
-
     if (!apiKey) {
         throw new Error("API_KEY_MISSING");
     }
+    return apiKey;
+}
 
+async function generateEmbedding(text) {
+    const apiKey = await getFireworksApiKey();
     const response = await fetch('https://api.fireworks.ai/inference/v1/embeddings', {
         method: 'POST',
         headers: {
@@ -104,10 +104,11 @@ function cosineSimilarity(vecA, vecB) {
 }
 
 async function generateChatCompletion(systemPrompt, userMessage) {
+    const apiKey = await getFireworksApiKey();
     const response = await fetch('https://api.fireworks.ai/inference/v1/chat/completions', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${FIREWORKS_API_KEY}`,
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
