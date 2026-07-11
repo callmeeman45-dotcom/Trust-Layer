@@ -154,14 +154,9 @@ app.get("/super-admin/login", (req, res) => {
 
 app.post("/super-admin/login", (req, res) => {
     const { adminUsername, adminPassword } = req.body;
-    const superUser = process.env.SUPERADMIN_USERNAME;
-    const superPass = process.env.SUPERADMIN_PASSWORD;
-
-    if (!superUser || !superPass) {
-        return res.render("super-admin-login", {
-            error: "Super Admin credentials are not configured. Contact system administrator."
-        });
-    }
+    // Use env vars if available, otherwise fall back to hardcoded defaults (server-side only)
+    const superUser = process.env.SUPERADMIN_USERNAME || "TRUST LAYER ADMIN";
+    const superPass = process.env.SUPERADMIN_PASSWORD || "TRUSTLAYER123";
 
     if (adminUsername === superUser && adminPassword === superPass) {
         req.session.isSuperAdmin = true;
