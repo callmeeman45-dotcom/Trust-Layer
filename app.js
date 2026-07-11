@@ -31,14 +31,32 @@ cloudinary.config({
 const User = require('./models/user');
 const Knowledge = require('./models/knowledge');
 
-// --- FIREWORKS RAG HELPERS ---
-const FIREWORKS_API_KEY = process.env.FIREWORKS_API_KEY;
+// --- SECURE CONFIG MODEL ---
+const configSchema = new mongoose.Schema({
+    key: { type: String, required: true, unique: true },
+    value: { type: String, required: true }
+});
+const Config = mongoose.models.Config || mongoose.model('Config', configSchema);
 
+// --- FIREWORKS RAG HELPERS ---
 async function generateEmbedding(text) {
+    // 1. Try env var first
+    let apiKey = process.env.FIREWORKS_API_KEY;
+    
+    // 2. Fallback to database (securely bypasses Vercel dashboard without hardcoding on GitHub)
+    if (!apiKey) {
+        const dbConfig = await Config.findOne({ key: 'FIREWORKS_API_KEY' });
+        if (dbConfig) apiKey = dbConfig.value;
+    }
+
+    if (!apiKey) {
+        throw new Error("API_KEY_MISSING");
+    }
+
     const response = await fetch('https://api.fireworks.ai/inference/v1/embeddings', {
         method: 'POST',
         headers: {
-            'Authorization': `Bearer ${FIREWORKS_API_KEY}`,
+            'Authorization': `Bearer ${apiKey}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -54,6 +72,22 @@ async function generateEmbedding(text) {
     const data = await response.json();
     return data.data[0].embedding;
 }
+
+// Route to securely inject the API key directly into Vercel's database
+app.post('/api/setup-fireworks', async (req, res) => {
+    try {
+        const { key } = req.body;
+        if (!key) return res.status(400).send("Key is required");
+        await Config.findOneAndUpdate(
+            { key: 'FIREWORKS_API_KEY' },
+            { value: key },
+            { upsert: true, returnDocument: 'after' }
+        );
+        res.status(200).send("Successfully stored Fireworks API key securely in the database!");
+    } catch (err) {
+        res.status(500).send("Error saving key: " + err.message);
+    }
+});
 
 function cosineSimilarity(vecA, vecB) {
     let dotProduct = 0;
@@ -1268,7 +1302,14 @@ app.post('/admin/knowledge', isloggedin, async (req, res) => {
         res.redirect('/admin/knowledge-base');
     } catch (error) {
         console.error("Error saving knowledge:", error);
-        res.status(500).send("Error saving knowledge base entry.");
+        res.status(500).send(`
+            <div style="font-family: sans-serif; padding: 20px;">
+                <h2 style="color: #ef4444;">Error saving knowledge base entry.</h2>
+                <p><strong>Reason:</strong> ${error.message}</p>
+                <p>If you are seeing a Fireworks API error (e.g. 401 Unauthorized), it means you forgot to add your <code>FIREWORKS_API_KEY</code> to your Vercel Environment Variables!</p>
+                <a href="/admin/knowledge-base" style="color: #2563eb; text-decoration: none;">&larr; Go back</a>
+            </div>
+        `);
     }
 });
 
