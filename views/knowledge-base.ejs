@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knowledge Base — Trust Layer</title>
+  <link rel="stylesheet" href="/css/dashboard-layout.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    /* ── HEADER SECTION ── */
+    .kb-header {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--beige);
+    }
+
+    .kb-eyebrow {
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--amber); /* Teal */
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .kb-eyebrow::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--honey);
+      border-radius: 50%;
+    }
+
+    .kb-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 12px;
+    }
+
+    .kb-desc {
+      font-size: 14px;
+      color: var(--bark);
+      line-height: 1.6;
+      max-width: 640px;
+    }
+
+    /* ── PANELS ── */
+    .kb-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 32px;
+      animation: fadeUp .6s .1s ease both;
+    }
+
+    .kb-card {
+      background: var(--white);
+      border: 1px solid var(--beige);
+      border-radius: 16px;
+      padding: 32px 36px;
+      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kb-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--honey);
+    }
+
+    .kb-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* ── FORM ── */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--umber);
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--cream);
+      border: 1px solid var(--beige);
+      border-radius: 12px;
+      font-size: 13px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 400;
+      color: var(--ink);
+      transition: border-color .25s, box-shadow .25s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--honey);
+      box-shadow: 0 0 0 3px rgba(250, 87, 22, 0.1);
+      background: var(--white);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 28px;
+      background: var(--ink);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .25s ease;
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.15);
+    }
+
+    .btn-submit:hover {
+      background: var(--honey);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(250, 87, 22, 0.25);
+    }
+
+    /* ── EXISTING KNOWLEDGE LIST ── */
+    .knowledge-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .k-item {
+      padding: 24px;
+      background: var(--cream);
+      border: 1px solid var(--beige);
+      border-radius: 12px;
+      transition: border-color .25s, transform .25s;
+    }
+
+    .k-item:hover {
+      border-color: var(--honey);
+      transform: translateX(4px);
+      background: var(--white);
+    }
+
+    .k-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+
+    .k-content {
+      font-size: 13px;
+      color: var(--bark);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .k-meta {
+      font-size: 11px;
+      color: var(--umber);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .k-meta svg {
+      color: var(--amber); /* Teal */
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 48px 20px;
+      background: var(--cream);
+      border-radius: 12px;
+      border: 1px dashed var(--beige);
+    }
+
+    .empty-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--white);
+      border: 1px solid var(--beige);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      color: var(--honey);
+    }
+
+    .empty-text {
+      font-size: 13px;
+      color: var(--umber);
+      font-weight: 500;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px) }
+      to { opacity: 1; transform: translateY(0) }
+    }
+  </style>
+</head>
+
+<body>
+
+  <%- include('partials/sidebar', { active: 'knowledge-base' }) %>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <%- include('partials/topbar', { pageTitle: 'Knowledge Base', pageSub: 'Manage Brand Rules' }) %>
+
+    <!-- CONTENT -->
+    <div class="content">
+      
+      <div class="kb-header">
+        <div class="kb-eyebrow">Brand AI RAG Engine</div>
+        <h1 class="kb-title">Knowledge Base</h1>
+        <p class="kb-desc">
+          Train your brand's AI by adding custom rules, return policies, or instructions.
+          The Brand Custodian AI will use this knowledge when chatting with consumers or admins.
+        </p>
+      </div>
+
+      <div class="kb-grid">
+        
+        <!-- Add Knowledge Form -->
+        <div class="kb-card">
+          <h2 class="kb-card-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 4v16m8-8H4" stroke="var(--honey)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Add Knowledge
+          </h2>
+          <form action="/admin/knowledge" method="POST">
+            <div class="form-group">
+              <label for="title">Knowledge Title</label>
+              <input type="text" id="title" name="title" required placeholder="e.g. Return Policy" autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="content">Knowledge Content</label>
+              <textarea id="content" name="content" required placeholder="Enter the text rules here... e.g. 'If a customer finds a counterfeit, they should...'"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 21v-8H7v8M7 3v5h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Save Knowledge
+            </button>
+          </form>
+        </div>
+
+        <!-- Existing Knowledge -->
+        <div class="kb-card">
+          <h2 class="kb-card-title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h7" stroke="var(--amber)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Existing Knowledge
+          </h2>
+          
+          <% if (knowledge && knowledge.length > 0) { %>
+            <div class="knowledge-list">
+              <% knowledge.forEach(function(item) { %>
+                <div class="k-item">
+                  <h3 class="k-title"><%= item.title %></h3>
+                  <div class="k-content"><%= item.content %></div>
+                  <div class="k-meta">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Added: <%= new Date(item.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) %>
+                  </div>
+                </div>
+              <% }); %>
+            </div>
+          <% } else { %>
+            <div class="empty">
+              <div class="empty-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="empty-text">No knowledge added yet.</div>
+            </div>
+          <% } %>
+        </div>
+
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+</body>
+</html>

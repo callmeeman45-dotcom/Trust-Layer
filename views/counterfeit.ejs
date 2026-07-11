@@ -1,0 +1,575 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500;600&display=swap');
+
+  :root {
+    --ink: #0F172A; /* Deep Slate */
+    --bark: #475569; /* Soft Slate */
+    --umber: #94A3B8; /* Muted Slate */
+    --honey: #FA5716; /* Vibrant Orange */
+    --amber: #0F5C5B; /* Deep Teal */
+    --cream: #F8FAFC; /* Light Canvas */
+    --parchment: #FFFFFF;
+    --beige: rgba(15, 23, 42, 0.08); /* Subtle borders */
+    --warm: #CBD5E1; /* Light Slate */
+    --sage: #10B981; /* Emerald */
+    --danger: #EF4444; /* Red */
+    --danger-bg: rgba(239, 68, 68, 0.05);
+    --white: #FFFFFF;
+  }
+
+  * { box-sizing: border-box; }
+
+  .tl-wrap {
+    font-family: 'Outfit', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .tl-wrap::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: .2;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='.04'/%3E%3C/svg%3E");
+  }
+
+  .tl-brand {
+    text-align: center;
+    margin-bottom: 32px;
+    animation: tl-down .6s ease both;
+  }
+
+  .tl-brand-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--honey);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+    box-shadow: 0 4px 12px rgba(250, 87, 22, 0.3);
+  }
+
+  .tl-brand-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: .02em;
+  }
+
+  .tl-brand-sub {
+    font-size: 10px;
+    color: var(--umber);
+    letter-spacing: .3em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  .tl-card {
+    background: var(--white);
+    width: 100%;
+    max-width: 540px;
+    border: 1px solid var(--beige);
+    border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+    animation: tl-up .7s .1s ease both;
+  }
+
+  .tl-card-top {
+    background: linear-gradient(135deg, var(--ink) 0%, #1b263b 100%);
+    padding: 48px 44px 44px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tl-card-top::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(239, 68, 68, .2) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .tl-card-top::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    right: -40px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(250, 87, 22, .15) 0%, transparent 65%);
+    pointer-events: none;
+  }
+
+  .tl-top-grid {
+    position: absolute;
+    inset: 0;
+    opacity: .05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M 40 0 L 0 0 0 40' fill='none' stroke='%23EF4444' stroke-width='1'/%3E%3C/svg%3E");
+  }
+
+  .tl-icon-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 1px solid rgba(239, 68, 68, .3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px;
+    position: relative;
+    z-index: 1;
+    animation: tl-pulse 2s ease infinite;
+  }
+
+  .tl-icon-ring-inner {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, .15);
+    border: 1px solid rgba(239, 68, 68, .4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @keyframes tl-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0) }
+    50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, .12) }
+  }
+
+  .tl-card-top h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -.01em;
+  }
+
+  .tl-card-top h2 em {
+    font-style: italic;
+    color: var(--danger);
+  }
+
+  .tl-card-top p {
+    font-size: 13px;
+    color: rgba(255, 255, 255, .6);
+    font-weight: 400;
+    letter-spacing: .02em;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tl-scan-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(239, 68, 68, .4);
+    padding: 8px 16px;
+    border-radius: 30px;
+    background: rgba(239, 68, 68, 0.08);
+    margin-top: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tl-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--danger);
+    animation: tl-glow 2s ease infinite;
+  }
+
+  @keyframes tl-glow {
+    0%, 100% { box-shadow: 0 0 6px rgba(239, 68, 68, .6) }
+    50% { box-shadow: 0 0 14px rgba(239, 68, 68, 1) }
+  }
+
+  .tl-scan-badge span {
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--danger);
+    font-weight: 600;
+  }
+
+  .tl-body {
+    padding: 40px 48px;
+  }
+
+  .tl-sec {
+    font-size: 10px;
+    letter-spacing: .35em;
+    text-transform: uppercase;
+    color: var(--umber);
+    font-weight: 600;
+    margin-bottom: 20px;
+    margin-top: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .tl-sec::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--beige), transparent);
+  }
+
+  .tl-sec:first-of-type {
+    margin-top: 0;
+  }
+
+  .tl-scan-timeline {
+    margin-bottom: 0;
+  }
+
+  .tl-scan-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    position: relative;
+  }
+
+  .tl-scan-row:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 26px;
+    width: 1px;
+    height: calc(100% + 8px);
+    background: linear-gradient(to bottom, rgba(239, 68, 68, .3), transparent);
+  }
+
+  .tl-scan-dot {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid rgba(16, 185, 129, .4);
+    background: rgba(16, 185, 129, .1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .tl-scan-dot-in {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sage);
+  }
+
+  .tl-scan-dot.warn {
+    border-color: rgba(239, 68, 68, .5);
+    background: rgba(239, 68, 68, .15);
+  }
+
+  .tl-scan-dot.warn .tl-scan-dot-in {
+    background: var(--danger);
+    box-shadow: 0 0 8px rgba(239, 68, 68, .6);
+  }
+
+  .tl-scan-info {
+    padding-bottom: 24px;
+  }
+
+  .tl-scan-lbl {
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--umber);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .tl-scan-val {
+    font-size: 13px;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: .01em;
+  }
+
+  .tl-scan-meta {
+    font-size: 11px;
+    color: var(--bark);
+    font-weight: 400;
+    margin-top: 4px;
+  }
+
+  .tl-alert {
+    background: var(--danger-bg);
+    border: 1px solid rgba(239, 68, 68, .2);
+    border-left: 3px solid var(--danger);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 0;
+  }
+
+  .tl-alert-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(239, 68, 68, .1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--danger);
+  }
+
+  .tl-alert-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: #991B1B;
+    margin-bottom: 6px;
+  }
+
+  .tl-alert-text {
+    font-size: 13px;
+    color: #B91C1C;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  .tl-actions {
+    margin-top: 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .tl-btn-primary {
+    width: 100%;
+    padding: 16px 24px;
+    background: var(--ink);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all .25s ease;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+  }
+
+  .tl-btn-primary:hover {
+    background: var(--honey);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(250, 87, 22, 0.3);
+  }
+
+  .tl-btn-outline {
+    width: 100%;
+    padding: 15px 24px;
+    background: var(--white);
+    color: var(--ink);
+    border: 1px solid var(--beige);
+    border-radius: 12px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 12px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all .25s ease;
+  }
+
+  .tl-btn-outline:hover {
+    border-color: var(--honey);
+    color: var(--honey);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  }
+
+  .tl-cert {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    letter-spacing: .15em;
+    color: var(--umber);
+    border-top: 1px solid var(--beige);
+    padding-top: 24px;
+    margin-top: 36px;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .tl-cert strong {
+    color: var(--amber); /* Teal */
+    font-weight: 600;
+  }
+
+  .tl-footer {
+    margin-top: 32px;
+    font-size: 12px;
+    color: var(--umber);
+    letter-spacing: .06em;
+    font-weight: 500;
+    text-align: center;
+    animation: tl-down .6s .3s ease both;
+  }
+
+  .tl-footer a {
+    color: var(--bark);
+    text-decoration: none;
+    transition: color .2s;
+  }
+
+  .tl-footer a:hover {
+    color: var(--honey);
+  }
+
+  @keyframes tl-down {
+    from { opacity: 0; transform: translateY(-16px) }
+    to { opacity: 1; transform: translateY(0) }
+  }
+
+  @keyframes tl-up {
+    from { opacity: 0; transform: translateY(24px) }
+    to { opacity: 1; transform: translateY(0) }
+  }
+
+  @media(max-width:540px) {
+    .tl-body { padding: 32px 24px 36px; }
+    .tl-card-top { padding: 40px 24px 36px; }
+  }
+</style>
+
+<div class="tl-wrap">
+  <div class="tl-brand">
+    <div class="tl-brand-icon">
+      <svg width="22" height="22" viewBox="0 0 18 18" fill="none">
+        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="white" />
+        <path d="M7 9.5l1.5 1.5 3-3" stroke="rgba(250,87,22,0.9)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+    <div class="tl-brand-name">Trust Layer</div>
+    <div class="tl-brand-sub">Product Authentication</div>
+  </div>
+
+  <div class="tl-card">
+    <div class="tl-card-top">
+      <div class="tl-top-grid"></div>
+      <div class="tl-icon-ring">
+        <div class="tl-icon-ring-inner">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M14 9v6M14 19h.02" stroke="#EF4444" stroke-width="2.5" stroke-linecap="round" />
+            <path d="M11.5 4.2L2.3 19.5A2.5 2.5 0 004.7 23.5h18.5a2.5 2.5 0 002.2-3.8L16.5 4.2a2.5 2.5 0 00-5 0z" stroke="rgba(239,68,68,.8)" stroke-width="2" stroke-linejoin="round" />
+          </svg>
+        </div>
+      </div>
+      <h2>Authentication <em>Failed</em></h2>
+      <p>This unit is registered as Counterfeit or Recalled</p>
+      <div class="tl-scan-badge">
+        <div class="tl-badge-dot"></div>
+        <span>High Risk · Do Not Consume</span>
+      </div>
+    </div>
+
+    <div class="tl-body">
+
+      <p class="tl-sec">Scan History</p>
+
+      <div class="tl-scan-timeline">
+        <div class="tl-scan-row">
+          <div class="tl-scan-dot">
+            <div class="tl-scan-dot-in"></div>
+          </div>
+          <div class="tl-scan-info">
+            <p class="tl-scan-lbl">First scan — original</p>
+            <p class="tl-scan-val">Verified successfully</p>
+            <p class="tl-scan-meta">14 Apr 2025 &nbsp;·&nbsp; 09:42 AM &nbsp;·&nbsp; Lahore, PK</p>
+          </div>
+        </div>
+        <div class="tl-scan-row">
+          <div class="tl-scan-dot warn">
+            <div class="tl-scan-dot-in"></div>
+          </div>
+          <div class="tl-scan-info">
+            <p class="tl-scan-lbl">Current scan — this device</p>
+            <p class="tl-scan-val">Flagged as duplicated or recalled</p>
+            <p class="tl-scan-meta">Today &nbsp;·&nbsp; Just now</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="tl-sec">Warning</p>
+
+      <div class="tl-alert">
+        <div class="tl-alert-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 9v4M12 17h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+          </svg>
+        </div>
+        <div>
+          <div class="tl-alert-label">Counterfeit Risk</div>
+          <div class="tl-alert-text">Each genuine product has a unique cryptographic QR code scanned only once. This code has been blocked. The product you are holding may be a counterfeit copy or a recalled unit.</div>
+        </div>
+      </div>
+
+      <div class="tl-actions">
+        <button class="tl-btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <line x1="4" y1="22" x2="4" y2="15" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+          Report Counterfeit Product
+        </button>
+        <button class="tl-btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+            <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8a19.79 19.79 0 01-3.07-8.66A2 2 0 012 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 14.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          Contact Authorised Seller
+        </button>
+      </div>
+
+      <div class="tl-cert">
+        Trust Layer &nbsp;<strong>v2.5.0</strong>
+        &nbsp;·&nbsp; Immutable Ledger
+        &nbsp;·&nbsp; Encrypted at Rest
+      </div>
+
+    </div>
+  </div>
+
+  <div class="tl-footer">← <a href="/">Back to Trust Layer Home</a></div>
+</div>

@@ -1,5 +1,5 @@
 const mongoose=require('mongoose');
-const Product=require('./Products');
+const Product=require('./product');
 const scanrecordSchema=new mongoose.Schema({
     productId:{
         type: mongoose.Schema.Types.ObjectId,

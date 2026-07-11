@@ -1,0 +1,3046 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trust Layer — Anti-Counterfeit Platform</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --ink: #F3EBD9; /* Light sand for text */
+      --bark: #E2E8F0; /* Secondary light text */
+      --umber: #A0AEC0; /* Muted text */
+      --honey: #FA5716; /* Vibrant Orange */
+      --amber: #0F5C5B; /* Deep Teal */
+      --cream: #1B242C; /* Dark Navy for background */
+      --parchment: #161e25; /* Darker Navy */
+      --beige: #2d3748; /* Borders */
+      --warm: #FF8A65; /* Light Orange */
+      --sage: #0c585c; /* Darker Teal */
+      --white: #FFFFFF;
+      --max-w: 1440px;
+      --side-pad: clamp(24px, 4vw, 80px);
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: .22;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23g)' opacity='.04'/%3E%3C/svg%3E");
+    }
+
+    /* ──── NAVBAR ──── */
+    .nav {
+      position: fixed;
+      top: 20px;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 72px;
+      width: calc(100% - 48px);
+      max-width: var(--max-w);
+      background: rgba(22, 19, 31, 0.85);
+      backdrop-filter: blur(24px);
+      border-radius: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+      animation: slideDown .7s ease both;
+    }
+
+    .nav-inner {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--white);
+      letter-spacing: .04em;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .nav-brand-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--honey);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    @keyframes borderDance {
+      0% {
+        background-position: center, 0% 50%;
+      }
+
+      100% {
+        background-position: center, 200% 50%;
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: clamp(10px, 1.5vw, 20px);
+      list-style: none;
+      position: relative;
+      align-items: center;
+    }
+
+    .nav-links li {
+      z-index: 2;
+    }
+
+    .nav-links a {
+      display: inline-block;
+      padding: 10px 20px;
+      font-size: 11px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-weight: 400;
+      transition: all .3s;
+      white-space: nowrap;
+      border-radius: 30px;
+      border: 2px solid transparent;
+      background: transparent;
+    }
+
+    .nav-links a:hover,
+    .nav-links a:focus {
+      color: var(--white);
+      background-clip: padding-box, border-box;
+      background-origin: padding-box, border-box;
+      background-image: linear-gradient(var(--cream), var(--cream)), linear-gradient(90deg, var(--amber), var(--honey));
+      background-size: 100% 100%, 200% 100%;
+      animation: borderDance 3s linear infinite;
+      outline: none;
+    }
+
+    .nav-links a.active {
+      color: var(--white);
+      background-clip: padding-box, border-box;
+      background-origin: padding-box, border-box;
+      background-image: linear-gradient(var(--cream), var(--cream)), linear-gradient(90deg, var(--amber), var(--honey));
+      background-size: 100% 100%, 200% 100%;
+      border: 2px solid transparent;
+    }
+
+    /* The Spotlight Pill */
+    .nav-hover-pill {
+      display: none;
+    }
+
+    .nav-cta {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      cursor: pointer;
+      gap: 0.4rem;
+      font-weight: 600;
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-radius: 30px;
+      text-shadow: none;
+      background: var(--honey);
+      color: #fff;
+      border: none;
+      box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      font-family: 'Outfit', sans-serif;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .nav-cta:hover,
+    .nav-cta:focus {
+      background: var(--warm);
+      outline: none;
+    }
+
+    .nav-cta svg {
+      width: 23px;
+      fill: #f09f33;
+      transition: 0.3s ease;
+    }
+
+    .nav-cta:hover svg {
+      fill: #fff;
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      border: none;
+      background: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--white);
+      border-radius: 2px;
+      transition: all .3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 100px;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: calc(100% - 48px);
+      background: rgba(22, 19, 31, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 20px 24px;
+      z-index: 490;
+      flex-direction: column;
+      gap: 0;
+      backdrop-filter: blur(20px);
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu li {
+      list-style: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .mobile-menu li:last-child {
+      border: none;
+    }
+
+    .mobile-menu a {
+      display: block;
+      font-size: 11px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      padding: 14px 0;
+      font-weight: 400;
+    }
+
+    .mobile-cta-wrap {
+      padding-top: 14px;
+    }
+
+    .mobile-cta-wrap .nav-cta {
+      width: 100%;
+      text-align: center;
+      padding: 13px;
+      font-size: 11px;
+    }
+
+    /* ──── HERO ──── */
+    .hero {
+      padding-top: 72px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+      background-color: #1B242C;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 20% 80%, rgba(15, 92, 91, 0.35) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(250, 87, 22, 0.15) 0%, transparent 70%),
+        linear-gradient(160deg, #1B242C 0%, #0F5C5B 40%, #1B242C 70%, #2a1a0e 100%);
+      /* Premium dark gradient with subtle teal and warm accent */
+    }
+
+    /* on very large screens, hero should fill nicely */
+    @media(min-width:1600px) {
+      .hero {
+        min-height: 90vh
+      }
+    }
+
+    .hero-left {
+      background: transparent;
+      /* Now inherits the beautiful hero background */
+      padding: clamp(60px, 7vw, 120px) clamp(32px, 5vw, 96px) clamp(60px, 7vw, 120px) var(--side-pad);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      animation: fadeLeft .9s .2s ease both;
+    }
+
+    .hero-left::before {
+      content: '';
+      position: absolute;
+      top: -120px;
+      left: -120px;
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, rgba(255, 255, 255, .12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-left::after {
+      content: '';
+      position: absolute;
+      bottom: -80px;
+      right: -60px;
+      width: 320px;
+      height: 320px;
+      background: radial-gradient(circle, rgba(255, 255, 255, .08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-content {
+      max-width: 540px;
+      width: 100%;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(255, 255, 255, .3);
+      background: rgba(255, 255, 255, 0.08);
+      padding: 7px 16px;
+      margin-bottom: 36px;
+      align-self: flex-start;
+    }
+
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #FFCC70;
+      animation: glow 2s ease infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes glow {
+
+      0%,
+      100% {
+        box-shadow: 0 0 8px rgba(255, 204, 112, .7)
+      }
+
+      50% {
+        box-shadow: 0 0 20px rgba(255, 204, 112, 1)
+      }
+    }
+
+    .hero-badge span {
+      font-size: 9px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: #fff;
+      font-weight: 600
+    }
+
+    .hero-eyebrow {
+      font-size: 9px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .7);
+      margin-bottom: 16px;
+      font-weight: 600
+    }
+
+    .hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: clamp(2.4rem, 4.5vw, 4.5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      color: #fff;
+      margin-bottom: 20px;
+      letter-spacing: -.03em;
+    }
+
+    .hero-title em {
+      font-style: normal;
+      color: var(--honey);
+      background: none;
+      -webkit-text-fill-color: var(--honey);
+    }
+
+    .hero-sub {
+      font-size: clamp(12px, 1.1vw, 14px);
+      color: rgba(255, 255, 255, .8);
+      font-weight: 400;
+      line-height: 1.85;
+      margin-bottom: 44px;
+      max-width: 420px;
+      letter-spacing: .03em;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 44px
+    }
+
+    .btn-primary {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 400;
+      padding: 13px 28px;
+      background: var(--honey);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: background .25s;
+    }
+
+    .btn-primary:hover {
+      background: var(--amber)
+    }
+
+    /* Animated Button for Protect Your Products */
+    .ui-btn-protect {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 48px;
+      padding: 0 28px;
+      cursor: pointer;
+      gap: 8px;
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border-radius: 40px;
+      text-shadow: none;
+      background: var(--honey);
+      color: #fff;
+      border: none;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, .2);
+      transition: all 0.3s ease;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .ui-btn-protect:hover {
+      background: var(--warm);
+      scale: 1.02;
+    }
+
+    .ui-btn-protect:hover svg {
+      fill: #fff;
+    }
+
+    .ui-btn-protect svg {
+      width: 14px;
+      height: 14px;
+      fill: #fff;
+      transition: .3s ease;
+    }
+
+    .ui-btn-protect:active {
+      scale: 0.95;
+    }
+
+    /* Animated Button for Register Your Products */
+    .ui-btn-register {
+      --border-radius: 40px;
+      --border-width: 2px;
+      appearance: none;
+      position: relative;
+      padding: 0 32px;
+      height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      background-color: #16131f;
+      font-family: "Outfit", sans-serif;
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: #fff;
+      z-index: 2;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      transition: scale 0.2s ease;
+    }
+
+    .ui-btn-register::after {
+      --m-i: linear-gradient(#000, #000);
+      --m-o: content-box, padding-box;
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      padding: var(--border-width);
+      border-radius: var(--border-radius);
+      background-image: conic-gradient(var(--amber),
+          var(--honey),
+          var(--warm),
+          var(--sage),
+          var(--amber));
+      -webkit-mask-image: var(--m-i), var(--m-i);
+      mask-image: var(--m-i), var(--m-i);
+      -webkit-mask-origin: var(--m-o);
+      mask-origin: var(--m-o);
+      -webkit-mask-clip: var(--m-o);
+      mask-composite: exclude;
+      -webkit-mask-composite: destination-out;
+      filter: hue-rotate(0);
+      animation: rotate-hue linear 2000ms infinite;
+      animation-play-state: paused;
+    }
+
+    .ui-btn-register:hover::after {
+      animation-play-state: running;
+    }
+
+    @keyframes rotate-hue {
+      to {
+        filter: hue-rotate(1turn);
+      }
+    }
+
+    .ui-btn-register,
+    .ui-btn-register::after {
+      box-sizing: border-box;
+    }
+
+    .ui-btn-register:active {
+      scale: 0.95;
+    }
+
+    .btn-outline {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 300;
+      padding: 13px 28px;
+      background: transparent;
+      color: rgba(255, 255, 255, .5);
+      border: 1px solid rgba(255, 255, 255, .2);
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: all .25s;
+    }
+
+    .btn-outline:hover {
+      border-color: rgba(255, 255, 255, .45);
+      color: rgba(255, 255, 255, .85)
+    }
+
+    /* Animated Button for Live Demo */
+    .ui-btn-demo {
+      position: relative;
+      background-color: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-size: 11px;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+      border-radius: 40px;
+      width: 180px;
+      height: 48px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      text-transform: uppercase;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.320, 1);
+      padding: 0;
+    }
+
+    .ui-btn-demo::before {
+      content: "Play Video ▶";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: linear-gradient(135deg, #7b4397, #dc2430);
+      transform: translate(0%, 90%);
+      z-index: 99;
+      position: relative;
+      transform-origin: bottom;
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+      color: white;
+      font-weight: 600;
+    }
+
+    .ui-btn-demo::after {
+      content: "View Live Demo";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: transparent;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      transform-origin: top;
+      transform: translate(0%, -100%);
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+    }
+
+    .ui-btn-demo:hover::before {
+      transform: translate(0%, 0%);
+    }
+
+    .ui-btn-demo:hover::after {
+      transform: translate(0%, -200%);
+    }
+
+    .ui-btn-demo:focus {
+      outline: none;
+    }
+
+    .ui-btn-demo:active {
+      scale: 0.95;
+    }
+
+    .scan-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 12px 20px;
+    }
+
+    .scan-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #FFCC70;
+      animation: glow3 1.8s ease infinite;
+      flex-shrink: 0;
+    }
+
+    @keyframes glow3 {
+
+      0%,
+      100% {
+        box-shadow: 0 0 6px #FFCC70;
+      }
+
+      50% {
+        box-shadow: 0 0 14px #FFCC70;
+      }
+    }
+
+    .scan-pill span {
+      font-size: 10px;
+      letter-spacing: .18em;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500
+    }
+
+    .scan-pill strong {
+      font-size: 10px;
+      color: #fff;
+      letter-spacing: .1em;
+      font-weight: 600
+    }
+
+    .hero-cert {
+      font-family: 'Playfair Display', serif;
+      font-size: 11px;
+      letter-spacing: .28em;
+      color: rgba(255, 255, 255, 0.6);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 24px;
+      margin-top: auto;
+      font-weight: 500;
+    }
+
+    .hero-cert strong {
+      color: #FFCC70;
+      font-weight: 600
+    }
+
+    /* Hero right — image panel */
+    .hero-right {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeRight .9s .3s ease both;
+    }
+
+    .hero-visual-wrap {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      display: flex;
+      align-items: stretch;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* The actual background image — cover with no repeat */
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://res.cloudinary.com/dc3lavmde/image/upload/v1777564522/atxp-pics-1777563736944_k3vhdr.png');
+      background-size: cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+
+    /* fallback gradient overlay for atmosphere */
+    .hero-img-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(26, 18, 8, .35) 0%, rgba(200, 130, 26, .08) 60%, transparent 100%);
+    }
+
+    /* decorative corner frame */
+    .hero-img-frame {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      border: 1px solid rgba(200, 130, 26, .2);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .hero-stamp {
+      position: absolute;
+      bottom: 28px;
+      right: 28px;
+      z-index: 10;
+    }
+
+    .hero-stamp-inner {
+      background: var(--honey);
+      padding: 10px 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-stamp span {
+      font-size: 9px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: #fff;
+      font-weight: 300
+    }
+
+    /* ──── STATS BAR ──── */
+    .stats-bar {
+      background: var(--ink);
+      border-top: 1px solid rgba(255, 255, 255, .05);
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
+      padding: 44px var(--side-pad);
+      animation: fadeUp .8s .4s ease both;
+    }
+
+    .stats-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 0 24px;
+      border-right: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .stat:last-child {
+      border-right: none
+    }
+
+    .stat-num {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3vw, 3rem);
+      font-weight: 500;
+      color: var(--amber);
+      letter-spacing: -.02em;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .stat-lbl {
+      font-size: 9px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .3);
+      font-weight: 300
+    }
+
+    /* ──── SHARED SECTION WRAPPER ──── */
+    .section-wrap {
+      max-width: var(--max-w);
+      margin: 0 auto;
+    }
+
+    /* ──── SERVICES ──── */
+    .services {
+      padding: clamp(72px, 8vw, 120px) var(--side-pad);
+    }
+
+    .section-tag {
+      font-size: 8px;
+      letter-spacing: .45em;
+      text-transform: uppercase;
+      color: var(--honey);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 300;
+    }
+
+    .section-tag::after {
+      content: '';
+      flex: 0 0 44px;
+      height: 1px;
+      background: var(--beige)
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 2.4vw, 2.8rem);
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+
+    .section-sub {
+      font-size: 12px;
+      color: var(--umber);
+      max-width: 480px;
+      line-height: 1.9;
+      margin-bottom: 52px;
+      font-weight: 300;
+      letter-spacing: .03em;
+    }
+
+    /* On large screens show services in 3 columns, on xl show 3 still but wider */
+    /* On large screens show services in 3 columns, on xl show 3 still but wider */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 30px;
+      background: transparent;
+      justify-items: center;
+      padding: 20px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ──── SERVICES SECTION GLOWING CARDS ──── */
+    .card {
+      position: relative;
+      width: 100%;
+      max-width: 320px;
+      height: 320px;
+      background-color: #16131f;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+      gap: 12px;
+      border-radius: 16px;
+      cursor: pointer;
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -5px;
+      margin: auto;
+      border-radius: 20px;
+      background: linear-gradient(-45deg, #FA5716 0%, #FFCC70 100%);
+      z-index: -10;
+      pointer-events: none;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card::after {
+      content: "";
+      z-index: -1;
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
+      background: linear-gradient(-45deg, #FFCC70 0%, #FA5716 100%);
+      transform: translate3d(0, 0, 0) scale(0.95);
+      filter: blur(20px);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .card .service-icon {
+      width: 46px;
+      height: 46px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      margin-bottom: auto; /* Push icon to the top */
+    }
+
+    .card .heading {
+      font-size: clamp(15px, 1.4vw, 18px);
+      text-transform: capitalize;
+      font-weight: 500;
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+      color: white;
+    }
+
+    .card p:not(.heading):not(.cta-text) {
+      font-size: 11px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+      font-weight: 300;
+      letter-spacing: 0.03em;
+    }
+
+    .card p.cta-text {
+      color: var(--honey);
+      font-weight: 600;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin: 0;
+      transition: all 0.3s;
+    }
+
+    .card:hover::after {
+      filter: blur(30px);
+    }
+
+    .card:hover::before {
+      transform: rotate(-90deg) scaleX(1.34) scaleY(0.77);
+    }
+
+    /* Background blobs */
+    .circle {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background-color: var(--honey);
+      position: absolute;
+      filter: blur(40px);
+      opacity: 0.15;
+      animation: floating 4000ms infinite ease-in-out;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #bottom {
+      background-color: var(--amber);
+      left: 10%;
+      top: 20%;
+      width: 150px;
+      height: 150px;
+      animation-delay: -800ms;
+    }
+
+    #right {
+      background-color: #ff2233;
+      right: 10%;
+      bottom: 20%;
+      width: 120px;
+      height: 120px;
+      animation-delay: -1800ms;
+    }
+
+    @keyframes floating {
+      0% {
+        transform: translateY(0px) scale(1);
+      }
+
+      50% {
+        transform: translateY(15px) scale(1.05);
+      }
+
+      100% {
+        transform: translateY(0px) scale(1);
+      }
+    }
+
+    /* ──── HOW IT WORKS ──── */
+    .how {
+      background-color: hsla(240, 15%, 9%, 1);
+      background-image: radial-gradient(at 88% 40%,
+          hsla(240, 15%, 9%, 1) 0px,
+          transparent 85%),
+        radial-gradient(at 49% 30%, hsla(240, 15%, 9%, 1) 0px, transparent 85%),
+        radial-gradient(at 14% 26%, hsla(240, 15%, 9%, 1) 0px, transparent 85%),
+        radial-gradient(at 0% 64%, hsla(263, 93%, 56%, 1) 0px, transparent 85%),
+        radial-gradient(at 41% 94%, hsla(284, 100%, 84%, 1) 0px, transparent 85%),
+        radial-gradient(at 100% 99%, hsla(306, 100%, 57%, 1) 0px, transparent 85%);
+      padding: clamp(72px, 8vw, 120px) var(--side-pad);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .how::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: transparent;
+      /* Disable the old warm gradient so the new mesh shines */
+      pointer-events: none;
+    }
+
+    .how-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      position: relative;
+      z-index: 1
+    }
+
+    .how .section-tag::after {
+      background: rgba(255, 255, 255, .08)
+    }
+
+    .how .section-tag {
+      color: var(--amber)
+    }
+
+    .how .section-title {
+      color: #fff
+    }
+
+    .how .section-sub {
+      color: rgba(255, 255, 255, .75)
+        /* Make text clearer and highly readable */
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      margin-top: 52px;
+      position: relative;
+    }
+
+    .how-line {
+      position: absolute;
+      top: 27px;
+      left: 10%;
+      right: 10%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(200, 130, 26, .3), transparent);
+    }
+
+    .step {
+      text-align: center;
+      padding: 0 clamp(12px, 2vw, 28px);
+      position: relative;
+      z-index: 1
+    }
+
+    .step-num {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 1px solid rgba(200, 130, 26, .4);
+      background: rgba(200, 130, 26, .1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 22px;
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--amber);
+    }
+
+    .step-title {
+      font-size: clamp(11px, 1vw, 13px);
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 8px;
+      letter-spacing: .05em
+    }
+
+    .step-desc {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .32);
+      line-height: 1.8;
+      font-weight: 300
+    }
+
+    /* ──── HOW IT WORKS STEPS (From Uiverse.io by Prince4fff) ──── */
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 52px;
+      position: relative;
+    }
+
+    .step-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      position: relative;
+      background: linear-gradient(135deg, #0c585c 0%, #0F5C5B 100%);
+      /* Deep Teal as default background */
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 36px 24px 28px;
+      text-decoration: none;
+      z-index: 1;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+      cursor: pointer;
+    }
+
+    .step-card:before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: -16px;
+      right: -16px;
+      background: linear-gradient(135deg, #FA5716 0%, #e14507 100%);
+      /* Vibrant Orange as hover background */
+      height: 32px;
+      width: 32px;
+      border-radius: 32px;
+      transform: scale(1);
+      transform-origin: 50% 50%;
+      transition: transform 0.4s cubic-bezier(0.1, 0.8, 0.3, 1);
+    }
+
+    .step-card:hover:before {
+      transform: scale(25);
+      /* scaled up to cover the card */
+    }
+
+    .step-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .step-card-num {
+      font-size: 28px;
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.08);
+      margin-bottom: 12px;
+      transition: color 0.3s;
+    }
+
+    .step-card:hover .step-card-num {
+      color: rgba(255, 255, 255, 0.25);
+    }
+
+    .step-card h3 {
+      font-size: clamp(14px, 1.3vw, 16px);
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+      font-family: 'Playfair Display', serif;
+      transition: all 0.3s ease-out;
+    }
+
+    .step-card p {
+      font-size: 11px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.45);
+      font-weight: 300;
+      margin: 0;
+      transition: all 0.3s ease-out;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .step-card:hover p {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .step-card:hover h3 {
+      color: #fff;
+    }
+
+    .go-corner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      overflow: hidden;
+      top: 0;
+      right: 0;
+      background: linear-gradient(135deg, #FA5716 0%, #e14507 100%);
+      border-radius: 0 12px 0 32px;
+      transition: all 0.3s ease;
+    }
+
+    .go-arrow {
+      margin-top: -4px;
+      margin-right: -4px;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .step-card:hover .go-corner {
+      background: #0c585c;
+      opacity: 0.9;
+    }
+
+    /* ──── DEMO ──── */
+    .demo {
+      padding: clamp(72px, 8vw, 120px) var(--side-pad);
+    }
+
+    .demo-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(40px, 5vw, 80px);
+      align-items: center;
+    }
+
+    .demo-card {
+      background: var(--white);
+      border: 1px solid var(--beige);
+      padding: clamp(28px, 3vw, 48px);
+      position: relative;
+    }
+
+    .demo-card::before,
+    .demo-card::after {
+      content: '';
+      position: absolute;
+      border-color: rgba(200, 130, 26, .3);
+      border-style: solid;
+      width: 18px;
+      height: 18px;
+    }
+
+    .demo-card::before {
+      top: 16px;
+      left: 16px;
+      border-width: 1px 0 0 1px
+    }
+
+    .demo-card::after {
+      bottom: 16px;
+      right: 16px;
+      border-width: 0 1px 1px 0
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px
+    }
+
+    .demo-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(13px, 1.1vw, 15px);
+      font-weight: 500;
+      color: var(--ink)
+    }
+
+    .verified-badge {
+      background: transparent;
+      border: 1px solid var(--sage);
+      color: var(--sage);
+      font-size: 9px;
+      padding: 5px 12px;
+      letter-spacing: .15em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 300;
+      white-space: nowrap;
+    }
+
+    .v-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--sage);
+      animation: glow2 2s ease infinite
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse
+    }
+
+    .info-table tr {
+      border-bottom: 1px solid var(--parchment)
+    }
+
+    .info-table tr:last-child {
+      border: none
+    }
+
+    .info-table td {
+      padding: 12px 0;
+      vertical-align: top
+    }
+
+    .ik {
+      font-size: 9px;
+      letter-spacing: .28em;
+      text-transform: uppercase;
+      color: var(--warm);
+      font-weight: 300;
+      width: 40%;
+      padding-top: 14px
+    }
+
+    .iv {
+      font-size: 12px;
+      color: var(--ink);
+      font-weight: 400;
+      text-align: right;
+      letter-spacing: .03em;
+      line-height: 1.5
+    }
+
+    .iv.honey {
+      color: var(--honey)
+    }
+
+    .iv.green {
+      color: var(--sage);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end
+    }
+
+    .iv.green::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--sage);
+      animation: glow2 2s ease infinite;
+      flex-shrink: 0;
+    }
+
+    .hash-block {
+      background: var(--ink);
+      padding: 16px 20px;
+      margin-top: 20px;
+    }
+
+    .hash-lbl {
+      font-size: 8px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .25);
+      margin-bottom: 8px;
+      font-weight: 300
+    }
+
+    .hash-val {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--amber);
+      letter-spacing: .08em;
+      word-break: break-all
+    }
+
+    .demo-text .section-sub {
+      margin-bottom: 32px
+    }
+
+    .prov-mini {
+      margin-top: 28px
+    }
+
+    .prov-mini-title {
+      font-size: 9px;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: var(--warm);
+      margin-bottom: 16px;
+      font-weight: 300
+    }
+
+    .prov-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0
+    }
+
+    .prov-step {
+      display: flex;
+      gap: 14px;
+      position: relative
+    }
+
+    .prov-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 20px;
+      width: 1px;
+      height: calc(100% + 2px);
+      background: linear-gradient(to bottom, var(--beige), transparent);
+    }
+
+    .prov-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid var(--honey);
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px
+    }
+
+    .prov-dot-in {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--honey)
+    }
+
+    .prov-info {
+      padding-bottom: 18px
+    }
+
+    .prov-lbl {
+      font-size: 8px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--warm);
+      font-weight: 300;
+      margin-bottom: 2px
+    }
+
+    .prov-val {
+      font-size: 11px;
+      color: var(--ink);
+      font-weight: 400;
+      letter-spacing: .02em
+    }
+
+    /* ──── CTA ──── */
+    .cta {
+      background: var(--parchment);
+      border-top: 1px solid var(--beige);
+      border-bottom: 1px solid var(--beige);
+      padding: clamp(72px, 8vw, 120px) var(--side-pad);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta::before {
+      content: '';
+      position: absolute;
+      top: -80px;
+      right: -80px;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(200, 130, 26, .1), transparent 60%);
+      pointer-events: none;
+    }
+
+    .cta-inner {
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 1
+    }
+
+    .cta-eyebrow {
+      font-size: 9px;
+      letter-spacing: .4em;
+      text-transform: uppercase;
+      color: var(--honey);
+      margin-bottom: 20px;
+      font-weight: 300
+    }
+
+    .cta-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 2.8vw, 3.2rem);
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 16px;
+      line-height: 1.15;
+    }
+
+    .cta-title em {
+      font-style: italic;
+      color: var(--honey)
+    }
+
+    .cta-sub {
+      font-size: 13px;
+      color: var(--umber);
+      margin-bottom: 40px;
+      line-height: 1.8;
+      font-weight: 300;
+      letter-spacing: .03em
+    }
+
+    .cta-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap
+    }
+
+    .btn-primary-dark {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 400;
+      padding: 13px 30px;
+      background: var(--ink);
+      color: var(--cream);
+      border: none;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: background .25s;
+    }
+
+    .btn-primary-dark:hover {
+      background: var(--bark)
+    }
+
+    .btn-outline-dark {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      font-weight: 300;
+      padding: 13px 30px;
+      background: transparent;
+      color: var(--umber);
+      border: 1px solid var(--beige);
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      transition: all .25s;
+    }
+
+    .btn-outline-dark:hover {
+      border-color: var(--umber);
+      color: var(--ink)
+    }
+
+    /* ──── FOOTER ──── */
+    .footer {
+      background: #11171d;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 60px var(--side-pad);
+    }
+
+    .footer-inner {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 32px;
+    }
+
+    .footer-brand {
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: rgba(243, 235, 217, 0.7);
+      font-weight: 400;
+      letter-spacing: .05em;
+    }
+
+    .footer-brand strong {
+      color: var(--honey);
+      font-weight: 600;
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      font-family: 'Outfit', sans-serif;
+      color: rgba(243, 235, 217, 0.4);
+      font-weight: 400;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 28px;
+    }
+
+    .footer-links a {
+      font-size: 11px;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(243, 235, 217, 0.6);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .25s;
+    }
+
+    .footer-links a:hover {
+      color: var(--honey);
+    }
+
+    /* ──── UIVERSE SOCIAL ICONS (wilsondesouza) ──── */
+    ul.example-2 {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      margin: 0;
+      padding: 0;
+    }
+
+    .example-2 .icon-content {
+      margin: 0 8px;
+      position: relative;
+    }
+
+    .example-2 .icon-content .tooltip {
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      opacity: 0;
+      visibility: hidden;
+      font-size: 11px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 500;
+      white-space: nowrap;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+      z-index: 10;
+    }
+
+    .example-2 .icon-content:hover .tooltip {
+      opacity: 1;
+      visibility: visible;
+      bottom: 140%;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .example-2 .icon-content a {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: rgba(243, 235, 217, 0.6);
+      background-color: #1e262f;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      transition: all 0.3s ease-in-out;
+    }
+
+    .example-2 .icon-content a:hover {
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      color: white;
+    }
+
+    .example-2 .icon-content a svg {
+      position: relative;
+      z-index: 1;
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+      transition: fill 0.3s ease;
+    }
+
+    .example-2 .icon-content a .filled {
+      position: absolute;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .example-2 .icon-content a:hover .filled {
+      height: 100%;
+    }
+
+    .example-2 .icon-content a[data-social="linkedin"] .filled,
+    .example-2 .icon-content a[data-social="linkedin"] ~ .tooltip {
+      background-color: #0274b3;
+    }
+
+    .example-2 .icon-content a[data-social="github"] .filled,
+    .example-2 .icon-content a[data-social="github"] ~ .tooltip {
+      background-color: #24262a;
+    }
+
+    .example-2 .icon-content a[data-social="instagram"] .filled,
+    .example-2 .icon-content a[data-social="instagram"] ~ .tooltip {
+      background: linear-gradient(45deg, #405de6, #5b51db, #b33ab4, #c135b4, #e1306c, #fd1f1f);
+    }
+
+    .example-2 .icon-content a[data-social="youtube"] .filled,
+    .example-2 .icon-content a[data-social="youtube"] ~ .tooltip {
+      background-color: #ff0000;
+    }
+
+    /* ──── ANIMATIONS ──── */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes fadeLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-24px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0)
+      }
+    }
+
+    @keyframes fadeRight {
+      from {
+        opacity: 0;
+        transform: translateX(24px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0)
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ──── LARGE SCREEN TWEAKS ──── */
+    @media(min-width:1400px) {
+      .hero-title {
+        font-size: clamp(3.2rem, 4.5vw, 5rem);
+      }
+
+      .services-grid {
+        grid-template-columns: repeat(3, 1fr)
+      }
+
+      .how-steps {
+        gap: 0
+      }
+    }
+
+    /* ──── RESPONSIVE ──── */
+    @media(max-width:1024px) {
+      .nav-links {
+        gap: 20px
+      }
+    }
+
+    @media(max-width:860px) {
+
+      .nav-links,
+      .nav-cta {
+        display: none
+      }
+
+      .hamburger {
+        display: flex
+      }
+
+      .hero {
+        grid-template-columns: 1fr
+      }
+
+      .hero-left {
+        padding: clamp(48px, 6vw, 80px) var(--side-pad);
+        min-height: auto;
+      }
+
+      .hero-right {
+        display: none;
+      }
+
+      .hero-visual-wrap {
+        min-height: 380px
+      }
+
+      .stats-inner {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0
+      }
+
+      .stat {
+        padding: 28px 0;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, .06)
+      }
+
+      .stat:nth-child(odd) {
+        border-right: 1px solid rgba(255, 255, 255, .06);
+        padding-right: 20px
+      }
+
+      .stat:nth-child(even) {
+        padding-left: 20px
+      }
+
+      .stat:nth-last-child(-n+2) {
+        border-bottom: none
+      }
+
+      .services-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .how-steps {
+        grid-template-columns: 1fr 1fr;
+        gap: 36px
+      }
+
+      .how-line {
+        display: none
+      }
+
+      .step {
+        text-align: left;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        padding: 0
+      }
+
+      .step-num {
+        margin: 0;
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        font-size: 15px
+      }
+
+      .demo-inner {
+        grid-template-columns: 1fr;
+        gap: 40px
+      }
+    }
+
+    @media(max-width:600px) {
+      .services-grid {
+        grid-template-columns: 1fr
+      }
+
+      .how-steps {
+        grid-template-columns: 1fr;
+        gap: 28px
+      }
+
+      .cta-btns {
+        flex-direction: column;
+        align-items: center
+      }
+
+      .btn-primary-dark,
+      .btn-outline-dark {
+        width: 100%;
+        max-width: 300px;
+        text-align: center
+      }
+
+      .footer-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px
+      }
+
+      .footer-links {
+        flex-wrap: wrap;
+        gap: 16px
+      }
+    }
+
+    @media(max-width:420px) {
+      .nav {
+        height: 60px
+      }
+
+      .mobile-menu {
+        top: 60px
+      }
+
+
+
+      .hero-visual-wrap {
+        min-height: 260px
+      }
+
+      .stat-num {
+        font-size: 1.8rem
+      }
+
+      .demo-card {
+        padding: 24px 18px
+      }
+    }
+
+
+
+
+    @media(max-width:900px) {
+      #contact-grid {
+        grid-template-columns: 1fr !important
+      }
+    }
+
+    @media(max-width:900px) {
+      #contact-grid {
+        grid-template-columns: 1fr !important;
+        gap: 40px !important;
+      }
+
+      section#contact {
+        padding: 56px 24px !important;
+      }
+    }
+
+    @media(max-width:480px) {
+      section#contact {
+        padding: 40px 16px !important;
+      }
+
+      #contact-grid>div:last-child {
+        padding: 24px 18px !important;
+      }
+    }
+
+    /* Scrollspy active state handled by general active class */
+
+    /* Smooth highlight on section entry */
+    #contact {
+      scroll-margin-top: 72px;
+      /* height of your fixed navbar */
+    }
+
+    /* ──── UIVERSE MENTOR CARD (gharsh11032000) ──── */
+    .mentor-card-container {
+      width: 100%;
+      height: 150px;
+      position: relative;
+      border-radius: 10px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      margin-top: 20px;
+    }
+
+    .mentor-card {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+    }
+
+    .mentor-card .front-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+    }
+
+    .mentor-card .front-content p {
+      font-size: 28px;
+      font-weight: 700;
+      opacity: 1;
+      background: linear-gradient(-45deg, #FA5716 0%, #FFCC70 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+    }
+
+    .mentor-card .content {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+      background: linear-gradient(-45deg, #FA5716 0%, #FFCC70 100%);
+      color: #e8e8e8;
+      padding: 20px;
+      line-height: 1.5;
+      border-radius: 5px;
+      pointer-events: none;
+      transform: translateX(-96%);
+      transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
+      box-sizing: border-box;
+    }
+
+    .mentor-card .content .heading {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .mentor-card:hover .content {
+      transform: translateY(0);
+    }
+
+    .mentor-card:hover .front-content {
+      transform: translateX(-30%);
+    }
+
+    .mentor-card:hover .front-content p {
+      opacity: 0;
+    }
+
+    /* ──── BOOK CARD (dalbrechtmartin) ──── */
+    .hero-book-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .book {
+      position: relative;
+      border-radius: 10px;
+      width: 300px;
+      height: 400px;
+      background-color: #1B242C;
+      box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.3);
+      transform: preserve-3d;
+      perspective: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #F3EBD9;
+      transition-duration: 0.5s;
+      padding: 24px;
+      gap: 16px;
+      overflow: visible;
+    }
+
+    /* Inner content — QR code revealed on hover */
+    .book-inner-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      height: 100%;
+    }
+
+    .book-inner-content .book-qr-wrap {
+      width: 200px;
+      height: 200px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 14px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .book-inner-content .book-qr-wrap svg path {
+      fill: #1B242C;
+    }
+
+    .book-inner-label {
+      font-family: 'Outfit', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(243, 235, 217, 0.6);
+      font-weight: 400;
+      margin-top: 8px;
+    }
+
+    .book-inner-hash {
+      font-family: monospace;
+      font-size: 9px;
+      color: rgba(243, 235, 217, 0.4);
+      letter-spacing: 0.05em;
+    }
+
+    .cover {
+      top: 0;
+      position: absolute;
+      background: linear-gradient(145deg, #0F5C5B 0%, #0a4342 50%, #1B242C 100%);
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.5s;
+      transform-origin: 0;
+      box-shadow: 1px 1px 12px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .cover .cover-brand {
+      font-family: 'Outfit', sans-serif;
+      font-size: 9px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 300;
+    }
+
+    .cover .cover-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .cover .cover-title span {
+      color: #FA5716;
+    }
+
+    .cover .cover-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cover .cover-icon svg {
+      fill: #FA5716;
+      width: 24px;
+      height: 24px;
+    }
+
+    .cover .cover-tagline {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.55);
+      text-align: center;
+      line-height: 1.6;
+      font-weight: 300;
+      max-width: 200px;
+    }
+
+    .cover .cover-cta {
+      font-family: 'Outfit', sans-serif;
+      font-size: 8px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.35);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 16px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .book:hover .cover {
+      transition: all 0.5s;
+      transform: rotatey(-70deg);
+    }
+
+    .book:hover {
+      transform: rotateZ(-10deg);
+    }
+
+
+
+
+
+
+
+    @keyframes scanLine {
+      0% {
+        top: 10%;
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 1;
+      }
+      100% {
+        top: 90%;
+        opacity: 0;
+      }
+    }
+
+
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-4px);
+      }
+    }
+    /* ──── UIVERSE CONTACT FORM (aadium) ──── */
+    .contact-form-card {
+      display: flex;
+      align-items: stretch;
+      flex-direction: column;
+      gap: 16px;
+      background-image: linear-gradient(45deg, #1B242C, #13191e);
+      border-radius: 2em;
+      padding: 40px 30px;
+      width: 100%;
+      max-width: 460px;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+
+    .contact-form-card::before {
+      content: '';
+      background-image: linear-gradient(45deg, var(--honey), var(--amber));
+      position: absolute;
+      top: -4px;
+      left: -4px;
+      right: -4px;
+      bottom: -4px;
+      z-index: -2;
+      border-radius: 2.2em;
+    }
+
+    .contact-form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+      text-align: center;
+    }
+
+    .contact-form-subtitle {
+      font-size: 11px;
+      font-family: 'Outfit', sans-serif;
+      color: var(--umber);
+      text-align: center;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .contact-form-card .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .contact-form-card .input-label {
+      font-size: 8px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: rgba(243, 235, 217, 0.8) !important;
+      font-weight: 500;
+      display: block;
+      margin-left: 4px;
+    }
+
+    .contact-form-card .input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid transparent;
+      border-bottom: 1.5px solid var(--honey);
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.02);
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .contact-form-card .input:focus {
+      border: 1px solid transparent;
+      border-bottom: 1.5px solid var(--honey);
+      background-color: rgba(255, 255, 255, 0.06);
+      color: white;
+    }
+
+    .contact-form-card .input::placeholder {
+      color: rgba(243, 235, 217, 0.5) !important;
+      opacity: 1;
+    }
+
+    .contact-form-card .textarea {
+      font-family: 'Outfit', sans-serif;
+      width: 100%;
+      padding: 12px 14px;
+      height: 100px;
+      border: 1px solid transparent;
+      border-bottom: 1.5px solid var(--honey);
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.02);
+      color: #fff;
+      font-size: 13px;
+      resize: vertical;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .contact-form-card .textarea::placeholder {
+      color: rgba(243, 235, 217, 0.5) !important;
+      opacity: 1;
+    }
+
+    .contact-form-card .textarea:focus {
+      border: 1px solid transparent;
+      border-bottom: 1.5px solid var(--honey);
+      background-color: rgba(255, 255, 255, 0.06);
+      color: white;
+    }
+
+    .contact-form-card .button {
+      margin-top: 12px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      background: var(--honey);
+      color: #1B242C;
+      padding: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid transparent;
+      border-radius: 5em;
+      overflow: hidden;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .contact-form-card .button:hover {
+      border: 2px solid #ffffff;
+      background: transparent;
+      color: #ffffff;
+    }
+
+    .contact-form-card .button:active {
+      border: 2px solid transparent;
+      background: var(--honey);
+      color: #1B242C;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="nav-brand" href="#">
+        <div class="nav-brand-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="white" opacity=".9" />
+            <path d="M7 9.5l1.5 1.5 3-3" stroke="rgba(200,130,26,0.8)" stroke-width="1.4" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </div>
+        Trust Layer
+      </a>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Home</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Products</a></li>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <a href="/admin/space" style="text-decoration: none;"><button class="nav-cta">Admin Space</button></a>
+      <button class="hamburger" onclick="toggleMenu()" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <ul class="mobile-menu" id="mobileMenu">
+    <li><a href="#" onclick="toggleMenu()">Home</a></li>
+    <li><a href="#" onclick="toggleMenu()">Services</a></li>
+    <li><a href="#" onclick="toggleMenu()">Products</a></li>
+    <li><a href="#" onclick="toggleMenu()">Dashboard</a></li>
+    <li><a href="#" onclick="toggleMenu()">Contact</a></li>
+    <li class="mobile-cta-wrap"><button class="nav-cta" style="width:100%;padding:13px;font-size:11px"
+        onclick="alert('Admin Space coming soon.')">Admin Space</button></li>
+  </ul>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <div class="hero-left">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <div class="badge-dot"></div>
+          <span>Blockchain-secured authentication</span>
+        </div>
+        <p class="hero-eyebrow">TrustLayer Anti-Counterfeit System</p>
+        <h1 class="hero-title">Make every product<br><em>impossible to fake.</em></h1>
+        <p class="hero-sub">Trust Layer assigns a unique, personalised QR code to each product unit. Scan it — instantly
+          verify authenticity, trace the full product journey, and detect counterfeit copies in real time.</p>
+        <div class="hero-btns">
+          <button class="ui-btn-protect" onclick="alert('Contact us to get started!')">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2L3 6v6c0 5.52 4.48 10 9 10s9-4.48 9-10V6l-9-4zm0 2.18l7 3.12v4.7c0 4.25-3.13 7.84-7 8.82-3.87-.98-7-4.57-7-8.82V7.3l7-3.12z" />
+            </svg>
+            Protect Your Products →
+          </button>
+          <button class="ui-btn-demo" onclick="openVideo()"></button>
+
+          <div id="videoModal"
+            style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:1000; align-items:center; justify-content:center;">
+            <div style="position:relative; width:90%; max-width:900px;">
+              <button onclick="closeVideo()"
+                style="position:absolute; top:-40px; right:0; color:white; background:none; border:none; font-size:24px; cursor:pointer;">✖</button>
+              <video id="myVideo" controls width="100%" style="display:block;">
+                <source src="https://res.cloudinary.com/dc3lavmde/video/upload/v1778870385/project-vedio_i60dua.mp4"
+                  type="video/mp4">
+              </video>
+            </div>
+          </div>
+
+        </div>
+        <div class="scan-pill">
+          <div class="scan-pill-dot"></div>
+          <span>System Status —</span>
+          <strong>✓ All Registries Online</strong>
+        </div>
+        <div class="hero-cert">
+          Platform Version &nbsp;<strong>v2.4.1</strong>
+          &nbsp;·&nbsp; 12,000+ Products Secured
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <!-- Book Card (dalbrechtmartin) -->
+      <div class="hero-book-wrapper">
+        <div class="book">
+          <!-- Inner content (QR code) - revealed when cover opens -->
+          <div class="book-inner-content">
+            <div class="book-qr-wrap">
+              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKQAAACkCAYAAAAZtYVBAAAAAklEQVR4AewaftIAAAZGSURBVO3BQY4cSRLAQDLQ//8yV0c/JZCoam2M4Gb2B2td4rDWRQ5rXeSw1kUOa13ksNZFDmtd5LDWRQ5rXeSw1kUOa13ksNZFDmtd5LDWRQ5rXeSw1kV++JDK31TxTSpTxaQyVUwqU8Wk8qRiUpkqJpWp4onK31TxicNaFzmsdZHDWhf54csqvknlDZWpYlKZKp5UTCpvVLxRMalMFZPKVPGk4ptUvumw1kUOa13ksNZFfvhlKm9UvKEyVTypmFSmikllqvhNKlPFb1J5o+I3Hda6yGGtixzWusgP/xiVqeJJxZOKSWWqmFSeVEwqU8UTlaniX3JY6yKHtS5yWOsiP/xjKiaVNyomlScqTyomlaniicoTlaniv+yw1kUOa13ksNZFfvhlFf+SiicqTyomlaniScWk8omKmxzWushhrYsc1rrID1+mcrOKSeUTKlPFpDJV/D+p3Oyw1kUOa13ksNZFfvhQxX+JyhsVn6h4UjGpPFF5o+K/5LDWRQ5rXeSw1kV++JDKVDGpfFPFVDGpTBVPVCaVJxVPVKaKJypTxaQyVUwqT1S+qeI3Hda6yGGtixzWusgPH6r4poq/qWJSmSreqJhUnlS8oTJVvFHxROWJypOKTxzWushhrYsc1rrIDx9SmSq+SeWNiicqb6i8ofKk4onKVPFEZap4Q2WqmFSeVHzTYa2LHNa6yGGti/zwZSpPKiaVSWWqmFSmikllqpgqnqhMFU9Upoq/qeJJxRsq/0+HtS5yWOsih7Uu8sOXVXyTylTxmyomlaliqphUpoonKlPFE5UnFd9UMan8psNaFzmsdZHDWhexP/iLVJ5UPFH5RMUTlaliUpkqnqg8qZhU3qiYVN6oeKLyRsUnDmtd5LDWRQ5rXeSHX6YyVTxReaNiUpkqJpWp4onKE5U3Kp5UvKHyTSpTxaQyVXzTYa2LHNa6yGGti9gffEBlqphUnlS8oTJVTCpTxTepPKl4Q+WNir9JZar4TYe1LnJY6yKHtS7yw4cqJpUnFU9UPlExqUwVk8pU8UbFpDJVvFExqTxReVIxqTypmCqeqEwVnzisdZHDWhc5rHUR+4NfpPKJiknlScWkMlU8UZkqPqHypGJSeaPiicqTiknlExWfOKx1kcNaFzmsdZEfPqTypGJSmSqeqHyiYlKZKp6ofFPFk4pJZar4RMWkMlVMKk8qvumw1kUOa13ksNZFfviyikllqphUnlRMKk9Upoqp4knFpDJVvKHyhsobKlPFVPGGypOK33RY6yKHtS5yWOsiP3yZylTxRsWkMlVMKp9QeVLxhsobKlPFpPKkYlKZKiaVNyomlanimw5rXeSw1kUOa13kh1+mMlW8UTGpTBVvqEwVk8qkMlVMKk8qJpWpYlKZKiaVJxWTylTxROVJxaQyVXzisNZFDmtd5LDWRX74sopJ5UnFpPKkYlJ5UvFEZap4ojJVPFGZKiaVJypTxROV36QyVXzTYa2LHNa6yGGti/zwl6lMFU8q3qiYVN5QmSq+SeWNiicqb6g8qZhUnqhMFZ84rHWRw1oXOax1kR8upzJVTBVvVHyi4onKVPFEZap4ovKbVKaKJyrfdFjrIoe1LnJY6yL2B/9hKk8qJpU3Kp6oTBWTypOKSeVJxaQyVbyhMlVMKm9UfOKw1kUOa13ksNZFfviQyt9UMVV8omJSeaLyRGWqeKIyVTxReUNlqvimim86rHWRw1oXOax1kR++rOKbVJ6oPKl4ovJEZap4Q+VJxaQyVXyi4r/ksNZFDmtd5LDWRX74ZSpvVHyi4psqJpVPVEwqU8WkMlVMKpPKJ1Smir/psNZFDmtd5LDWRX74x6hMFVPFpPJGxSdUpoonFZPKVDGpTBWTyhsqb1R84rDWRQ5rXeSw1kV++MdUfJPKk4o3KiaVqeJJxaQyVUwqTypucljrIoe1LnJY6yI//LKK31TxRGWqmComlScVk8pU8QmVqWJSmSqeVEwqk8pUMalMFb/psNZFDmtd5LDWRewPPqDyN1VMKlPFGypTxaTypGJSmSqeqEwVb6j8popJZar4psNaFzmsdZHDWhexP1jrEoe1LnJY6yKHtS5yWOsih7UucljrIoe1LnJY6yKHtS5yWOsih7UucljrIoe1LnJY6yKHtS7yP8UHL0lbhV9nAAAAAElFTkSuQmCC" alt="Secure QR Code" style="width: 100%; height: 100%; object-fit: contain; display: block; border-radius: 4px;">
+            </div>
+            <div class="book-inner-label">Secure Verification Tag</div>
+            <div class="book-inner-hash">Serial ID: #TL-8942-X90</div>
+          </div>
+
+          <!-- Cover - opens like a book on hover -->
+          <div class="cover">
+            <div class="cover-brand">Trust Layer</div>
+            <div class="cover-icon">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L3 6v6c0 5.52 4.48 10 9 10s9-4.48 9-10V6l-9-4zm0 2.18l7 3.12v4.7c0 4.25-3.13 7.84-7 8.82-3.87-.98-7-4.57-7-8.82V7.3l7-3.12z" />
+              </svg>
+            </div>
+            <div class="cover-title">Verified<br><span>Authenticity</span></div>
+            <div class="cover-tagline">Hover to preview the secure label layout with cryptographically unique QR codes.</div>
+            <div class="cover-cta">&#8599; Preview Label</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- SERVICES -->
+  <section class="services" style="background: var(--sage); position: relative; overflow: hidden;">
+    <!-- Background blobs -->
+    <div class="circle" id="bottom"></div>
+    <div class="circle" id="right"></div>
+
+    <div class="section-wrap" style="position: relative; z-index: 1;">
+      <p class="section-tag">What we offer</p>
+      <h2 class="section-title" style="color: var(--honey); font-weight: 700;">Every tool you need<br>to fight counterfeiting</h2>
+      <p class="section-sub" style="color: rgba(243, 235, 217, 0.9);">From unique QR generation to real-time scan tracking — Trust Layer gives you a complete
+        anti-counterfeit system out of the box.</p>
+      <div class="services-grid">
+        <!-- Card 1 -->
+        <div class="card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <rect x="3" y="3" width="7" height="7" rx="1" stroke="#fff" stroke-width="1.2" />
+              <rect x="12" y="3" width="7" height="7" rx="1" stroke="#fff" stroke-width="1.2" />
+              <rect x="3" y="12" width="7" height="7" rx="1" stroke="#fff" stroke-width="1.2" />
+              <path d="M15 12v7M12 15h7" stroke="#fff" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <p class="heading">Unique QR Generation</p>
+          <p>Every product unit receives its own cryptographically unique QR code that cannot be duplicated or reused
+            across the registry.</p>
+          <p class="cta-text">Learn More →</p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M11 3L4 7v5c0 4 3.1 7.7 7 8.5 3.9-.8 7-4.5 7-8.5V7L11 3z" stroke="#fff" stroke-width="1.2" />
+              <path d="M8 11.5l2 2 4-4" stroke="#fff" stroke-width="1.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <p class="heading">Product Authentication</p>
+          <p>Consumers scan the QR code and instantly see verified product data — origin, batch, date — proving
+            authenticity on the spot.</p>
+          <p class="cta-text">Learn More →</p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <circle cx="11" cy="11" r="7" stroke="#fff" stroke-width="1.2" />
+              <circle cx="11" cy="11" r="3" stroke="#fff" stroke-width="1.2" />
+              <path d="M11 4v3M11 15v3M4 11h3M15 11h3" stroke="#fff" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <p class="heading">Scan Tracking</p>
+          <p>Know exactly when and where each product was scanned. First scan vs duplicate scan detection flags
+            counterfeit attempts instantly.</p>
+          <p class="cta-text">Learn More →</p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M4 6h14M4 11h10M4 16h7" stroke="#fff" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <p class="heading">Personalised Data</p>
+          <p>Each QR holds a full data profile — batch number, price, origin, manufacturing date, expiry, and custom
+            fields for your product type.</p>
+          <p class="cta-text">Learn More →</p>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M3 17l4-4 3 3 4-5 5 6" stroke="#fff" stroke-width="1.2" stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <p class="heading">Brand Dashboard</p>
+          <p>Real-time dashboard showing scan geography, counterfeit alerts, product performance, and full scan history
+            for every registered unit.</p>
+          <p class="cta-text">Learn More →</p>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="card">
+          <div class="service-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <rect x="3" y="5" width="16" height="12" rx="2" stroke="#fff" stroke-width="1.2" />
+              <path d="M8 9h6M8 13h4" stroke="#fff" stroke-width="1.2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <p class="heading">Lab Reports</p>
+          <p>Attach verified lab analysis reports and ISO certificates directly to the product QR — full transparency
+            for your customers at every scan.</p>
+          <p class="cta-text">Learn More →</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" style="background-color: #1B242C; background-image: radial-gradient(ellipse 80% 60% at 20% 80%, rgba(15, 92, 91, 0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 20%, rgba(250, 87, 22, 0.15) 0%, transparent 70%), linear-gradient(160deg, #1B242C 0%, #0F5C5B 40%, #1B242C 70%, #2a1a0e 100%);">
+    <div class="how-inner">
+      <p class="section-tag">How it works</p>
+      <h2 class="section-title">From product to protected<br><em style="font-style:italic;color:var(--honey)">in four
+          steps.</em></h2>
+      <p class="section-sub">A seamless process designed for brands, built for trust. No technical expertise required —
+        just register, generate, protect.</p>
+      <div class="how-steps">
+        <div class="step-card">
+          <div class="go-corner">
+            <div class="go-arrow">1</div>
+          </div>
+          <div class="step-card-num">01</div>
+          <h3>Register Product</h3>
+          <p>Add your product with all personalised data — origin, batch, price, description — through our elegant
+            dashboard.</p>
+        </div>
+        <div class="step-card">
+          <div class="go-corner">
+            <div class="go-arrow">2</div>
+          </div>
+          <div class="step-card-num">02</div>
+          <h3>Generate Unique QR</h3>
+          <p>Each unit gets a cryptographically unique QR code linked to its exact data record in our secured registry.
+          </p>
+        </div>
+        <div class="step-card">
+          <div class="go-corner">
+            <div class="go-arrow">3</div>
+          </div>
+          <div class="step-card-num">03</div>
+          <h3>Customer Scans</h3>
+          <p>Consumer scans with any phone — product info and full authenticity confirmation displayed immediately.</p>
+        </div>
+        <div class="step-card">
+          <div class="go-corner">
+            <div class="go-arrow">4</div>
+          </div>
+          <div class="step-card-num">04</div>
+          <h3>Duplicate = Caught</h3>
+          <p>Any copied QR triggers a counterfeit alert. You and the customer are both notified — fake products stopped
+            instantly.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DEMO -->
+  <section class="demo">
+    <div class="demo-inner">
+      <div class="demo-text">
+        <p class="section-tag">Live example</p>
+        <h2 class="section-title">What your customers see<br><em style="font-style:italic;color:var(--honey)">when they
+            scan.</em></h2>
+        <p class="section-sub">A clean, elegant verification page that displays all product details — personalised per
+          unit — and confirms authenticity in real time. Every product is different. Every QR is unique.</p>
+        <button class="ui-btn-register" onclick="alert('Contact us to register your products!')">Register Your Products
+          →</button>
+
+        <div class="prov-mini">
+          <p class="prov-mini-title">Journey of authenticity</p>
+          <div class="prov-steps">
+            <div class="prov-step">
+              <div class="prov-dot">
+                <div class="prov-dot-in"></div>
+              </div>
+              <div class="prov-info">
+                <p class="prov-lbl">Harvested</p>
+                <p class="prov-val">Thal Desert, Punjab</p>
+              </div>
+            </div>
+            <div class="prov-step">
+              <div class="prov-dot">
+                <div class="prov-dot-in"></div>
+              </div>
+              <div class="prov-info">
+                <p class="prov-lbl">Laboratory Tested</p>
+                <p class="prov-val">ISO 17025 Certified Lab</p>
+              </div>
+            </div>
+            <div class="prov-step">
+              <div class="prov-dot">
+                <div class="prov-dot-in"></div>
+              </div>
+              <div class="prov-info">
+                <p class="prov-lbl">Sealed & Registered</p>
+                <p class="prov-val">TrustLayer Registry · Jan 2026</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-card">
+        <div class="demo-header">
+          <span class="demo-title">Verification Result</span>
+          <div class="verified-badge">
+            <div class="v-dot"></div>
+            Authentic
+          </div>
+        </div>
+        <table class="info-table">
+          <tr>
+            <td class="ik">Product</td>
+            <td class="iv">Sidr Honey 500g</td>
+          </tr>
+          <tr>
+            <td class="ik">Batch no.</td>
+            <td class="iv honey" style="font-family:monospace;font-size:11px">TL-0042-SH5</td>
+          </tr>
+          <tr>
+            <td class="ik">Origin</td>
+            <td class="iv">Thal Desert, Punjab</td>
+          </tr>
+          <tr>
+            <td class="ik">Extracted by</td>
+            <td class="iv">Ahmad Beekeepers Co.</td>
+          </tr>
+          <tr>
+            <td class="ik">Manufactured</td>
+            <td class="iv">15 Jan 2026</td>
+          </tr>
+          <tr>
+            <td class="ik">Expiry</td>
+            <td class="iv">15 Jan 2028</td>
+          </tr>
+          <tr>
+            <td class="ik">Scan status</td>
+            <td class="iv green">First scan — genuine</td>
+          </tr>
+        </table>
+        <div class="hash-block">
+          <div class="hash-lbl">Verification Hash</div>
+          <div class="hash-val">0x3f7a1b92 · e08c4d5f · 1c3d9f7e</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <!-- <section class="cta">
+  <div class="cta-inner">
+    <p class="cta-eyebrow">Ready to begin?</p>
+    <h2 class="cta-title">Counterfeit-proof your products,<br><em>protect your reputation.</em></h2>
+    <p class="cta-sub">Join hundreds of brands who trust Trust Layer to protect their reputation and their customers — with a system built for authenticity at every step.</p>
+    <div class="cta-btns">
+      <button class="btn-primary-dark" onclick="alert('Welcome! Contact us to get started.')">Start Protecting Now →</button>
+      <button class="btn-outline-dark">Talk to Sales</button>
+    </div>
+  </div>
+</section> -->
+  <!-- CONTACT SECTION -->
+  <section id="contact"
+    style="background: var(--cream);padding:72px 52px;position:relative;overflow:hidden;">
+    <div id="contact-grid"
+      style="max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;position:relative;z-index:2;">
+
+      <!-- LEFT -->
+      <div>
+        <p
+          style="font-size:9px;letter-spacing:.45em;text-transform:uppercase;color:#fff;margin-bottom:16px;font-weight:300;display:flex;align-items:center;gap:12px;">
+          The Team
+          <span style="flex:0 0 44px;height:1px;background:rgba(255,255,255,0.4);display:inline-block;"></span>
+        </p>
+        <h2
+          style="font-family:'Playfair Display',serif;font-size:clamp(1.6rem,2.5vw,2.2rem);font-weight:500;color:#fff;line-height:1.2;margin-bottom:20px;">
+          A project built by <em style="font-style:italic;color:var(--honey);">three students</em>
+        </h2>
+        <p style="font-size:13px;color:rgba(255,255,255,0.95);font-weight:300;line-height:1.8;margin-bottom:32px;">
+          Trust Layer is a student initiative focused on fighting counterfeit products through smart QR-based
+          verification. Built with dedication, real-world technology, and a vision for supply chain transparency.
+        </p>
+
+        <!-- Mentorship card -->
+        <div class="mentor-card-container">
+          <div class="mentor-card">
+            <div class="front-content">
+              <p style="margin: 0; font-family: 'Outfit', sans-serif; text-transform: uppercase; letter-spacing: 2px;">
+                Mentor</p>
+            </div>
+            <div class="content">
+              <p class="heading">Dr. Muhammad Zeeshan Asaf</p>
+              <p
+                style="font-size: 11px; color: rgba(255,255,255,0.9); letter-spacing: 0.05em; font-family: 'Outfit', sans-serif; margin: 0;">
+                Project Supervisor &amp; Mentor</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: FORM -->
+      <form class="contact-form-card" action="/contact" method="POST">
+        <h3 class="contact-form-title">Get in Touch</h3>
+        <p class="contact-form-subtitle">We'd love to hear from you</p>
+
+        <div class="input-group">
+          <label class="input-label">Your Name</label>
+          <input type="text" name="name" class="input" placeholder="e.g. Ahmed Khan" required>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Email Address</label>
+          <input type="email" name="email" class="input" placeholder="you@example.com" required>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Message</label>
+          <textarea name="message" class="textarea" placeholder="Write your message here..." required></textarea>
+        </div>
+
+        <button type="submit" class="button">
+          Send Message
+        </button>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- Responsive fix -->
+
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>Trust Layer</strong> &middot; Anti-Counterfeit Platform
+      </div>
+
+      <!-- Uiverse Social Icons -->
+      <ul class="example-2">
+        <li class="icon-content">
+          <a href="https://linkedin.com" data-social="linkedin" aria-label="LinkedIn">
+            <div class="filled"></div>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+          </a>
+          <div class="tooltip">LinkedIn</div>
+        </li>
+        <li class="icon-content">
+          <a href="https://github.com" data-social="github" aria-label="GitHub">
+            <div class="filled"></div>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+          </a>
+          <div class="tooltip">GitHub</div>
+        </li>
+        <li class="icon-content">
+          <a href="https://instagram.com" data-social="instagram" aria-label="Instagram">
+            <div class="filled"></div>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          <div class="tooltip">Instagram</div>
+        </li>
+        <li class="icon-content">
+          <a href="https://youtube.com" data-social="youtube" aria-label="YouTube">
+            <div class="filled"></div>
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M23.498 6.163c-.272-1.023-1.078-1.83-2.101-2.102-1.854-.5-9.397-.5-9.397-.5s-7.544 0-9.397.5c-1.023.272-1.83 1.079-2.102 2.102-.5 1.854-.5 5.728-.5 5.728s0 3.874.5 5.728c.272 1.023 1.079 1.83 2.102 2.102 1.853.5 9.397.5 9.397.5s7.543 0 9.397-.5c1.022-.272 1.829-1.079 2.101-2.102.5-1.854.5-5.728.5-5.728s0-3.874-.5-5.728zm-14.398 9.337v-7l6.5 3.5-6.5 3.5z"/>
+            </svg>
+          </a>
+          <div class="tooltip">YouTube</div>
+        </li>
+      </ul>
+
+      <div class="footer-copy">&copy; 2026 Trust Layer &middot; All Rights Reserved</div>
+      <div class="footer-links">
+        <a href="#">Home</a>
+        <a href="#">Services</a>
+        <a href="#">Dashboard</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+    }
+    document.addEventListener('click', function (e) {
+      const menu = document.getElementById('mobileMenu');
+      const hamburger = document.getElementById('hamburger');
+      if (!menu.contains(e.target) && !hamburger.contains(e.target)) {
+        menu.classList.remove('open');
+      }
+    });
+    (function () {
+      const contactLink = document.querySelector('.nav-links a[href="#contact"]');
+      if (!contactLink) return;
+
+      const section = document.getElementById('contact');
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          // remove active from all nav links first
+          document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+          if (entry.isIntersecting) {
+            contactLink.classList.add('active');
+          }
+        },
+        { threshold: 0.15, rootMargin: '-72px 0px 0px 0px' }
+      );
+
+      observer.observe(section);
+    })();
+
+
+    function openVideo() {
+      const modal = document.getElementById('videoModal');
+      modal.style.display = 'flex';
+      document.getElementById('myVideo').play();
+    }
+    function closeVideo() {
+      const modal = document.getElementById('videoModal');
+      modal.style.display = 'none';
+      document.getElementById('myVideo').pause();
+    }
+    // Close on background click
+    document.getElementById('videoModal').addEventListener('click', function (e) {
+      if (e.target === this) closeVideo();
+    });
+    // Spotlight Navbar Logic
+    const navLinksList = document.querySelector('.nav-links');
+    const hoverPill = document.createElement('div');
+    hoverPill.className = 'nav-hover-pill';
+
+    if (navLinksList) {
+      navLinksList.appendChild(hoverPill);
+
+      const links = navLinksList.querySelectorAll('li');
+      links.forEach(li => {
+        li.addEventListener('mouseenter', (e) => {
+          const left = li.offsetLeft;
+          const width = li.offsetWidth;
+          hoverPill.style.opacity = '1';
+          hoverPill.style.left = `${left}px`;
+          hoverPill.style.width = `${width}px`;
+        });
+      });
+
+      navLinksList.addEventListener('mouseleave', () => {
+        const activeLink = navLinksList.querySelector('a.active');
+        if (activeLink) {
+          const li = activeLink.parentElement;
+          hoverPill.style.left = `${li.offsetLeft}px`;
+          hoverPill.style.width = `${li.offsetWidth}px`;
+          hoverPill.style.opacity = '1';
+        } else {
+          hoverPill.style.opacity = '0';
+        }
+      });
+
+      // Initialize pill on active link if any
+      setTimeout(() => {
+        const activeLink = navLinksList.querySelector('a.active');
+        if (activeLink) {
+          const li = activeLink.parentElement;
+          hoverPill.style.opacity = '1';
+          hoverPill.style.left = `${li.offsetLeft}px`;
+          hoverPill.style.width = `${li.offsetWidth}px`;
+        }
+      }, 100);
+    }
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<div class="topbar">
+  <div class="topbar-left" style="display: flex; align-items: center;">
+    <button class="menu-toggle-btn" onclick="toggleMobileSidebar()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+    </button>
+    <span class="topbar-page"><%= typeof pageTitle !== 'undefined' ? pageTitle : 'Dashboard' %></span>
+    <span class="topbar-sep">·</span>
+    <span class="topbar-sub"><%= typeof pageSub !== 'undefined' ? pageSub : 'Welcome back, ' + username %></span>
+  </div>
+  <div class="topbar-right">
+
+    <button class="notif-btn">
+      <svg class="notif-bell" viewBox="0 0 16 16" fill="none">
+        <path d="M8 2a5 5 0 00-5 5v3l-1 1.5h12L13 10V7a5 5 0 00-5-5z" stroke="currentColor" stroke-width="1.2" />
+        <path d="M6.5 13.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+      </svg>
+      <span>Notifications</span>
+      <div class="notif-arrow">→</div>
+    </button>
+    <div class="tb-btn"
+      style="width:34px;height:34px;border-radius:50%;overflow:hidden;border:none;background:transparent;padding:0;">
+      <div
+        style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center;font-size:10px;color:#FFFFFF;font-weight:700;letter-spacing:.04em">
+        <%= typeof brandname !=='undefined' ? brandname.split(' ').map(w => w[0]).join('').toUpperCase() : ' B' %>
+      </div>
+    </div>
+  </div>
+</div>

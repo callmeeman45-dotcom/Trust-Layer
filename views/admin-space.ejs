@@ -1,0 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trust Layer — Admin Dashboard</title>
+  <link rel="stylesheet" href="/css/dashboard-layout.css">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500&display=swap"
+    rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    /* Section headers */
+    .section-eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--umber);
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .section-eyebrow::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--beige), transparent);
+    }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      background: transparent;
+      border: none;
+      margin-bottom: 28px;
+      animation: fadeUp .7s .1s ease both;
+    }
+
+    .stat-card-jae {
+      --background: linear-gradient(135deg, var(--amber) 0%, var(--honey) 100%);
+      width: 100%;
+      height: 155px;
+      padding: 1.2px;
+      border-radius: 20px;
+      overflow: visible;
+      background: var(--background);
+      position: relative;
+      z-index: 1;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .stat-card-jae:hover {
+      transform: translateY(-2px);
+    }
+
+    .stat-card-jae::after {
+      position: absolute;
+      content: "";
+      top: -12px;
+      left: 0;
+      right: 0;
+      z-index: -1;
+      height: 100%;
+      width: 100%;
+      transform: scale(0.85);
+      filter: blur(24px);
+      background: var(--background);
+      opacity: 0.15;
+      transition: all 0.5s ease;
+    }
+
+    .stat-card-jae:hover::after {
+      opacity: 0.5;
+      top: 10px;
+    }
+
+    .jae-info {
+      background: #111827;
+      /* Rich dark background */
+      color: rgba(255, 255, 255, 0.7);
+      width: 100%;
+      height: 100%;
+      padding: 22px;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      transition: all 0.5s ease;
+      box-sizing: border-box;
+    }
+
+    .stat-card-jae:hover .jae-info {
+      color: #FFFFFF;
+      background: #0B0F19;
+      /* Slightly darker rich color on hover */
+    }
+
+    /* Keep metric text sizes & styles clean */
+    .jae-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .jae-icon-wrap {
+      background: rgba(255, 255, 255, 0.06);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--honey);
+      flex-shrink: 0;
+      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+    }
+
+    .stat-card-jae:hover .jae-icon-wrap {
+      background: var(--honey);
+      color: #FFFFFF;
+      box-shadow: 0 0 10px rgba(250, 87, 22, 0.4);
+    }
+
+    .jae-title-text {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.5);
+      transition: color 0.3s;
+    }
+
+    .stat-card-jae:hover .jae-title-text {
+      color: rgba(255, 255, 255, 0.95);
+    }
+
+    .jae-percent {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--honey);
+      background: rgba(250, 87, 22, 0.15);
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-left: auto;
+    }
+
+    .jae-percent.alert-accent {
+      color: #10B981;
+      background: rgba(16, 185, 129, 0.15);
+    }
+
+    .jae-percent.warn-accent {
+      color: #EF4444;
+      background: rgba(239, 68, 68, 0.15);
+    }
+
+    .jae-data {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 10px;
+    }
+
+    .jae-num {
+      font-size: 32px;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .jae-arrow-svg {
+      color: rgba(255, 255, 255, 0.25);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card-jae:hover .jae-arrow-svg {
+      color: #FFFFFF;
+      transform: translate(2px, -2px);
+    }
+
+    /* ✨ Animations */
+    @keyframes fillBar {
+      from {
+        width: 0%;
+      }
+
+      to {
+        width: var(--target-width, 76%);
+      }
+    }
+
+    @keyframes pulseFill {
+
+      0%,
+      100% {
+        filter: brightness(1);
+      }
+
+      50% {
+        filter: brightness(1.15);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 3px 8px rgba(250, 87, 22, 0.35);
+      }
+
+      50% {
+        transform: scale(1.08);
+        box-shadow: 0 6px 14px rgba(250, 87, 22, 0.45);
+      }
+    }
+
+    @keyframes pulseTeal {
+
+      0%,
+      100% {
+        transform: scale(1);
+        box-shadow: 0 3px 8px rgba(15, 92, 91, 0.35);
+      }
+
+      50% {
+        transform: scale(1.08);
+        box-shadow: 0 6px 14px rgba(15, 92, 91, 0.45);
+      }
+    }
+
+    /* ── QUICK ACTIONS ── */
+    .qa-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 28px;
+      animation: fadeUp .7s .15s ease both;
+    }
+
+    .qa-card-effect {
+      perspective: 1000px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .qa-card-inner {
+      --card-bg: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+      --card-accent: #FA5716;
+      --card-text: var(--ink);
+      --card-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      height: 240px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      transition:
+        transform 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+        box-shadow 0.5s cubic-bezier(0.23, 1, 0.32, 1),
+        border-color 0.4s ease;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--beige);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      transform-style: preserve-3d;
+    }
+
+    .qa-card-inner:hover {
+      transform: rotateY(6deg) rotateX(6deg) translateZ(12px) scale(1.02);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+      border-color: rgba(250, 87, 22, 0.35);
+    }
+
+    .qa-card__liquid {
+      position: absolute;
+      top: -80px;
+      left: 0;
+      width: 300px;
+      height: 200px;
+      background: linear-gradient(135deg, #FA5716, #ff8a65);
+      border-radius: 50%;
+      transform: translateZ(-80px);
+      filter: blur(50px);
+      transition:
+        transform 0.7s cubic-bezier(0.36, 0, 0.66, -0.56),
+        opacity 0.3s ease-in-out;
+      opacity: 0;
+    }
+
+    .qa-card-inner:hover .qa-card__liquid {
+      transform: translateZ(-50px) translateY(30px) translateX(-20px) rotate(-20deg) scale(1.2);
+      opacity: 0.15;
+    }
+
+    .qa-card__shine {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+          rgba(255, 255, 255, 0) 30%,
+          rgba(255, 255, 255, 0.4) 50%,
+          rgba(255, 255, 255, 0) 70%);
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+      pointer-events: none;
+    }
+
+    .qa-card-inner:hover .qa-card__shine {
+      opacity: 1;
+      animation: shine-effect 2s infinite linear;
+    }
+
+    .qa-card__glow {
+      position: absolute;
+      inset: -15px;
+      background: radial-gradient(circle at 50% 0%,
+          rgba(250, 87, 22, 0.15) 0%,
+          rgba(250, 87, 22, 0) 60%);
+      opacity: 0;
+      transition: opacity 0.6s ease-in-out;
+      pointer-events: none;
+    }
+
+    .qa-card-inner:hover .qa-card__glow {
+      opacity: 1;
+    }
+
+    .qa-card__content {
+      padding: 1.5em;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8em;
+      position: relative;
+      z-index: 2;
+    }
+
+    .qa-card__icon-container {
+      width: 42px;
+      height: 42px;
+      background: rgba(250, 87, 22, 0.06);
+      border: 1px solid rgba(250, 87, 22, 0.12);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FA5716;
+      transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1), background 0.3s, border-color 0.3s;
+      margin-bottom: 8px;
+    }
+
+    .qa-card-inner:hover .qa-card__icon-container {
+      transform: translateY(-4px) scale(1.05);
+      background: rgba(250, 87, 22, 0.1);
+      border-color: rgba(250, 87, 22, 0.3);
+    }
+
+    .qa-card__text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4em;
+    }
+
+    .qa-card__title {
+      font-family: 'Playfair Display', serif;
+      color: var(--card-text);
+      font-size: 14px;
+      margin: 0;
+      font-weight: 500;
+      transition:
+        color 0.4s ease-in-out,
+        transform 0.4s ease-in-out;
+    }
+
+    .qa-card-inner:hover .qa-card__title {
+      color: var(--card-accent);
+      transform: translateX(3px);
+    }
+
+    .qa-card__description {
+      color: var(--warm);
+      font-size: 10.5px;
+      margin: 0;
+      line-height: 1.5;
+      font-weight: 300;
+      letter-spacing: .02em;
+      transition:
+        opacity 0.4s ease-in-out,
+        transform 0.4s ease-in-out;
+    }
+
+    .qa-card-inner:hover .qa-card__description {
+      color: var(--ink);
+      transform: translateX(3px);
+    }
+
+    .qa-card__footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .qa-card__arrow-text {
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: var(--warm);
+      transition: color 0.4s ease, transform 0.4s ease;
+    }
+
+    .qa-card-inner:hover .qa-card__arrow-text {
+      color: var(--card-accent);
+      transform: translateX(3px);
+    }
+
+    .qa-card__button {
+      width: 28px;
+      height: 28px;
+      background: var(--card-accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition:
+        transform 0.4s ease-in-out,
+        box-shadow 0.4s ease-in-out;
+      transform: scale(0.85);
+    }
+
+    .qa-card-inner:hover .qa-card__button {
+      transform: scale(1);
+      box-shadow: 0 0 0 5px rgba(250, 87, 22, 0.25);
+    }
+
+    .qa-card-inner:hover .qa-card__button svg {
+      animation: pulse-button 1.5s infinite;
+    }
+
+    /* ── TWO-COL PANELS ── */
+    .panels {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 16px;
+      margin-bottom: 16px;
+      animation: fadeUp .7s .2s ease both;
+    }
+
+    .panel {
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--beige);
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 24px;
+      position: relative;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    }
+
+    .panel::before,
+    .panel::after {
+      content: '';
+      position: absolute;
+      border-color: rgba(250, 87, 22, 0.3);
+      border-style: solid;
+      width: 14px;
+      height: 14px;
+    }
+
+    .panel::before {
+      top: 12px;
+      left: 12px;
+      border-width: 1px 0 0 1px;
+      border-top-left-radius: 4px;
+    }
+
+    .panel::after {
+      bottom: 12px;
+      right: 12px;
+      border-width: 0 1px 1px 0;
+      border-bottom-right-radius: 4px;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px
+    }
+
+    .panel-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .panel-action {
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--honey);
+      cursor: pointer;
+      background: transparent;
+      border: 1px solid var(--beige);
+      padding: 5px 12px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      transition: border-color .2s, color .2s;
+    }
+
+    .panel-action:hover {
+      border-color: var(--honey);
+      color: var(--honey)
+    }
+
+    /* product rows */
+    .product-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--parchment);
+    }
+
+    .product-row:last-child {
+      border-bottom: none
+    }
+
+    .pr-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--parchment);
+      border: 1px solid var(--beige);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pr-name {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink);
+      letter-spacing: .02em
+    }
+
+    .pr-id {
+      font-size: 9px;
+      color: var(--warm);
+      font-family: monospace;
+      letter-spacing: .08em;
+      margin-top: 2px
+    }
+
+    .pr-badge {
+      font-size: 8px;
+      padding: 3px 9px;
+      letter-spacing: .15em;
+      font-weight: 300;
+      border: 1px solid;
+      text-transform: uppercase;
+    }
+
+    .pr-badge.ok {
+      border-color: rgba(142, 158, 126, .4);
+      color: var(--sage);
+      background: rgba(142, 158, 126, .06)
+    }
+
+    .pr-badge.warn {
+      border-color: rgba(200, 130, 26, .4);
+      color: var(--honey);
+      background: rgba(200, 130, 26, .06)
+    }
+
+    .pr-scans {
+      text-align: right;
+      margin-left: auto
+    }
+
+    .pr-scans strong {
+      display: block;
+      font-family: 'Playfair Display', serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink)
+    }
+
+    .pr-scans span {
+      font-size: 9px;
+      color: var(--warm);
+      letter-spacing: .1em;
+      font-weight: 300
+    }
+
+    /* activity rows */
+    .act-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--parchment);
+    }
+
+    .act-row:last-child {
+      border-bottom: none
+    }
+
+    .act-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-top: 4px;
+      flex-shrink: 0
+    }
+
+    .act-dot.green {
+      background: var(--sage)
+    }
+
+    .act-dot.amber {
+      background: var(--honey);
+      animation: glow 2s ease infinite
+    }
+
+    .act-dot.blue {
+      background: #378add
+    }
+
+    .act-msg {
+      font-size: 11px;
+      color: var(--ink);
+      line-height: 1.6;
+      letter-spacing: .02em
+    }
+
+    .act-time {
+      font-size: 9px;
+      color: var(--warm);
+      margin-top: 3px;
+      letter-spacing: .1em;
+      font-weight: 300
+    }
+
+    /* ── SCAN BAR CHART ── */
+    .scan-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px
+    }
+
+    .scan-bar-row:last-child {
+      margin-bottom: 0
+    }
+
+    .scan-label {
+      font-size: 10px;
+      color: var(--umber);
+      width: 100px;
+      flex-shrink: 0;
+      letter-spacing: .04em;
+      font-weight: 400
+    }
+
+    .scan-track {
+      flex: 1;
+      background: var(--parchment);
+      height: 5px;
+      position: relative
+    }
+
+    .scan-fill {
+      height: 100%;
+      background: var(--honey);
+      transition: width .6s ease
+    }
+
+    .scan-val {
+      font-size: 10px;
+      color: var(--warm);
+      width: 36px;
+      text-align: right;
+      flex-shrink: 0;
+      font-weight: 300
+    }
+
+
+    /* ── EMPTY STATE ── */
+    .empty {
+      text-align: center;
+      padding: 40px 20px
+    }
+
+    .empty-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--parchment);
+      border: 1px solid var(--beige);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+    }
+
+    .empty-text {
+      font-size: 12px;
+      color: var(--warm);
+      margin-bottom: 14px;
+      font-weight: 300;
+      letter-spacing: .04em
+    }
+
+    
+
+    
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-12px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    @keyframes fadeLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0)
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(12px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:1024px) {
+      :root {
+        --sidebar-w: 200px
+      }
+
+      .qa-grid {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .stats-strip {
+        grid-template-columns: repeat(2, 1fr)
+      }
+    }
+
+    @media(max-width:768px) {
+
+      .stats-strip {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .qa-grid {
+        grid-template-columns: 1fr 1fr
+      }
+
+      .panels {
+        grid-template-columns: 1fr
+      }
+
+      .tb-search {
+        display: none
+      }
+    }
+
+    @media(max-width:480px) {
+      .qa-grid {
+        grid-template-columns: 1fr
+      }
+
+      .stats-strip {
+        grid-template-columns: 1fr
+      }
+
+      .tb-greet {
+        font-size: 14px !important;
+      }
+
+      .tb-sub {
+        font-size: 9px !important;
+      }
+
+      .panel {
+        padding: 16px;
+        border-radius: 14px;
+      }
+
+      .stat-card-jae {
+        border-radius: 14px;
+      }
+
+      .jae-num {
+        font-size: 28px !important;
+      }
+
+      .pr-name {
+        font-size: 11px;
+      }
+
+      .pr-scans strong {
+        font-size: 13px;
+      }
+
+      .act-msg {
+        font-size: 10px;
+      }
+
+      .section-eyebrow {
+        font-size: 8px !important;
+      }
+    }
+
+    @media(max-width:360px) {
+      .stats-strip {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .product-row {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .pr-scans {
+        margin-left: 0;
+        text-align: left;
+      }
+
+      .pr-badge {
+        font-size: 7px;
+        padding: 2px 7px;
+      }
+
+      .topbar {
+        min-height: auto !important;
+      }
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 20px;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .empty-state p {
+      font-size: 12px;
+      color: var(--umber);
+      letter-spacing: .04em;
+      font-weight: 300;
+    }
+
+    .empty-cta {
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--honey);
+      text-decoration: none;
+      border: 1px solid var(--beige);
+      padding: 6px 16px;
+      transition: border-color .2s, background .2s;
+      font-weight: 400;
+    }
+
+    .empty-cta:hover {
+      border-color: var(--honey);
+      background: rgba(250, 87, 22, 0.06);
+    }
+
+    /* ── HAMBURGER MENU (mobile) ── */
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 1001;
+    }
+
+    .hamburger-btn span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--ink);
+      margin: 5px 0;
+      transition: transform .3s, opacity .3s;
+      border-radius: 2px;
+    }
+
+    @media(max-width:768px) {
+      .hamburger-btn {
+        display: block;
+        position: fixed;
+        top: 20px;
+        left: 16px;
+        z-index: 1100;
+      }
+
+      .hamburger-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+        background: #fff;
+      }
+
+      .hamburger-btn.active span:nth-child(2) {
+        opacity: 0;
+      }
+
+      .hamburger-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+        background: #fff;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 280px;
+        height: 100vh !important;
+        border-radius: 0 24px 24px 0;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        transform: translateX(-110%);
+        transition: transform .35s cubic-bezier(.4, 0, .2, 1);
+        z-index: 1050;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1040;
+        backdrop-filter: blur(2px);
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+
+      .sb-nav,
+      .sb-bottom {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .main {
+        margin-left: 0;
+        width: 100%;
+      }
+
+      .topbar {
+        padding-left: 52px !important;
+      }
+    }
+
+    .nostyling {
+      text-decoration: none;
+      color: inherit;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <%- include('partials/sidebar', { active: 'overview' }) %>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <%- include('partials/topbar', { pageTitle: 'Dashboard', pageSub: 'Welcome back, ' + username }) %>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- STATS STRIP -->
+      <p class="section-eyebrow">Overview</p>
+      <div class="stats-strip">
+        <!-- CARD 1 -->
+        <div class="stat-card-jae">
+          <div class="jae-info">
+            <div class="jae-title">
+              <span class="jae-icon-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                  </path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span class="jae-title-text">Products registered</span>
+              <span class="jae-percent">↑ <%= typeof productsCount !=='undefined' ? productsCount : 0 %> total</span>
+            </div>
+            <div class="jae-data">
+              <span class="jae-num">
+                <%= typeof productsCount !=='undefined' ? productsCount.toLocaleString() : '0' %>
+              </span>
+              <a href="/all-products" class="jae-arrow-btn">
+                <svg class="jae-arrow-svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <path d="M14.581,7.05,7.05,14.581" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                  <path d="M10,7l5.287.037.038,5.287" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 2 -->
+        <div class="stat-card-jae">
+          <div class="jae-info">
+            <div class="jae-title">
+              <span class="jae-icon-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span class="jae-title-text">Total scans</span>
+              <span class="jae-percent">↑ <%= typeof totalScans !=='undefined' ? totalScans : 0 %> scans</span>
+            </div>
+            <div class="jae-data">
+              <span class="jae-num">
+                <%= typeof totalScans !=='undefined' ? totalScans.toLocaleString() : '0' %>
+              </span>
+              <a href="/analytics" class="jae-arrow-btn">
+                <svg class="jae-arrow-svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <path d="M14.581,7.05,7.05,14.581" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                  <path d="M10,7l5.287.037.038,5.287" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 3 -->
+        <div class="stat-card-jae">
+          <div class="jae-info">
+            <div class="jae-title">
+              <span class="jae-icon-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </span>
+              <span class="jae-title-text">Counterfeit alerts</span>
+              <span
+                class="jae-percent <%= typeof counterfeitCount !== 'undefined' && counterfeitCount === 0 ? 'alert-accent' : 'warn-accent' %>">
+                <%= typeof counterfeitCount !=='undefined' && counterfeitCount===0 ? '✔ Clean' : `⚠ ${typeof
+                  counterfeitCount !=='undefined' ? counterfeitCount : 0} Alert` %>
+              </span>
+            </div>
+            <div class="jae-data">
+              <span class="jae-num">
+                <%= typeof counterfeitCount !=='undefined' ? counterfeitCount.toLocaleString() : '0' %>
+              </span>
+              <a href="/counterfeits" class="jae-arrow-btn">
+                <svg class="jae-arrow-svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <path d="M14.581,7.05,7.05,14.581" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                  <path d="M10,7l5.287.037.038,5.287" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CARD 4 -->
+        <div class="stat-card-jae">
+          <div class="jae-info">
+            <div class="jae-title">
+              <span class="jae-icon-wrap">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <circle cx="12" cy="12" r="6"></circle>
+                  <circle cx="12" cy="12" r="2"></circle>
+                </svg>
+              </span>
+              <span class="jae-title-text">Scan accuracy</span>
+              <span
+                class="jae-percent <%= (typeof scanAccuracy !== 'undefined' && parseFloat(scanAccuracy) >= 95) ? '' : 'warn-accent' %>">
+                <%= typeof scanAccuracy !=='undefined' ? scanAccuracy : '100.0' %>%
+              </span>
+            </div>
+            <div class="jae-data">
+              <span class="jae-num">
+                <%= typeof scanAccuracy !=='undefined' ? scanAccuracy : '100.0' %>
+                  <% if (typeof scanAccuracy !=='undefined' ) { %>%<% } %>
+              </span>
+              <a href="/analytics" class="jae-arrow-btn">
+                <svg class="jae-arrow-svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+                  <path d="M14.581,7.05,7.05,14.581" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                  <path d="M10,7l5.287.037.038,5.287" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round"></path>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <p class="section-eyebrow" style="margin-bottom:14px">Quick actions</p>
+      <div class="qa-grid">
+        <a href="/add-product" class="qa-card-effect">
+          <div class="qa-card-inner">
+            <div class="qa-card__liquid"></div>
+            <div class="qa-card__shine"></div>
+            <div class="qa-card__glow"></div>
+            <div class="qa-card__content">
+              <div class="qa-card__icon-container">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                  <rect x="3" y="3" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.2" />
+                  <path d="M10 7v6M7 10h6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="qa-card__text">
+                <h3 class="qa-card__title">Add new product</h3>
+                <p class="qa-card__description">Register a unit and generate its unique QR code</p>
+              </div>
+              <div class="qa-card__footer">
+                <span class="qa-card__arrow-text">Get started</span>
+                <div class="qa-card__button">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        <a href="/all-products" class="qa-card-effect">
+          <div class="qa-card-inner">
+            <div class="qa-card__liquid"></div>
+            <div class="qa-card__shine"></div>
+            <div class="qa-card__glow"></div>
+            <div class="qa-card__content">
+              <div class="qa-card__icon-container">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                  <path d="M3 6h14M3 10h10M3 14h7" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="qa-card__text">
+                <h3 class="qa-card__title">All products</h3>
+                <p class="qa-card__description">Browse every registered product and its scan history</p>
+              </div>
+              <div class="qa-card__footer">
+                <span class="qa-card__arrow-text">View list</span>
+                <div class="qa-card__button">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        <a href="/edit-product" class="qa-card-effect">
+          <div class="qa-card-inner">
+            <div class="qa-card__liquid"></div>
+            <div class="qa-card__shine"></div>
+            <div class="qa-card__glow"></div>
+            <div class="qa-card__content">
+              <div class="qa-card__icon-container">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                  <rect x="2" y="5" width="16" height="12" rx="1.5" stroke="currentColor" stroke-width="1.2" />
+                  <path d="M5 5V4a3 3 0 016 0v1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
+                  <circle cx="8" cy="11" r="1" fill="currentColor" />
+                </svg>
+              </div>
+              <div class="qa-card__text">
+                <h3 class="qa-card__title">Batch update</h3>
+                <p class="qa-card__description">Update multiple products at once</p>
+              </div>
+              <div class="qa-card__footer">
+                <span class="qa-card__arrow-text">Update</span>
+                <div class="qa-card__button">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        <a href="/admin/dashboard" class="qa-card-effect">
+          <div class="qa-card-inner">
+            <div class="qa-card__liquid"></div>
+            <div class="qa-card__shine"></div>
+            <div class="qa-card__glow"></div>
+            <div class="qa-card__content">
+              <div class="qa-card__icon-container">
+                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                  <path d="M3 15l4-5 3 3 3.5-5L17 15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="qa-card__text">
+                <h3 class="qa-card__title">Analytics &amp; scans</h3>
+                <p class="qa-card__description">Real-time scan data, geography, and counterfeit alerts</p>
+              </div>
+              <div class="qa-card__footer">
+                <span class="qa-card__arrow-text">Analyze</span>
+                <div class="qa-card__button">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- TWO-COL PANELS -->
+      <div class="panels">
+
+        <!-- RECENT PRODUCTS -->
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">Recent products</div>
+            <a href="/all-products" class="panel-action nostyling">View all ↗</a>
+          </div>
+          <% if (typeof recentProducts !=='undefined' && recentProducts.length> 0) { %>
+            <% recentProducts.forEach(function(product) { %>
+              <div class="product-row">
+                <div class="pr-icon">
+                  <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
+                    <path d="M9 2C9 2 4 5 4 10C4 13 6.2 15 9 15C11.8 15 14 13 14 10C14 5 9 2 9 2Z" fill="#C8821A"
+                      opacity=".6" />
+                  </svg>
+                </div>
+                <div style="flex:1;min-width:0">
+                  <div class="pr-name">
+                    <%= product.name %>
+                  </div>
+                  <div class="pr-id">
+                    <%= product.batchNumber || 'N/A' %>
+                  </div>
+                </div>
+                <div class="pr-badge <%= product.status === 'Genuine' ? 'ok' : 'warn' %>">
+                  <%= product.status==='Genuine' ? 'Authentic' : product.status %>
+                </div>
+                <div class="pr-scans"><strong>
+                    <%= product.scanCount || 0 %>
+                  </strong><span>scans</span></div>
+              </div>
+              <% }); %>
+                <% } else { %>
+                  <div class="empty-state">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--umber)" stroke-width="1.2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
+                      </path>
+                    </svg>
+                    <p>No products registered yet</p>
+                    <a href="/add-product" class="empty-cta">Add your first product ↗</a>
+                  </div>
+                  <% } %>
+        </div>
+
+
+        <!-- RIGHT COL -->
+        <div style="display:flex;flex-direction:column;gap:16px">
+
+          <!-- ACTIVITY -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Live activity</div>
+              <a href="/analytics" class="panel-action nostyling">Monitor ↗</a>
+            </div>
+            <% if (typeof recentActivity !=='undefined' && recentActivity.length> 0) { %>
+              <% recentActivity.forEach(function(scan) { %>
+                <div class="act-row">
+                  <div
+                    class="act-dot <%= scan.productstatus === 'Genuine' ? 'green' : (scan.productstatus === 'Counterfeit' ? 'amber' : 'blue') %>">
+                  </div>
+                  <div>
+                    <div class="act-msg">
+                      <%= scan.productId ? scan.productId.batchNumber : 'Unknown' %>
+                        <% if (scan.productstatus==='Genuine' ) { %>
+                          scanned · Verified authentic
+                          <% } else if (scan.productstatus==='Counterfeit' ) { %>
+                            — Counterfeit alert triggered
+                            <% } else { %>
+                              · Scan recorded
+                              <% } %>
+                    </div>
+                    <div class="act-time">
+                      <% var now=new Date(); var scanTime=new Date(scan.scanDate); var diffMs=now - scanTime; var
+                        diffMins=Math.floor(diffMs / 60000); var diffHrs=Math.floor(diffMs / 3600000); var
+                        diffDays=Math.floor(diffMs / 86400000); var timeAgo='' ; if (diffMins < 1) timeAgo='Just now' ;
+                        else if (diffMins < 60) timeAgo=diffMins + ' min ago' ; else if (diffHrs < 24) timeAgo=diffHrs
+                        + ' hr ago' ; else timeAgo=diffDays + ' day' + (diffDays> 1 ? 's' : '') + ' ago';
+                        %>
+                        <%= timeAgo %> · <%= scan.location || 'Unknown' %>
+                    </div>
+                  </div>
+                </div>
+                <% }); %>
+                  <% } else { %>
+                    <div class="empty-state">
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--umber)"
+                        stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                      <p>No scan activity yet</p>
+                    </div>
+                    <% } %>
+          </div>
+
+
+          <!-- SCAN GEOGRAPHY -->
+          <div class="panel">
+            <div class="panel-head">
+              <div class="panel-title">Scan geography</div>
+            </div>
+            <% if (typeof scanGeography !=='undefined' && scanGeography.length> 0) { %>
+              <% scanGeography.forEach(function(geo) { %>
+                <div class="scan-bar-row">
+                  <div class="scan-label">
+                    <%= geo.location %>
+                  </div>
+                  <div class="scan-track">
+                    <div class="scan-fill" style="width:<%= geo.percent %>%"></div>
+                  </div>
+                  <div class="scan-val">
+                    <%= geo.percent %>%
+                  </div>
+                </div>
+                <% }); %>
+                  <% } else { %>
+                    <div class="empty-state">
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--umber)"
+                        stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <path
+                          d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
+                        </path>
+                      </svg>
+                      <p>No scan data available yet</p>
+                    </div>
+                    <% } %>
+          </div>
+
+
+
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+  <script>
+    function setActive(el) {
+      document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    // Animate scan bars on load
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.scan-fill').forEach(el => {
+        const w = el.style.width;
+        el.style.width = '0';
+        setTimeout(() => { el.style.width = w }, 200);
+      });
+    });
+  </script>
+</body>
+
+</html>
