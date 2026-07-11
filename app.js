@@ -140,15 +140,53 @@ app.get("/login", (req, res) => {
 });
 
 
-app.get("/register", (req, res) => {
+// ── Super Admin Session-Based Auth ──
+const superAdminAuth = (req, res, next) => {
+    if (req.session && req.session.isSuperAdmin === true) {
+        return next();
+    }
+    res.redirect("/super-admin/login");
+};
+
+app.get("/super-admin/login", (req, res) => {
+    res.render("super-admin-login", { error: null });
+});
+
+app.post("/super-admin/login", (req, res) => {
+    const { adminUsername, adminPassword } = req.body;
+    const superUser = process.env.SUPERADMIN_USERNAME;
+    const superPass = process.env.SUPERADMIN_PASSWORD;
+
+    if (!superUser || !superPass) {
+        return res.render("super-admin-login", {
+            error: "Super Admin credentials are not configured. Contact system administrator."
+        });
+    }
+
+    if (adminUsername === superUser && adminPassword === superPass) {
+        req.session.isSuperAdmin = true;
+        return req.session.save(() => {
+            res.redirect("/register");
+        });
+    }
+
+    res.render("super-admin-login", {
+        error: "Invalid credentials. Access denied."
+    });
+});
+
+app.get("/super-admin/logout", (req, res) => {
+    req.session.isSuperAdmin = false;
+    res.redirect("/login");
+});
+
+app.get("/register", superAdminAuth, (req, res) => {
     res.render("register");
 });
-app.post("/register", async (req, res) => {
+app.post("/register", superAdminAuth, async (req, res) => {
     const { brandname, email, username, password } = req.body;
-    console.log(password);
     const user = new User({ username, email, brandname });
     const registereduser = await User.register(user, password);
-    // registereduser.save().catch(err=>console.log("User Save Error:",err));
     console.log("User Registered:", registereduser);
     res.redirect("/login");
 });

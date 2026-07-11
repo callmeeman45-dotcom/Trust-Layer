@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trust Layer — Super Admin Authorization</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500;600&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --honey: #FA5716;
+      --amber: #0F5C5B;
+      --umber: #94A3B8;
+      --ink: #0F172A;
+      --cream: #F8FAFC;
+      --danger: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #1B242C;
+      background-image: radial-gradient(ellipse 80% 60% at 20% 80%, rgba(15, 92, 91, 0.35) 0%, transparent 70%),
+                        radial-gradient(ellipse 60% 50% at 80% 20%, rgba(250, 87, 22, 0.15) 0%, transparent 70%),
+                        linear-gradient(160deg, #1B242C 0%, #0F5C5B 40%, #1B242C 70%, #2a1a0e 100%);
+      padding: 20px;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    /* ── CONTAINER ── */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      background-image: linear-gradient(45deg, #1B242C, #13191e);
+      border-radius: 2em;
+      padding: 48px 38px 40px;
+      width: 100%;
+      max-width: 460px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .form::before {
+      content: '';
+      background-image: linear-gradient(45deg, var(--honey), var(--amber));
+      position: absolute;
+      top: -4px; left: -4px; right: -4px; bottom: -4px;
+      z-index: -2;
+      border-radius: 2.2em;
+    }
+
+    /* ── SHIELD ICON ── */
+    .shield-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .shield-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: rgba(250, 87, 22, 0.12);
+      border: 1px solid rgba(250, 87, 22, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: pulseShield 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseShield {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(250, 87, 22, 0.2); }
+      50% { box-shadow: 0 0 0 12px rgba(250, 87, 22, 0); }
+    }
+
+    /* ── TITLES ── */
+    .form-eyebrow {
+      text-align: center;
+      font-size: 9px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+      color: var(--honey);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .form-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 2px;
+    }
+
+    .form-sub {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.55);
+      text-align: center;
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+      margin: 4px 0;
+    }
+
+    /* ── FORM FIELDS ── */
+    .flex-column {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+    }
+
+    .flex-column > label {
+      font-size: 8px;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: rgba(243, 235, 217, 0.8);
+      font-weight: 500;
+      display: block;
+      margin-left: 4px;
+    }
+
+    .inputForm {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid transparent;
+      border-bottom: 1.5px solid rgba(250, 87, 22, 0.4);
+      outline: none;
+      background-color: rgba(255, 255, 255, 0.02);
+      color: #fff;
+      font-size: 13px;
+      transition: all 0.25s ease;
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      align-items: center;
+      height: 48px;
+    }
+
+    .inputForm:focus-within {
+      background-color: rgba(255, 255, 255, 0.06);
+      border-bottom-color: var(--honey);
+    }
+
+    .input {
+      margin-left: 10px;
+      background: transparent;
+      border: none;
+      color: #fff;
+      width: 100%;
+      height: 100%;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .input::placeholder {
+      color: rgba(243, 235, 217, 0.4);
+    }
+
+    .inputForm > svg * {
+      stroke: #ffffff !important;
+    }
+
+    .eye-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: rgba(255, 255, 255, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 4px;
+      transition: color 0.2s;
+    }
+
+    .eye-btn:hover { color: var(--honey); }
+
+    /* ── SUBMIT ── */
+    .button-submit {
+      margin-top: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      background: var(--honey);
+      color: #ffffff;
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      border: 2px solid transparent;
+      border-radius: 5em;
+      overflow: hidden;
+      transition: all 0.25s ease;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .button-submit:hover {
+      border-color: var(--honey);
+      background: transparent;
+      color: var(--honey);
+    }
+
+    .button-submit:active { transform: scale(0.98); }
+
+    .button-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ── SPINNER ── */
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── ERROR TOAST ── */
+    .error-banner {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #fca5a5;
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      line-height: 1.5;
+      animation: shakeIn .4s ease;
+    }
+
+    @keyframes shakeIn {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-6px); }
+      40% { transform: translateX(6px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+
+    /* ── BACK LINK ── */
+    .back-link {
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .back-link a {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link a:hover { color: var(--honey); }
+
+    /* ── FOOTER NOTE ── */
+    .footer-note {
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .footer-note p {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.3);
+      letter-spacing: .05em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 500px) {
+      .form {
+        padding: 36px 24px 32px;
+        border-radius: 1.4em;
+      }
+      .form::before { border-radius: 1.6em; }
+      .form-title { font-size: 20px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="form">
+
+    <!-- Shield icon -->
+    <div class="shield-wrap">
+      <div class="shield-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#FA5716" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M9 12l2 2 4-4" stroke="#FA5716" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Titles -->
+    <div class="form-eyebrow">Restricted Access</div>
+    <div class="form-title">Super Admin Portal</div>
+    <div class="form-sub">Enter your super admin credentials to access<br>the brand registration panel.</div>
+
+    <div class="divider"></div>
+
+    <!-- Error Banner -->
+    <div class="error-banner" id="errorBanner">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style="display:inline-block; vertical-align:middle; margin-right:6px;">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+        <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span id="errorText">Invalid credentials. Please try again.</span>
+    </div>
+
+    <!-- Form -->
+    <form id="adminForm" method="POST" action="/super-admin/login">
+
+      <!-- Admin Username -->
+      <div class="flex-column" style="margin-bottom: 16px;">
+        <label for="adminUsername">Admin Username</label>
+        <div class="inputForm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#64748b" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input type="text" class="input" id="adminUsername" name="adminUsername" placeholder="Enter admin username" required autocomplete="off">
+        </div>
+      </div>
+
+      <!-- Admin Password -->
+      <div class="flex-column" style="margin-bottom: 20px;">
+        <label for="adminPassword">Admin Password</label>
+        <div class="inputForm">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="11" width="18" height="11" rx="2" stroke="#64748b" stroke-width="1.5"/>
+            <path d="M7 11V7a5 5 0 0110 0v4" stroke="#64748b" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input type="password" class="input" id="adminPassword" name="adminPassword" placeholder="Enter admin password" required>
+          <button class="eye-btn" type="button" onclick="togglePw()" aria-label="Toggle password">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.2"/>
+              <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <button class="button-submit" type="submit" id="submitBtn">
+        <span id="btnLabel">Authorize & Continue</span>
+        <div class="spinner" id="spinner"></div>
+        <svg id="btnArrow" width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </form>
+
+    <!-- Back -->
+    <div class="back-link">
+      <a href="/login">← Back to Brand Login</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-note">
+      <p>This portal is restricted to Trust Layer administrators only.</p>
+    </div>
+
+  </div>
+
+  <script>
+    function togglePw() {
+      var inp = document.getElementById('adminPassword');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    // Handle form submit with loading state
+    document.getElementById('adminForm').addEventListener('submit', function(e) {
+      var u = document.getElementById('adminUsername').value.trim();
+      var p = document.getElementById('adminPassword').value.trim();
+
+      if (!u || !p) {
+        e.preventDefault();
+        showError('Please fill in both fields.');
+        return;
+      }
+
+      // Show loading
+      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('btnLabel').textContent = 'Verifying...';
+      document.getElementById('spinner').style.display = 'block';
+      document.getElementById('btnArrow').style.display = 'none';
+    });
+
+    function showError(msg) {
+      var banner = document.getElementById('errorBanner');
+      document.getElementById('errorText').textContent = msg;
+      banner.style.display = 'block';
+    }
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      showError('<%= error %>');
+    <% } %>
+  </script>
+
+</body>
+
+</html>
