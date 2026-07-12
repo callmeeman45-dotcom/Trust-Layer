@@ -4,7 +4,7 @@
 
 ---
 
-## 🎯 Problem It Solves
+## Problem It Solves
 
 Counterfeit products cost brands revenue and trust, and consumers have no easy way to verify if what they bought is genuine. Trust Layer solves this through three core pillars:
 
@@ -14,7 +14,7 @@ Counterfeit products cost brands revenue and trust, and consumers have no easy w
 
 ---
 
-## ⚙️ How the System Works (End-to-End)
+## How the System Works (End-to-End)
 
 1. **Brand owner registers a product** and generates a unique QR code for each unit via the dashboard.
 2. **QR code + product data** is generated, stored, and the QR image/PDF is uploaded to **Cloudinary**.
@@ -27,7 +27,7 @@ Counterfeit products cost brands revenue and trust, and consumers have no easy w
 
 ---
 
-## 🧩 Core Features
+## Core Features
 
 ### 1. QR Code Generation & Ownership Verification
 - Unique QR code generated per product unit
@@ -52,7 +52,7 @@ See detailed section below.
 
 ---
 
-## 🧠 AI-Powered Product Assistant (RAG)
+## AI-Powered Product Assistant (RAG)
 
 A Retrieval-Augmented Generation (RAG) system that lets brand owners feed in detailed product information, and lets end users ask natural-language questions about that product after scanning its QR code.
 
@@ -105,7 +105,7 @@ specifically suitable for oily skin types."
 
 ---
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -118,42 +118,40 @@ specifically suitable for oily skin types."
 | Deployment | Vercel |
 | Device Tracking | UUID (cookie-based) |
 | Embeddings (RAG) | *(fill in — e.g. Fireworks API key)* |
-| Vector Store (RAG) | *(fill in — e.g.  MongoDB Atlas Vector Search)* |
+| Vector Store (RAG) | *(fill in — e.g. MongoDB Atlas Vector Search)* |
 | LLM (RAG) | *(fill in — your chosen provider/model)* |
 | Data Isolation | `brandId`-scoped namespaces/collections |
 
 ---
 
-🔐 Brand Account Access Model
+## Brand Account Access Model
 
 Trust Layer does not support open, public self-registration for brand accounts. This is a deliberate security measure to prevent unauthorized parties from issuing fraudulent verification for products they don't own.
 
-How it works:
+**How it works:**
 
-
-A prospective brand submits a verification/onboarding request (outside the platform, e.g. via contact form or direct outreach).
-Trust Layer's team manually verifies the brand's legitimacy (business registration, product ownership, etc.).
-Only the Super Admin can approve a request and provision a verified Brand Admin account on the platform.
-Once created, the Brand Admin can log in and manage their own product QR codes, view analytics, and issue recall notifications — scoped strictly to their own brand's data.
-
+1. A prospective brand submits a verification/onboarding request (outside the platform, e.g. via contact form or direct outreach).
+2. Trust Layer's team manually verifies the brand's legitimacy (business registration, product ownership, etc.).
+3. Only the Super Admin can approve a request and provision a verified Brand Admin account on the platform.
+4. Once created, the Brand Admin can log in and manage their own product QR codes, view analytics, and issue recall notifications — scoped strictly to their own brand's data.
 
 This closed-registration model is core to Trust Layer's trust guarantee: every brand account on the platform has been vetted, so a "verified" badge actually means something to end consumers.
 
+---
 
-🧪 Demo Access
+## Demo Access
 
 For testing/demo purposes, a pre-verified Super Admin account is available:
 
-FieldValue
-USERNAME   Abbott Admin
-PASSWORD   ABBOTT
+| Field | Value |
+|---|---|
+| Username | `Abbott Admin` |
+| Password | `ABBOTT` |
 
+**Note:** These are demo credentials for evaluation purposes only. Do not use in production, and rotate/remove before any public deployment.
 
-⚠️ Note: These are demo credentials for evaluation purposes only. Do not use in production, and rotate/remove before any public deployment.
+---
 
+## How It Works on the Consumer Side
 
-
-
-How it works on the consumer side 
-when consumer scans the product so if it was brand real product so it shows authentic 
-but if that product was counterfieted and QR code is dulpicated so it flags that product is fake in this way user can protect themselves by using fake medicines or other things which can harms the consumers.
+When a consumer scans the product, if it is a real, registered product, the system shows it as authentic. If the product has been counterfeited and its QR code duplicated, the system flags it as fake. This way, users can protect themselves from fake medicines or other counterfeit goods that could otherwise cause them harm.
