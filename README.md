@@ -124,6 +124,36 @@ specifically suitable for oily skin types."
 
 ---
 
+🔐 Brand Account Access Model
+
+Trust Layer does not support open, public self-registration for brand accounts. This is a deliberate security measure to prevent unauthorized parties from issuing fraudulent verification for products they don't own.
+
+How it works:
+
+
+A prospective brand submits a verification/onboarding request (outside the platform, e.g. via contact form or direct outreach).
+Trust Layer's team manually verifies the brand's legitimacy (business registration, product ownership, etc.).
+Only the Super Admin can approve a request and provision a verified Brand Admin account on the platform.
+Once created, the Brand Admin can log in and manage their own product QR codes, view analytics, and issue recall notifications — scoped strictly to their own brand's data.
+
+
+This closed-registration model is core to Trust Layer's trust guarantee: every brand account on the platform has been vetted, so a "verified" badge actually means something to end consumers.
+
+
+🧪 Demo Access
+
+For testing/demo purposes, a pre-verified Super Admin account is available:
+
+FieldValue
+USERNAME   Abbott Admin
+PASSWORD   ABBOTT
+
+
+⚠️ Note: These are demo credentials for evaluation purposes only. Do not use in production, and rotate/remove before any public deployment.
+
+
+
+
 How it works on the consumer side 
 when consumer scans the product so if it was brand real product so it shows authentic 
 but if that product was counterfieted and QR code is dulpicated so it flags that product is fake in this way user can protect themselves by using fake medicines or other things which can harms the consumers.
