@@ -1077,17 +1077,7 @@ app.post("/contact", async (req, res) => {  // ← add async
 const { MongoClient } = require('mongodb');
 
 // ── MongoDB connection ────────────────────────────────────────────────────────
-const MONGO_URI = process.env.mongodb_cloud_address;
-const DB_NAME = "test"; // your database name;
-const COLLECTION = 'scanrecords'; // your collection name;
-let client;
-async function getCollection() {
-    if (!client) {
-        client = new MongoClient(MONGO_URI);
-        await client.connect();
-    }
-    return client.db(DB_NAME).collection(COLLECTION);
-}
+// Removed redundant MongoClient code
 
 // ── Helper: parse "Mon Apr 27 2026 17:09:44 GMT+0000 (...)" → Date ───────────
 function parseDate(str) {
@@ -1099,8 +1089,7 @@ app.get('/analytics', isloggedin, async (req, res) => {
     const brandname = req.user.brandname;
     console.log("Loading analytics dashboard...");
     try {
-        const col = await getCollection();
-        const docs = await col.find({ brandname: brandname }).toArray();
+        const docs = await ScanRecord.find({ brandname: brandname }).lean();
         console.log(docs);
 
         // ── 1. Genuine vs Counterfeit ─────────────────────────────────────────────

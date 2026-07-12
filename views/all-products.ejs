@@ -230,20 +230,23 @@
       border-right: 1px solid rgba(255, 255, 255, 0.126);
     }
 
-    .product-card .bottom-section .row .item button.download-icon-btn {
+    .product-card .bottom-section .row .item .download-icon-btn {
       background: none;
       border: none;
-      color: var(--honey);
+      color: #ffffff;
       cursor: pointer;
-      display: inline-flex;
+      display: flex;
       align-items: center;
       justify-content: center;
       transition: color 0.2s, transform 0.2s;
       padding: 0;
+      margin: 0 auto 2px auto;
+      text-decoration: none;
+      height: 14px;
     }
 
-    .product-card .bottom-section .row .item button.download-icon-btn:hover {
-      color: #fff;
+    .product-card .bottom-section .row .item .download-icon-btn:hover {
+      color: var(--honey);
       transform: scale(1.15);
     }
 
@@ -336,8 +339,7 @@
             <div class="flex">
               <div class="products-grid">
                 <% for (let product of products) { %>
-                  <form class="form" action="/admin/batch/<%=product._id %>/download-pdf" method="get">
-                    <div class="product-card">
+                  <div class="product-card" onclick="window.location.href='/admin/batch/<%=product._id %>'" style="cursor: pointer;" title="View Batch Details">
                       <div class="top-section">
                         <div class="border"></div>
                         <div class="icons">
@@ -351,7 +353,7 @@
                       </div>
                       <div class="bottom-section">
                         <span class="title"><%= product.name || product._id %></span>
-                        <span class="desc"><%= product.description || 'No description provided.' %></span>
+                        <span class="desc" style="color: #ffffff; font-weight: 500;">Click to view and manage batch details</span>
                         <div class="row">
                           <div class="item">
                             <span class="big-text">$<%= product.price %></span>
@@ -362,19 +364,18 @@
                             <span class="regular-text">Units</span>
                           </div>
                           <div class="item">
-                            <button class="download-icon-btn" type="submit" title="Download PDF">
+                            <a href="/admin/batch/<%=product._id %>/download-pdf" class="download-icon-btn" title="Download PDF" onclick="event.stopPropagation();">
                               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="7 10 12 15 17 10"></polyline>
                                 <line x1="12" y1="15" x2="12" y2="3"></line>
                               </svg>
-                            </button>
+                            </a>
                             <span class="regular-text">PDF</span>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </form>
               <% } %>
             </div>
             </div>

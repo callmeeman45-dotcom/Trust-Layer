@@ -1,805 +1,490 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Analytics — Trust Layer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics Dashboard — Trust Layer</title>
+  <link rel="stylesheet" href="/css/dashboard-layout.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet"/>
 
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-
-    :root{
-      --ink:        #F3EBD9;
-      --bark:       #E2E8F0;
-      --umber:      #A0AEC0;
-      --honey:      #FA5716;
-      --amber:      #FFAB8A;
-      --cream:      #1B242C;
-      --parchment:  #212B35;
-      --beige:      #2D3748;
-      --warm:       #FFAB8A;
-      --sage:       #17A398;
-      --white:      #26313D;
-      --danger:     #B94040;
-      --danger-bg:  rgba(185,64,64,.12);
-      --danger-b:   rgba(185,64,64,.3);
+    :root {
+      --honey: #FA5716; /* Vibrant Orange */
+      --amber: #0F5C5B; /* Deep Teal */
+      --umber: #94A3B8; /* Muted Slate */
+      --ink: #0F172A;
+      --cream: #F8FAFC;
+      --danger: #ef4444;
+      --success: #10b981;
     }
 
-    html{scroll-behavior:smooth}
-    body{
-      font-family:'Outfit',sans-serif;
-      background-image: radial-gradient(ellipse 80% 60% at 20% 80%, rgba(15, 92, 91, 0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 20%, rgba(250, 87, 22, 0.15) 0%, transparent 70%), linear-gradient(160deg, #1B242C 0%, #0F5C5B 40%, #1B242C 70%, #2a1a0e 100%);
-      color:var(--ink);
-      min-height:100vh;
-      overflow-x:hidden;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    /* Grain overlay */
-    body::after{
-      content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.22;
-     background-image: radial-gradient(ellipse 80% 60% at 20% 80%, rgba(15, 92, 91, 0.35) 0%, transparent 70%), radial-gradient(ellipse 60% 50% at 80% 20%, rgba(250, 87, 22, 0.15) 0%, transparent 70%), linear-gradient(160deg, #1B242C 0%, #0F5C5B 40%, #1B242C 70%, #2a1a0e 100%);
-}
-
-    /* ── NAVBAR ── */
-    .nav{
-      position:fixed;top:0;left:0;right:0;z-index:500;
-      display:flex;align-items:center;justify-content:space-between;
-      padding:0 52px;height:72px;
-      background:rgba(27,36,44,.96);
-      backdrop-filter:blur(24px);
-      border-bottom:1px solid var(--beige);
-    }
-    .nav-brand{
-      display:flex;align-items:center;gap:12px;
-      font-family:'Playfair Display',serif;
-      font-size:17px;font-weight:500;color:var(--bark);
-      letter-spacing:.04em;text-decoration:none;
-    }
-    .nav-brand-icon{
-      width:34px;height:34px;background:var(--honey);
-      border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-    }
-    .nav-links{display:flex;gap:36px;list-style:none}
-    .nav-links a{
-      font-size:11px;letter-spacing:.22em;text-transform:uppercase;
-      color:var(--warm);text-decoration:none;font-weight:300;transition:color .25s;
-    }
-    .nav-links a:hover,.nav-links a.active{color:var(--ink)}
-    .nav-cta{
-      font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:400;
-      padding:9px 22px;background:var(--ink);color:var(--cream);
-      border:none;cursor:pointer;transition:background .25s;font-family:'Outfit',sans-serif;
-      text-decoration:none;display:inline-flex;align-items:center;
-    }
-    .nav-cta:hover{background:var(--bark)}
-
-    /* ── PAGE HEADER ── */
-    .page-header{
-      background:#11171D;
-      padding:120px 52px 56px;
-      position:relative;overflow:hidden;
-    }
-    .page-header::before{
-      content:'';position:absolute;top:-100px;right:-100px;
-      width:500px;height:500px;
-      background:radial-gradient(circle,rgba(250,87,22,.15) 0%,transparent 65%);
-      pointer-events:none;
-    }
-    .page-header::after{
-      content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-      background:linear-gradient(90deg,transparent,rgba(250,87,22,.4),transparent);
-    }
-    .header-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
-    .header-eyebrow{
-      font-size:9px;letter-spacing:.45em;text-transform:uppercase;
-      color:var(--warm);margin-bottom:14px;font-weight:300;
-      display:flex;align-items:center;gap:12px;
-    }
-    .header-eyebrow::after{content:'';flex:0 0 44px;height:1px;background:rgba(250,87,22,.4)}
-    .page-header h1{
-      font-family:'Playfair Display',serif;
-      font-size:clamp(2rem,3.5vw,3rem);
-      font-weight:500;color:#fff;line-height:1.1;letter-spacing:-.01em;margin-bottom:10px;
-    }
-    .page-header h1 em{font-style:italic;color:var(--warm)}
-    .header-meta{
-      font-size:11px;color:rgba(255,255,255,.3);font-weight:300;letter-spacing:.08em;
-      display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:16px;
-    }
-    .header-meta span{display:flex;align-items:center;gap:7px}
-    .live-dot{
-      width:7px;height:7px;border-radius:50%;background:var(--sage);
-      animation:glow2 1.8s ease infinite;
-    }
-    @keyframes glow2{
-      0%,100%{box-shadow:0 0 6px var(--sage)}
-      50%{box-shadow:0 0 14px var(--sage)}
-    }
-    .alert-badge{
-      display:inline-flex;align-items:center;gap:8px;
-      background:var(--danger-bg);border:1px solid var(--danger-b);
-      color:var(--danger);padding:7px 16px;font-size:10px;
-      letter-spacing:.18em;font-weight:400;
-    }
-    .alert-dot{width:7px;height:7px;border-radius:50%;background:var(--danger);animation:pulse 1.5s ease infinite}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
-    /* ── KPI STRIP ── */
-    .kpi-strip{
-      background:var(--parchment);
-      border-bottom:1px solid var(--beige);
-      padding:0 52px;
-      overflow-x:auto;
-    }
-    .kpi-inner{
-      max-width:1200px;margin:0 auto;
-      display:grid;grid-template-columns:repeat(5,1fr);
-    }
-    .kpi{
-      padding:28px 24px;
-      border-right:1px solid var(--beige);
-      position:relative;
-    }
-    .kpi:last-child{border-right:none}
-    .kpi::before{
-      content:'';position:absolute;top:0;left:0;right:0;height:3px;
-      background:var(--kpi-accent,var(--honey));
-      transform:scaleX(0);transform-origin:left;
-      transition:transform .4s ease;
-    }
-    .kpi:hover::before{transform:scaleX(1)}
-    .kpi-label{
-      font-size:8px;letter-spacing:.35em;text-transform:uppercase;
-      color:var(--umber);font-weight:300;margin-bottom:10px;
-    }
-    .kpi-value{
-      font-family:'Playfair Display',serif;
-      font-size:2.2rem;font-weight:500;line-height:1;
-      color:var(--kpi-color,var(--ink));margin-bottom:6px;
-    }
-    .kpi-sub{font-size:10px;color:var(--warm);font-weight:300;letter-spacing:.05em}
-
-    /* ── MAIN CONTENT ── */
-    .main{max-width:1200px;margin:0 auto;padding:48px 52px 80px}
-
-    /* ── SECTION LABEL ── */
-    .section-tag{
-      font-size:8px;letter-spacing:.45em;text-transform:uppercase;
-      color:var(--honey);margin-bottom:14px;
-      display:flex;align-items:center;gap:12px;font-weight:300;
-    }
-    .section-tag::after{content:'';flex:0 0 44px;height:1px;background:var(--beige)}
-
-    /* ── CHART GRID ── */
-    .chart-grid{
-      display:grid;
-      grid-template-columns:repeat(12,1fr);
-      gap:20px;
-      margin-bottom:20px;
-    }
-    .col-4{grid-column:span 4}
-    .col-5{grid-column:span 5}
-    .col-7{grid-column:span 7}
-    .col-8{grid-column:span 8}
-    .col-12{grid-column:span 12}
-
-    /* ── CARD ── */
-    .card{
-      background:var(--white);
-      border:1px solid var(--beige);
-      padding:28px 28px 24px;
-      position:relative;overflow:hidden;
-    }
-    /* corner accent lines */
-    .card::before,.card::after{
-      content:'';position:absolute;
-      border-color:rgba(250,87,22,.25);border-style:solid;
-      width:14px;height:14px;pointer-events:none;
-    }
-    .card::before{top:12px;left:12px;border-width:1px 0 0 1px}
-    .card::after{bottom:12px;right:12px;border-width:0 1px 1px 0}
-
-    .card-header{margin-bottom:18px}
-    .card-title{
-      font-family:'Playfair Display',serif;
-      font-size:15px;font-weight:500;color:var(--ink);
-      display:flex;align-items:center;gap:10px;margin-bottom:4px;
-    }
-    .card-title-dot{
-      width:8px;height:8px;border-radius:50%;
-      background:var(--dot-color,var(--honey));flex-shrink:0;
-    }
-    .card-sub{font-size:10px;color:var(--umber);font-weight:300;letter-spacing:.05em}
-
-    .chart-wrap{position:relative;width:100%}
-
-    /* ── LEGEND ── */
-    .legend{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:16px}
-    .legend-item{display:flex;align-items:center;gap:7px;font-size:10px;color:var(--umber);font-weight:300;letter-spacing:.05em}
-    .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-
-    /* ── GEO SECTION (dark card) ── */
-    .card-dark{
-      background:#11171D;
-      border:1px solid rgba(255,255,255,.06);
-      padding:36px;
-      position:relative;overflow:hidden;
-    }
-    .card-dark::before{
-      content:'';position:absolute;top:-60px;right:-60px;
-      width:300px;height:300px;
-      background:radial-gradient(circle,rgba(250,87,22,.1),transparent 60%);
-      pointer-events:none;
-    }
-    .card-dark .card-title{color:#fff}
-    .card-dark .card-sub{color:rgba(255,255,255,.3)}
-    .card-dark .card-title-dot{background:var(--warm)}
-
-    /* ── GEO TABLE ── */
-    .geo-layout{display:grid;grid-template-columns:320px 1fr;gap:36px;align-items:start;margin-top:20px}
-    .geo-table{width:100%;border-collapse:collapse;font-size:12px}
-    .geo-table th{
-      text-align:left;padding:9px 12px;
-      color:rgba(255,255,255,.3);font-size:8px;
-      text-transform:uppercase;letter-spacing:.2em;font-weight:300;
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .geo-table td{padding:12px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
-    .geo-table tr:last-child td{border-bottom:none}
-    .geo-table tr:hover td{background:rgba(255,255,255,.02)}
-    .country-cell{display:flex;align-items:center;gap:8px}
-    .flag-box{
-      width:28px;height:20px;border-radius:3px;
-      background:rgba(255,255,255,.06);
-      display:flex;align-items:center;justify-content:center;font-size:13px;
-    }
-    .country-name{color:#fff;font-weight:400;letter-spacing:.02em}
-    .mono{font-family:monospace;color:rgba(255,255,255,.55);font-size:11px}
-    .pill{
-      display:inline-block;padding:3px 10px;border-radius:999px;
-      font-size:10px;font-weight:400;letter-spacing:.04em;
-    }
-    .pill-g{background:rgba(23,163,152,.15);color:var(--sage)}
-    .pill-c{background:rgba(185,64,64,.12);color:#E06060}
-    .rate-wrap{display:flex;align-items:center;gap:8px}
-    .rate-bar-bg{flex:1;height:4px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden}
-    .rate-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,#B94040,#E06060)}
-    .rate-pct{font-family:monospace;font-size:10px;color:#E06060;width:36px;text-align:right}
-
-    /* ── FOOTER ── */
-    .footer{
-      background:#11171D;padding:40px 52px;
-      display:flex;align-items:center;justify-content:space-between;
-      flex-wrap:wrap;gap:20px;
-      border-top:1px solid rgba(255,255,255,.05);
-    }
-    .footer-brand{
-      font-family:'Playfair Display',serif;font-size:15px;
-      color:rgba(255,255,255,.4);font-weight:400;letter-spacing:.08em;
-    }
-    .footer-brand strong{color:var(--warm);font-weight:500}
-    .footer-copy{font-size:9px;letter-spacing:.2em;color:rgba(255,255,255,.18);font-weight:300}
-    .footer-links{display:flex;gap:28px}
-    .footer-links a{
-      font-size:9px;letter-spacing:.22em;text-transform:uppercase;
-      color:rgba(255,255,255,.22);text-decoration:none;font-weight:300;transition:color .25s;
-    }
-    .footer-links a:hover{color:rgba(255,255,255,.6)}
-
-    /* ── RESPONSIVE ── */
-    @media(max-width:1100px){
-      .kpi-inner{grid-template-columns:repeat(3,1fr)}
-      .kpi:nth-child(3){border-right:none}
-    }
-    @media(max-width:900px){
-      .nav{padding:0 24px}
-      .nav-links,.nav-cta{display:none}
-      .page-header{padding:100px 24px 44px}
-      .kpi-strip{padding:0 24px}
-      .kpi-inner{grid-template-columns:repeat(2,1fr)}
-      .kpi:nth-child(2n){border-right:none}
-      .main{padding:32px 24px 60px}
-      .col-4,.col-5,.col-7,.col-8{grid-column:span 12}
-      .geo-layout{grid-template-columns:1fr;gap:24px}
-      .footer{padding:32px 24px;flex-direction:column;align-items:flex-start}
-    }
-    @media(max-width:480px){
-      .page-header h1{font-size:1.8rem}
-      .kpi-inner{grid-template-columns:1fr 1fr}
-      .kpi-value{font-size:1.8rem}
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      min-height: 100vh;
     }
 
-    /* ── ENTRY ANIMATIONS ── */
-    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
-    .page-header{animation:fadeUp .7s .1s ease both}
-    .kpi-strip{animation:fadeUp .7s .25s ease both}
-    .main{animation:fadeUp .7s .4s ease both}
+    /* ── PAGE HEADER / TOP ROW ── */
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .page-tag {
+      font-size: 10px;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: var(--amber);
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .page-sub {
+      font-size: 13px;
+      color: var(--umber);
+      margin-top: 4px;
+    }
+
+    /* ── STATS CARDS ── */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border: 1.5px solid rgba(15, 92, 91, 0.08);
+      border-radius: 18px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px rgba(15, 92, 91, 0.05);
+    }
+
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--kpi-color, var(--umber));
+    }
+
+    .stat-card .stat-num {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--kpi-text-color, var(--ink));
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 4px;
+    }
+
+    .stat-card .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--umber);
+      margin-bottom: 8px;
+    }
+
+    .stat-card .stat-sub {
+      font-size: 13px;
+      color: #64748B;
+    }
+
+    /* ── CHARTS GRID ── */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .chart-card {
+      background: #ffffff;
+      border: 1.5px solid rgba(15, 92, 91, 0.08);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.02);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .chart-card.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .chart-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chart-title::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--honey);
+    }
+
+    .chart-sub {
+      font-size: 12px;
+      color: var(--umber);
+    }
+
+    .chart-container {
+      position: relative;
+      flex-grow: 1;
+      min-height: 300px;
+      width: 100%;
+      min-width: 0;
+    }
   </style>
 </head>
+
 <body>
 
-<!-- NAV -->
-<nav class="nav">
-  <a class="nav-brand" href="/">
-    <div class="nav-brand-icon">
-      <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-        <path d="M9 2L3 6v4c0 3.3 2.5 6.4 6 7.2C12.5 16.4 15 13.3 15 10V6L9 2z" fill="white" opacity=".9"/>
-        <path d="M7 9.5l1.5 1.5 3-3" stroke="rgba(250,87,22,0.8)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    Trust Layer
-  </a>
-  <ul class="nav-links">
-    <li><a href="/">Home</a></li>
-    <li><a href="#">Services</a></li>
-    <li><a href="#">Products</a></li>
-    <li><a href="#" class="active">Analytics</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-  <a href="/admin/space" class="nav-cta">Admin Space</a>
-</nav>
+  <%- include('partials/sidebar', { active: 'analytics' }) %>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <div class="header-inner">
-    <p class="header-eyebrow">Scan Intelligence</p>
-    <h1><%=brandname %>  <em>Analytics</em> Dashboard</h1>
-    <div class="header-meta">
-      <span><div class="live-dot"></div> Live data · All registries online</span>
-      <span>·</span>
-      <span><%= totalScans %> total scan events recorded</span>
-      <span>·</span>
-      <div class="alert-badge">
-        <div class="alert-dot"></div>
-        ⚠ <%= statusCount.Counterfeit %> counterfeit scans detected
-      </div>
-    </div>
-  </div>
-</div>
+  <!-- MAIN DASHBOARD AREA -->
+  <div class="main">
 
-<!-- KPI STRIP -->
-<div class="kpi-strip">
-  <div class="kpi-inner">
-    <div class="kpi" style="--kpi-accent:var(--honey);--kpi-color:var(--ink)">
-      <div class="kpi-label">Total Scans</div>
-      <div class="kpi-value"><%= totalScans %></div>
-      <div class="kpi-sub">All QR scan events</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--sage);--kpi-color:var(--sage)">
-      <div class="kpi-label">Genuine</div>
-      <div class="kpi-value"><%= statusCount.Genuine %></div>
-      <div class="kpi-sub"><%= ((statusCount.Genuine / totalScans)*100).toFixed(1) %>% of total</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:#B94040;--kpi-color:#B94040">
-      <div class="kpi-label">Counterfeit</div>
-      <div class="kpi-value"><%= statusCount.Counterfeit %></div>
-      <div class="kpi-sub"><%= ((statusCount.Counterfeit / totalScans)*100).toFixed(1) %>% of total</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--umber);--kpi-color:var(--umber)">
-      <div class="kpi-label">Unique Products</div>
-      <div class="kpi-value"><%= productChart.labels.length %></div>
-      <div class="kpi-sub">Multi-scanned SKUs</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--amber);--kpi-color:var(--amber)">
-      <div class="kpi-label">Countries</div>
-      <div class="kpi-value"><%= geoData.length %></div>
-      <div class="kpi-sub">Geographic regions</div>
-    </div>
-  </div>
-</div>
+    <%- include('partials/topbar', { pageTitle: 'Analytics', pageSub: 'Deep dive into scan intelligence' }) %>
 
-<!-- MAIN -->
-<main class="main">
-  <p class="section-tag">Scan breakdown</p>
-
-  <div class="chart-grid">
-
-    <!-- 1. Donut -->
-    <div class="card col-4">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-dot" style="--dot-color:var(--sage)"></div>
-          Genuine vs Counterfeit
+    <!-- CONTENT -->
+    <div class="content" style="padding: 36px 40px; overflow-y: auto;">
+      
+      <!-- PAGE HEADER -->
+      <div class="dashboard-header">
+        <div>
+          <div class="page-tag">Live Data</div>
+          <div class="page-title"><%= brandname %> Analytics Dashboard</div>
+          <div class="page-sub">Comprehensive insights across all your registered products and scan events.</div>
         </div>
-        <div class="card-sub">Status distribution across all scans</div>
       </div>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:var(--sage)"></span>Genuine</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#B94040"></span>Counterfeit</span>
-      </div>
-      <div class="chart-wrap" style="height:240px">
-        <canvas id="donutChart"></canvas>
-      </div>
-    </div>
 
-    <!-- 2. Scans Over Time -->
-    <div class="card col-8">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-dot" style="--dot-color:var(--honey)"></div>
-          Scans Over Time
+      <% 
+        const genuineCount = statusCount.Genuine || 0;
+        const counterfeitCount = statusCount.Counterfeit || 0;
+        const total = genuineCount + counterfeitCount || 1; // Prevent division by zero
+        
+        const genuinePct = ((genuineCount / total) * 100).toFixed(1);
+        const counterfeitPct = ((counterfeitCount / total) * 100).toFixed(1);
+      %>
+
+      <!-- STATS ROW -->
+      <div class="stats-row">
+        <!-- Total Scans -->
+        <div class="stat-card" style="--kpi-color: var(--amber); --kpi-text-color: var(--amber);">
+          <div class="stat-label">Total Scans</div>
+          <div class="stat-num"><%= totalScans %></div>
+          <div class="stat-sub">All QR scan events recorded</div>
         </div>
-        <div class="card-sub">Daily scan activity by status</div>
-      </div>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:var(--sage)"></span>Genuine</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#B94040"></span>Counterfeit</span>
-      </div>
-      <div class="chart-wrap" style="height:240px">
-        <canvas id="timeChart"></canvas>
-      </div>
-    </div>
 
-    <!-- 3. IP Chart -->
-    <div class="card col-7">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-dot" style="--dot-color:var(--amber)"></div>
-          Top IP Addresses
+        <!-- Genuine -->
+        <div class="stat-card" style="--kpi-color: var(--success); --kpi-text-color: var(--success);">
+          <div class="stat-label">Genuine</div>
+          <div class="stat-num"><%= genuineCount %></div>
+          <div class="stat-sub"><%= totalScans === 0 ? '0' : genuinePct %>% of total</div>
         </div>
-        <div class="card-sub">Scan volume by source IP — top 12</div>
-      </div>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:var(--sage)"></span>Genuine</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#B94040"></span>Counterfeit</span>
-      </div>
-      <div class="chart-wrap" style="height:280px">
-        <canvas id="deviceChart"></canvas>
-      </div>
-    </div>
 
-    <!-- 4. Multi-Scan Products -->
-    <div class="card col-5">
-      <div class="card-header">
-        <div class="card-title">
-          <div class="card-title-dot" style="--dot-color:var(--umber)"></div>
-          Multi-Scan Products
+        <!-- Counterfeit -->
+        <div class="stat-card" style="--kpi-color: var(--danger); --kpi-text-color: var(--danger);">
+          <div class="stat-label">Counterfeit</div>
+          <div class="stat-num"><%= counterfeitCount %></div>
+          <div class="stat-sub"><%= totalScans === 0 ? '0' : counterfeitPct %>% of total</div>
         </div>
-        <div class="card-sub">Products scanned more than once</div>
-      </div>
-      <div class="legend">
-        <span class="legend-item"><span class="legend-dot" style="background:var(--sage)"></span>Genuine</span>
-        <span class="legend-item"><span class="legend-dot" style="background:#B94040"></span>Counterfeit</span>
-      </div>
-      <div class="chart-wrap" style="height:280px">
-        <canvas id="productChart"></canvas>
-      </div>
-    </div>
 
+        <!-- Unique Products -->
+        <div class="stat-card" style="--kpi-color: var(--honey); --kpi-text-color: var(--honey);">
+          <div class="stat-label">Unique Products</div>
+          <div class="stat-num"><%= productChart.labels.length %></div>
+          <div class="stat-sub">Multi-scanned SKUs</div>
+        </div>
+
+        <!-- Countries -->
+        <div class="stat-card" style="--kpi-color: #3b82f6; --kpi-text-color: #3b82f6;">
+          <div class="stat-label">Countries</div>
+          <div class="stat-num"><%= geoChart.labels.length %></div>
+          <div class="stat-sub">Geographic regions</div>
+        </div>
+      </div>
+
+      <!-- CHARTS -->
+      <div class="charts-grid">
+        
+        <!-- Genuine vs Counterfeit -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Status Breakdown</div>
+              <div class="chart-sub">Distribution across all scans</div>
+            </div>
+          </div>
+          <div class="chart-container" style="display:flex; justify-content:center; align-items:center; min-height: 250px;">
+            <canvas id="statusChart" style="max-height: 250px;"></canvas>
+          </div>
+        </div>
+
+        <!-- Top Products -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Top Scanned Products</div>
+              <div class="chart-sub">Scan volume by product ID</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="productChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Device Analytics -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Device Fingerprints</div>
+              <div class="chart-sub">Scans grouped by unique device characteristics</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="deviceChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Geographic Distribution -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Geographic Activity</div>
+              <div class="chart-sub">Scans distributed by country</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="geoChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Scans Over Time -->
+        <div class="chart-card full-width">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Scans Over Time</div>
+              <div class="chart-sub">Daily scan activity by status</div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas id="timeChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
   </div>
 
-  <!-- 5. Geographic Summary (dark card) -->
-  <p class="section-tag" style="margin-top:12px">Geographic intelligence</p>
-  <div class="card-dark">
-    <div class="card-title">
-      <div class="card-title-dot"></div>
-      Geographic Scan Summary
-    </div>
-    <div class="card-sub">Counterfeit distribution across scan regions</div>
-    <div class="geo-layout">
-      <div class="chart-wrap" style="height:240px">
-        <canvas id="geoChart"></canvas>
-      </div>
-      <table class="geo-table">
-        <thead>
-          <tr>
-            <th>Region</th>
-            <th>Total</th>
-            <th>Genuine</th>
-            <th>Counterfeit</th>
-            <th>Counterfeit Rate</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% geoData.forEach(function(g) { %>
-          <% const rate = ((g.Counterfeit / g.total) * 100).toFixed(1); %>
-          <tr>
-            <td>
-              <div class="country-cell">
-                <div class="flag-box"><%= g.country === 'PK' ? '🇵🇰' : g.country === 'US' ? '🇺🇸' : '🌐' %></div>
-                <span class="country-name"><%= g.country %></span>
-              </div>
-            </td>
-            <td class="mono"><%= g.total %></td>
-            <td><span class="pill pill-g"><%= g.Genuine %></span></td>
-            <td><span class="pill pill-c"><%= g.Counterfeit %></span></td>
-            <td style="min-width:160px">
-              <div class="rate-wrap">
-                <div class="rate-bar-bg">
-                  <div class="rate-bar" style="width:<%= rate %>%"></div>
-                </div>
-                <span class="rate-pct"><%= rate %>%</span>
-              </div>
-            </td>
-          </tr>
-          <% }); %>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <script>
+    // Injected Data from Backend
+    const stCount = <%- JSON.stringify(statusCount) %>;
+    const scansOverTime = <%- JSON.stringify(scansOverTime) %>;
+    const deviceData = <%- JSON.stringify(deviceChart) %>;
+    const prodData = <%- JSON.stringify(productChart) %>;
+    const geoData = <%- JSON.stringify(geoChart) %>;
 
-</main>
+    // Common Chart Options
+    Chart.defaults.font.family = "'Outfit', sans-serif";
+    Chart.defaults.color = '#94A3B8';
+    
+    const tooltipSettings = {
+      backgroundColor: '#1E293B',
+      titleColor: '#F8FAFC',
+      bodyColor: '#CBD5E1',
+      borderColor: 'rgba(255,255,255,0.1)',
+      borderWidth: 1,
+      padding: 12,
+      cornerRadius: 8,
+      displayColors: true
+    };
 
-<!-- FOOTER -->
-<footer class="footer">
-  <div class="footer-brand"><strong>Trust Layer</strong> · Anti-Counterfeit Platform</div>
-  <div class="footer-copy">© 2026 Trust Layer · Analytics Module</div>
-  <div class="footer-links">
-    <a href="/">Home</a>
-    <a href="#">Services</a>
-    <a href="/admin/space">Admin</a>
-    <a href="#">Contact</a>
-  </div>
-</footer>
-
-<script>
-  // ── Theme palette matching Trust Layer
-  const G   = '#17A398';   // teal – genuine
-  const C   = '#B94040';   // danger – counterfeit
-  const H   = '#FA5716';   // honey (orange)
-  const AMB = '#FFAB8A';   // amber (light orange accent)
-  const UMB = '#A0AEC0';   // umber
-  const INK = '#11171D';   // ink (dark navy, used for tooltip bg)
-
-  // Shared chart defaults
-  Chart.defaults.color       = '#A0AEC0';
-  Chart.defaults.borderColor = '#2D3748';
-  Chart.defaults.font.family = "'Outfit', sans-serif";
-  Chart.defaults.font.size   = 11;
-
-  const gridOpts = { color: 'rgba(255,255,255,.06)', drawBorder: false };
-  const tickOpts = { color: '#A0AEC0' };
-
-  // ── EJS data injection ──────────────────────────────────────────────────────
-  const genuine      = <%= statusCount.Genuine %>;
-  const counterfeit  = <%= statusCount.Counterfeit %>;
-  const timeLabels   = <%- JSON.stringify(scansOverTime.labels) %>;
-  const timeGenuine  = <%- JSON.stringify(scansOverTime.genuine) %>;
-  const timeCounterf = <%- JSON.stringify(scansOverTime.counterfeit) %>;
-  const ipLabels           = <%- JSON.stringify(deviceChart.labels) %>;
-  const ipGenuine          = <%- JSON.stringify(deviceChart.genuine) %>;
-  const ipCounterf         = <%- JSON.stringify(deviceChart.counterfeit) %>;
-  const ipGenuineProds     = <%- JSON.stringify(deviceChart.genuineProducts) %>;
-  const ipCounterfeitProds = <%- JSON.stringify(deviceChart.counterfeitProducts) %>;
-  const prodLabels   = <%- JSON.stringify(productChart.labels) %>;
-  const prodGenuine  = <%- JSON.stringify(productChart.genuine) %>;
-  const prodCounterf = <%- JSON.stringify(productChart.counterfeit) %>;
-  const prodFull     = <%- JSON.stringify(productChart.fullIds) %>;
-  const geoLabels    = <%- JSON.stringify(geoChart.labels) %>;
-  const geoGenuine   = <%- JSON.stringify(geoChart.genuine) %>;
-  const geoCounterf  = <%- JSON.stringify(geoChart.counterfeit) %>;
-  const prodGenuineIPs     = <%- JSON.stringify(productChart.genuineIPs) %>;
-  const prodCounterfIPs = <%- JSON.stringify(productChart.counterfeitIPs) %>;
-// ADD these lines after existing ipLabels declarations
-const ipFullIds = <%- JSON.stringify(deviceChart.fullIds) %>;
-const ipIPs     = <%- JSON.stringify(deviceChart.ips) %>;
-  // ── 1. Donut ────────────────────────────────────────────────────────────────
-  new Chart(document.getElementById('donutChart'), {
-    type: 'doughnut',
-    data: {
-      labels: ['Genuine', 'Counterfeit'],
-      datasets: [{
-        data: [genuine, counterfeit],
-        backgroundColor: [G, C],
-        borderColor: '#26313D',
-        borderWidth: 5,
-        hoverOffset: 10,
-      }]
-    },
-    options: {
-      cutout: '74%',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: INK,
-          titleColor: AMB,
-          bodyColor: 'rgba(255,255,255,.6)',
-          callbacks: {
-            label: ctx => ` ${ctx.label}: ${ctx.raw}  (${((ctx.raw/(genuine+counterfeit))*100).toFixed(1)}%)`
-          }
-        }
-      }
-    },
-    plugins: [{
-      id: 'centerText',
-      afterDraw(chart) {
-        const { ctx, chartArea: { width, height, left, top } } = chart;
-        ctx.save();
-        const cx = left + width/2, cy = top + height/2;
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-        ctx.font = "600 2rem 'Playfair Display'"; ctx.fillStyle = '#F3EBD9';
-        ctx.fillText(genuine + counterfeit, cx, cy - 10);
-        ctx.font = "300 9px 'Outfit'"; ctx.fillStyle = '#A0AEC0';
-        ctx.letterSpacing = '0.2em';
-        ctx.fillText('TOTAL SCANS', cx, cy + 14);
-        ctx.restore();
-      }
-    }]
-  });
-
-  // ── 2. Scans Over Time ──────────────────────────────────────────────────────
-  new Chart(document.getElementById('timeChart'), {
-    type: 'line',
-    data: {
-      labels: timeLabels,
-      datasets: [
-        {
-          label: 'Genuine', data: timeGenuine,
-          borderColor: G, backgroundColor: G + '22',
-          fill: true, tension: .4, pointRadius: 5,
-          pointBackgroundColor: G, pointBorderColor: '#26313D', pointBorderWidth: 2,
-        },
-        {
-          label: 'Counterfeit', data: timeCounterf,
-          borderColor: C, backgroundColor: C + '18',
-          fill: true, tension: .4, pointRadius: 5,
-          pointBackgroundColor: C, pointBorderColor: '#26313D', pointBorderWidth: 2,
-        }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { backgroundColor: INK, titleColor: AMB, bodyColor: 'rgba(255,255,255,.6)' }
+    // 1. Status Chart (Doughnut)
+    new Chart(document.getElementById('statusChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Genuine', 'Counterfeit'],
+        datasets: [{
+          data: [stCount.Genuine || 0, stCount.Counterfeit || 0],
+          backgroundColor: ['#0F5C5B', '#FA5716'],
+          borderWidth: 0,
+          hoverOffset: 4
+        }]
       },
-      scales: {
-        x: { grid: gridOpts, ticks: tickOpts },
-        y: { grid: gridOpts, ticks: { ...tickOpts, stepSize: 1 }, beginAtZero: true }
-      }
-    }
-  });
-
-  // ── 3. IP Chart ─────────────────────────────────────────────────────────────
-  new Chart(document.getElementById('deviceChart'), {
-    type: 'bar',
-    data: {
-      labels: ipLabels,
-      datasets: [
-        { label: 'Genuine',     data: ipGenuine,  backgroundColor: G + 'cc', borderRadius: 3, stack: 'ip' },
-        { label: 'Counterfeit', data: ipCounterf, backgroundColor: C + 'cc', borderRadius: 3, stack: 'ip' }
-      ]
-    },
-    options: {
-      indexAxis: 'y',
-      responsive: true, maintainAspectRatio: false,
-      // plugins: {
-      //   legend: { display: false },
-      //   tooltip: { backgroundColor: INK, titleColor: AMB, bodyColor: 'rgba(255,255,255,.6)' }
-      // },
-      plugins: {
-  legend: { display: false },
-  tooltip: {
-  backgroundColor: INK,
-  titleColor: AMB,
-  bodyColor: 'rgba(255,255,255,.6)',
-  callbacks: {
-    title: (items) => {
-      const i = items[0].dataIndex;
-      return 'Device: ' + ipFullIds[i];  // ← was deviceChart.fullIds (undefined)
-    },
-    afterBody: (items) => {
-      const i = items[0].dataIndex;
-
-      const ipLines = ipIPs[i].map(ip => '  • ' + ip);  // ← was deviceChart.ips
-
-      const gProds = Object.entries(ipGenuineProds[i])
-        .map(([pid, count]) => `  • ${pid} (×${count})`);
-
-      const cProds = Object.entries(ipCounterfeitProds[i])
-        .map(([pid, count]) => `  • ${pid} (×${count})`);
-
-      return [
-        '',
-        '🌐 IPs Used:',
-        ...ipLines,
-        '',
-        '✅ Genuine Products:',
-        ...(gProds.length ? gProds : ['  None']),
-        '',
-        '❌ Counterfeit Products:',
-        ...(cProds.length ? cProds : ['  None']),
-      ];
-    }
-  }
-}
-},
-      scales: {
-        x: { grid: gridOpts, ticks: { ...tickOpts, stepSize: 1 }, stacked: true, beginAtZero: true },
-        y: { grid: { display: false }, ticks: { ...tickOpts, font: { family: 'monospace', size: 10 } }, stacked: true }
-      }
-    }
-  });
-
-  // ── 4. Products ─────────────────────────────────────────────────────────────
- new Chart(document.getElementById('productChart'), {
-  type: 'bar',
-  data: {
-    labels: prodLabels,
-    datasets: [
-      { label: 'Genuine',     data: prodGenuine,  backgroundColor: G + 'cc', borderRadius: 3, stack: 'prod' },
-      { label: 'Counterfeit', data: prodCounterf, backgroundColor: C + 'cc', borderRadius: 3, stack: 'prod' }
-    ]
-  },
-  options: {
-    responsive: true, maintainAspectRatio: false,
-    plugins: {
-      legend: { display: false },
-
-      // ↓ REPLACE your old tooltip block with this entire tooltip object
-      tooltip: {
-        backgroundColor: INK,
-        titleColor: AMB,
-        bodyColor: 'rgba(255,255,255,.6)',
-        callbacks: {
-          title(ctx) {
-            return 'ID: ' + prodFull[ctx[0].dataIndex];
-          },
-          label(ctx) {
-            return ctx.dataset.label + ': ' + ctx.parsed.y;
-          },
-          afterLabel(ctx) {
-            if (ctx.datasetIndex !== ctx.chart.data.datasets.length - 1) return;
-
-            const i           = ctx.dataIndex;
-            const genuineIPs  = prodGenuineIPs?.[i]  || [];
-            const counterfIPs = prodCounterfIPs?.[i] || [];
-
-            const lines = ['──────────────────'];
-
-            if (genuineIPs.length > 0) {
-              lines.push('✅ Genuine scans:');
-              genuineIPs.forEach(ip => lines.push('   • ' + ip));
-            } else {
-              lines.push('✅ Genuine scans: none');
-            }
-
-            lines.push('');
-
-            if (counterfIPs.length > 0) {
-              lines.push('🚨 Counterfeit scans:');
-              counterfIPs.forEach(ip => lines.push('   • ' + ip));
-            } else {
-              lines.push('🚨 Counterfeit scans: none');
-            }
-
-            return lines;
-          }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '75%',
+        plugins: {
+          legend: { position: 'bottom', labels: { padding: 20, usePointStyle: true, pointStyle: 'circle' } },
+          tooltip: tooltipSettings
         }
       }
-      // ↑ end of tooltip
+    });
 
-    },
-    scales: {
-      x: { grid: { display: false }, ticks: { ...tickOpts, font: { family: 'monospace', size: 10 } }, stacked: true },
-      y: { grid: gridOpts, ticks: { ...tickOpts, stepSize: 1 }, stacked: true, beginAtZero: true }
-    }
-  }
-});
-  // ── 5. Geo Bar ──────────────────────────────────────────────────────────────
-  new Chart(document.getElementById('geoChart'), {
-    type: 'bar',
-    data: {
-      labels: geoLabels,
-      datasets: [
-        { label: 'Genuine',     data: geoGenuine,  backgroundColor: G + 'cc', borderRadius: 5, stack: 'geo' },
-        { label: 'Counterfeit', data: geoCounterf, backgroundColor: C + 'cc', borderRadius: 5, stack: 'geo' }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: { backgroundColor: '#FEFCF8', titleColor: H, bodyColor: '#3D4852' }
+    // 2. Scans Over Time (Line)
+    new Chart(document.getElementById('timeChart'), {
+      type: 'line',
+      data: {
+        labels: scansOverTime.labels,
+        datasets: [
+          {
+            label: 'Genuine',
+            data: scansOverTime.genuine,
+            borderColor: '#0F5C5B',
+            backgroundColor: 'rgba(15, 92, 91, 0.1)',
+            borderWidth: 2,
+            pointBackgroundColor: '#0F5C5B',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'Counterfeit',
+            data: scansOverTime.counterfeit,
+            borderColor: '#FA5716',
+            backgroundColor: 'rgba(250, 87, 22, 0.1)',
+            borderWidth: 2,
+            pointBackgroundColor: '#FA5716',
+            tension: 0.4,
+            fill: true
+          }
+        ]
       },
-      scales: {
-        x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,.4)' }, stacked: true },
-        y: { grid: { color: 'rgba(255,255,255,.05)', drawBorder: false }, ticks: { color: 'rgba(255,255,255,.4)', stepSize: 5 }, stacked: true, beginAtZero: true }
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true, pointStyle: 'circle' } }, tooltip: tooltipSettings },
+        scales: {
+          x: { grid: { display: false, drawBorder: false } },
+          y: { grid: { color: 'rgba(0,0,0,0.04)', drawBorder: false }, beginAtZero: true, ticks: { precision: 0 } }
+        }
       }
-    }
-  });
-</script>
+    });
+
+    // 3. Top Products (Bar)
+    new Chart(document.getElementById('productChart'), {
+      type: 'bar',
+      data: {
+        labels: prodData.labels,
+        datasets: [
+          { label: 'Genuine', data: prodData.genuine, backgroundColor: '#0F5C5B', borderRadius: 4 },
+          { label: 'Counterfeit', data: prodData.counterfeit, backgroundColor: '#FA5716', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true, pointStyle: 'circle' } }, tooltip: tooltipSettings },
+        scales: {
+          x: { stacked: true, grid: { display: false } },
+          y: { stacked: true, grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+
+    // 4. Device Analytics (Horizontal Bar)
+    new Chart(document.getElementById('deviceChart'), {
+      type: 'bar',
+      data: {
+        labels: deviceData.labels,
+        datasets: [
+          { label: 'Genuine', data: deviceData.genuine, backgroundColor: '#0F5C5B', borderRadius: 4 },
+          { label: 'Counterfeit', data: deviceData.counterfeit, backgroundColor: '#FA5716', borderRadius: 4 }
+        ]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true, pointStyle: 'circle' } }, tooltip: tooltipSettings },
+        scales: {
+          x: { stacked: true, grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true, ticks: { precision: 0 } },
+          y: { stacked: true, grid: { display: false } }
+        }
+      }
+    });
+
+    // 5. Geographic Activity (Bar)
+    new Chart(document.getElementById('geoChart'), {
+      type: 'bar',
+      data: {
+        labels: geoData.labels,
+        datasets: [
+          { label: 'Genuine', data: geoData.genuine, backgroundColor: '#0F5C5B', borderRadius: 4 },
+          { label: 'Counterfeit', data: geoData.counterfeit, backgroundColor: '#FA5716', borderRadius: 4 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true, pointStyle: 'circle' } }, tooltip: tooltipSettings },
+        scales: {
+          x: { grid: { display: false } },
+          y: { grid: { color: 'rgba(0,0,0,0.04)' }, beginAtZero: true, ticks: { precision: 0 } }
+        }
+      }
+    });
+  </script>
+
 </body>
+
 </html>
