@@ -27,6 +27,73 @@ Counterfeit products cost brands revenue and trust, and consumers have no easy w
 
 ---
 
+## 📸 Sneak Peek
+
+<div align="center">
+  <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/hero_section.jpg" alt="Trust Layer Dashboard" width="800" />
+</div>
+
+---
+
+## 🚀 Getting Started
+
+Follow these instructions to set up the project locally on your machine.
+
+### Prerequisites
+- **Node.js** (v16.x or higher)
+- **MongoDB** (Local instance or MongoDB Atlas URI)
+- **Git**
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/callmeeman45-dotcom/Trust-Layer.git
+   cd Trust-Layer
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Configure Environment Variables**
+   Create a `.env` file in the root directory and add your credentials:
+   ```env
+   PORT=3000
+   mongodb_cloud_address=your_mongodb_connection_string
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_name
+   CLOUDINARY_API_KEY=your_api_key
+   CLOUDINARY_API_SECRET=your_api_secret
+   ```
+
+4. **Run the Application**
+   ```bash
+   npm start
+   ```
+   Open your browser and navigate to `http://localhost:3000`.
+
+---
+
+## 📁 Folder Structure
+
+```text
+Trust-Layer/
+├── models/             # Mongoose schemas (Product, ScanRecord, Admin, etc.)
+├── public/             # Static assets (CSS, Images, Client-side JS)
+│   ├── css/            # Custom styling and layout logic
+│   └── images/         # Logos and UI assets
+├── routes/             # Express route handlers
+├── views/              # EJS templates (Dashboard, Analytics, Auth)
+│   └── partials/       # Reusable components (Sidebar, Topbar)
+├── app.js              # Entry point & Server configuration
+├── .env                # Environment variables (Ignored in Git)
+├── package.json        # Project metadata and dependencies
+└── README.md           # Project documentation
+```
+
+---
+
 ## ⚙️ How the System Works (End-to-End)
 
 1. **Brand owner registers a product** and generates a unique QR code for each unit via the dashboard.
@@ -85,20 +152,13 @@ A Retrieval-Augmented Generation (RAG) system that lets brand owners feed in det
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Backend** | Node.js / Express |
-| **Database** | MongoDB (Mongoose) |
-| **File/Image Storage** | Cloudinary |
-| **Templating** | EJS |
-| **Charts/Analytics** | Chart.js |
-| **Email** | Nodemailer (Gmail SMTP) |
-| **Deployment** | Vercel |
-| **Device Tracking** | UUID (cookie-based) |
-| **Embeddings (RAG)** | *(to be configured)* |
-| **Vector Store (RAG)** | *(to be configured)* |
-| **LLM (RAG)** | *(to be configured)* |
-| **Data Isolation** | `brandId`-scoped namespaces/collections |
+- <img src="https://img.shields.io/badge/Frontend-EJS_&_CSS-1572B6?style=flat-square&logo=css3" alt="Frontend" /> **EJS, Vanilla CSS & JS**: For rendering a premium, glassmorphism-inspired user interface.
+- <img src="https://img.shields.io/badge/Backend-Node.js_&_Express-339933?style=flat-square&logo=nodedotjs" alt="Backend" /> **Node.js & Express**: Handling robust API endpoints and server-side logic.
+- <img src="https://img.shields.io/badge/Database-MongoDB_&_Mongoose-4EA94B?style=flat-square&logo=mongodb" alt="Database" /> **MongoDB**: Storing scan records, product data, and brand credentials.
+- <img src="https://img.shields.io/badge/Storage-Cloudinary-3448C5?style=flat-square&logo=cloudinary" alt="Storage" /> **Cloudinary**: Managing image and PDF assets.
+- <img src="https://img.shields.io/badge/Analytics-Chart.js-FF6384?style=flat-square&logo=chartdotjs" alt="Chart.js" /> **Chart.js**: Rendering real-time dynamic charts for scan tracking.
+- <img src="https://img.shields.io/badge/Mailing-Nodemailer-0088cc?style=flat-square&logo=maildotru" alt="Nodemailer" /> **Nodemailer (Gmail SMTP)**: Used for handling contact forms and email triggers.
+- <img src="https://img.shields.io/badge/Deployment-Vercel-000000?style=flat-square&logo=vercel" alt="Vercel" /> **Vercel**: Seamless and scalable production deployment.
 
 ---
 
@@ -131,8 +191,12 @@ For testing/demo purposes, a pre-verified Super Admin account is available:
 
 ## 👥 Our Team
 
-Trust Layer was brought to life by a dedicated team of developers and innovators:
+Trust Layer was brought to life by a dedicated team of developers and innovators under expert supervision:
 
+### Supervisor
+- **Zeeshan Asif**
+
+### Development Team
 - **Hafiz Zubair Akram**
 - **Eman Fatima**
 - **Saman Khalid**
