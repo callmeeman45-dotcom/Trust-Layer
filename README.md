@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/logo.png" alt="Trust Layer Logo" width="150" onerror="this.src='https://placehold.co/150x150?text=Trust+Layer'"/>
+  <img src="./public/images/logo.png" alt="Trust Layer Logo" width="150" onerror="this.src='https://placehold.co/150x150?text=Trust+Layer'"/>
   <h1>Trust Layer</h1>
   <p><strong>Counterfeit-proof your products, protect your reputation.</strong></p>
   
@@ -30,22 +30,22 @@ Counterfeit products cost brands revenue and trust, and consumers have no easy w
 ## 📸 Platform Gallery
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/hero_section.jpg" alt="Trust Layer Dashboard" width="800" />
+  <img src="./public/images/hero_section.jpg" alt="Trust Layer Dashboard" width="800" />
 </div>
 
 <br>
 
 | Analytics Dashboard | AI Product Assistant |
 |:---:|:---:|
-| <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/analytics.png" width="400"/> | <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/ai_chat.png" width="400"/> |
+| <img src="./public/images/analytics.png" width="400"/> | <img src="./public/images/ai_chat.png" width="400"/> |
 
 | Batch Management | Brand Authentication |
 |:---:|:---:|
-| <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/products.png" width="400"/> | <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/brand_login.png" width="400"/> |
+| <img src="./public/images/products.png" width="400"/> | <img src="./public/images/brand_login.png" width="400"/> |
 
 | Knowledge Base | Generated QR Sheets |
 |:---:|:---:|
-| <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/knowledge_base.png" width="400"/> | <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/generated_qr.png" width="400"/> |
+| <img src="./public/images/knowledge_base.png" width="400"/> | <img src="./public/images/generated_qr.png" width="400"/> |
 
 ---
 
@@ -79,6 +79,7 @@ Follow these instructions to set up the project locally on your machine.
    CLOUDINARY_CLOUD_NAME=your_cloudinary_name
    CLOUDINARY_API_KEY=your_api_key
    CLOUDINARY_API_SECRET=your_api_secret
+   FIREWORKS_API_KEY=your_fireworks_api_key
    ```
 
 4. **Run the Application**
