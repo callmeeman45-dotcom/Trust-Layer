@@ -205,7 +205,7 @@ For testing/demo purposes, a pre-verified Super Admin account is available:
 Trust Layer was brought to life by a dedicated team of developers and innovators under expert supervision:
 
 ### Supervisor
-- **Sir Zeeshan Asif**
+- **Dr. Zeeshan Asif**
 
 ### Development Team
 - **Hafiz Zubair Akram**
