@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="./public/images/logo.png" alt="Trust Layer Logo" width="150" onerror="this.src='https://placehold.co/150x150?text=Trust+Layer'"/>
+  <img src="./public/images/logo.png" alt="Trust Layer Logo" width="250" onerror="this.src='https://placehold.co/250x250?text=Trust+Layer'"/>
   <h1>Trust Layer</h1>
   <p><strong>Counterfeit-proof your products, protect your reputation.</strong></p>
   
@@ -205,7 +205,7 @@ For testing/demo purposes, a pre-verified Super Admin account is available:
 Trust Layer was brought to life by a dedicated team of developers and innovators under expert supervision:
 
 ### Supervisor
-- **Zeeshan Asif**
+- **Sir Zeeshan Asif**
 
 ### Development Team
 - **Hafiz Zubair Akram**
