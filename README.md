@@ -27,11 +27,25 @@ Counterfeit products cost brands revenue and trust, and consumers have no easy w
 
 ---
 
-## 📸 Sneak Peek
+## 📸 Platform Gallery
 
 <div align="center">
   <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/hero_section.jpg" alt="Trust Layer Dashboard" width="800" />
 </div>
+
+<br>
+
+| Analytics Dashboard | AI Product Assistant |
+|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/analytics.png" width="400"/> | <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/ai_chat.png" width="400"/> |
+
+| Batch Management | Brand Authentication |
+|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/products.png" width="400"/> | <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/brand_login.png" width="400"/> |
+
+| Knowledge Base | Generated QR Sheets |
+|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/knowledge_base.png" width="400"/> | <img src="https://raw.githubusercontent.com/callmeeman45-dotcom/Trust-Layer/main/public/images/generated_qr.png" width="400"/> |
 
 ---
 
@@ -96,9 +110,10 @@ Trust-Layer/
 
 ## ⚙️ How the System Works (End-to-End)
 
-1. **Brand owner registers a product** and generates a unique QR code for each unit via the dashboard.
-2. **QR code + product data** is generated, stored, and the QR image/PDF is uploaded to **Cloudinary**.
-3. **Consumer scans the QR code** on the product.
+1. **Brand owner registers a product** via the dashboard. The backend dynamically generates a cryptographically secure hash using Node.js `crypto`.
+2. **QR Code Generation**: This hash is embedded into a verification URL, which is dynamically converted into a scannable QR code matrix using the `qrcode` library.
+3. **Storage & Printing**: A printable PDF sheet containing these generated QR codes is instantly assembled and uploaded to **Cloudinary**, ready for manufacturing and packaging.
+4. **Consumer scans the QR code** on the product.
 4. **First scan** → the system records this as the legitimate "ownership" event, tagging the scan with a **UUID stored in a cookie** on the user's device (replacing older IP-based tracking, which was unreliable behind shared networks/VPNs).
 5. **Subsequent scans** of the same QR code (e.g., from a different device/location) are automatically flagged as **potential counterfeits**, since a genuine product should only be "claimed" once.
 6. **Every scan event** (timestamp, device UUID, IP, location) is logged and visualized on an **analytics dashboard** for the brand owner.
@@ -141,7 +156,7 @@ A Retrieval-Augmented Generation (RAG) system that lets brand owners feed in det
 3. **Users query naturally**: After scanning a QR code, users can ask questions like:
    - "Is this safe for sensitive skin?"
    - "What's the expiry date policy?"
-4. **Retrieval + generation**: The system retrieves the most relevant chunks of that brand's product data (via similarity search) and passes them to an LLM, which generates a grounded, accurate answer — no hallucinated product claims.
+4. **Retrieval + generation**: The system retrieves the most relevant chunks of that brand's product data (via similarity search) and passes them to an LLM via the **Fireworks API**, which generates a grounded, accurate answer — no hallucinated product claims.
 
 ### Why It Matters
 - Builds consumer trust by giving instant, verified answers straight from the manufacturer.
@@ -158,6 +173,7 @@ A Retrieval-Augmented Generation (RAG) system that lets brand owners feed in det
 - <img src="https://img.shields.io/badge/Storage-Cloudinary-3448C5?style=flat-square&logo=cloudinary" alt="Storage" /> **Cloudinary**: Managing image and PDF assets.
 - <img src="https://img.shields.io/badge/Analytics-Chart.js-FF6384?style=flat-square&logo=chartdotjs" alt="Chart.js" /> **Chart.js**: Rendering real-time dynamic charts for scan tracking.
 - <img src="https://img.shields.io/badge/Mailing-Nodemailer-0088cc?style=flat-square&logo=maildotru" alt="Nodemailer" /> **Nodemailer (Gmail SMTP)**: Used for handling contact forms and email triggers.
+- <img src="https://img.shields.io/badge/AI_Engine-Fireworks_API-FF6384?style=flat-square&logo=openai" alt="Fireworks" /> **Fireworks API**: Powering lightning-fast LLM inference and Retrieval-Augmented Generation (RAG) for the AI Product Assistant.
 - <img src="https://img.shields.io/badge/Deployment-Vercel-000000?style=flat-square&logo=vercel" alt="Vercel" /> **Vercel**: Seamless and scalable production deployment.
 
 ---
