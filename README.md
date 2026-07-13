@@ -29,31 +29,17 @@ Counterfeit products cost brands revenue and trust, and consumers have no easy w
 
 ## 📸 Platform Gallery
 
-<p align="center">
-  <b>Analytics Dashboard</b><br>
-  <img src="./public/images/analytics.png" width="100%" />
-</p>
+| Analytics Dashboard | AI Product Assistant |
+| :---: | :---: |
+| <img src="./public/images/analytics.png" width="100%" /> | <img src="./public/images/ai_chat.png" width="100%" /> |
 
-<p align="center">
-  <b>AI Product Assistant</b><br>
-  <img src="./public/images/ai_chat.png" width="100%" />
-</p>
+| Batch Management | Brand Authentication |
+| :---: | :---: |
+| <img src="./public/images/products.png" width="100%" /> | <img src="./public/images/brand_login.png" width="100%" /> |
 
-<p align="center">
-  <b>Batch Management</b><br>
-  <img src="./public/images/products.png" width="100%" />
-</p>
-
-<p align="center">
-  <b>Knowledge Base & Auth</b><br>
-  <img src="./public/images/knowledge_base.png" width="49%" />
-  <img src="./public/images/brand_login.png" width="49%" />
-</p>
-
-<p align="center">
-  <b>Generated QR Sheets</b><br>
-  <img src="./public/images/generated_qr.png" width="100%" />
-</p>
+| Knowledge Base | Generated QR Sheets |
+| :---: | :---: |
+| <img src="./public/images/knowledge_base.png" width="100%" /> | <img src="./public/images/generated_qr.png" width="100%" /> |
 
 ---
 
