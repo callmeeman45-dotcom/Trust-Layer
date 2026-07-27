@@ -1062,7 +1062,7 @@ app.post("/contact", async (req, res) => {  // ← add async
         res.send("Email sent successfully!");
     } catch (error) {
         console.error('Mail error:', error);  // ← now visible in Vercel logs
-        res.status(500).send('Failed to send message.');
+        res.status(500).send(error);
     }
 
 });
